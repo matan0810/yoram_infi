@@ -1,4 +1,5 @@
 ﻿export const EXCLUDED_TOPICS = new Set(["multivariable"]);
+export const isExcluded = (topic) => EXCLUDED_TOPICS.has(topic);
 
 export const TOPIC_HE = {
   countable_sums: "קבוצות בנות מנייה / סכומים לא מסודרים",

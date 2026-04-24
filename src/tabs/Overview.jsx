@@ -2,14 +2,18 @@ import { useMemo } from "react";
 import Bar from "../components/Bar";
 import { card } from "../styles/theme";
 import { EXAMS } from "../data/exams";
-import { TOPIC_HE, COLORS } from "../data/topics";
+import { TOPIC_HE, COLORS, isExcluded } from "../data/topics";
+import ExcludedTag, { excludedRowStyle } from "../components/ExcludedTag";
 
 export default function Overview({ stats, setTab, setSt }) {
-  const sorted = useMemo(
-    () => Object.entries(stats.tc).sort((a, b) => b[1] - a[1]),
-    [stats],
-  );
-  const mx = sorted[0]?.[1] || 1;
+  const { active, excluded } = useMemo(() => {
+    const all = Object.entries(stats.tc).sort((a, b) => b[1] - a[1]);
+    return {
+      active: all.filter(([k]) => !isExcluded(k)),
+      excluded: all.filter(([k]) => isExcluded(k)),
+    };
+  }, [stats]);
+  const mx = active[0]?.[1] || 1;
 
   return (
     <div
@@ -42,27 +46,17 @@ export default function Overview({ stats, setTab, setSt }) {
             ↓ לחץ לחיפוש
           </span>
         </div>
-        {sorted.map(([k, v], i) => {
+        {active.map(([k, v], i) => {
           let ew = 0;
-          EXAMS.forEach((ex) => {
-            if (stats.yt[ex.code][k]) ew++;
-          });
+          EXAMS.forEach((ex) => { if (stats.yt[ex.code][k]) ew++; });
           return (
             <Bar
               key={k}
               label={
                 <span>
                   {TOPIC_HE[k] || k}
-                  <span
-                    style={{
-                      fontFamily: "monospace",
-                      fontSize: 9,
-                      color: "#6d6a5e",
-                      marginRight: 6,
-                    }}
-                  >
-                    {" "}
-                    {ew}/{EXAMS.length}
+                  <span style={{ fontFamily: "Heebo, system-ui, sans-serif", fontSize: 11, color: "#9b9890", marginRight: 6 }}>
+                    {" "}{ew}/{EXAMS.length}
                   </span>
                 </span>
               }
@@ -70,13 +64,32 @@ export default function Overview({ stats, setTab, setSt }) {
               max={mx}
               color={COLORS[i % COLORS.length]}
               pct={Math.round((v / stats.tot) * 100)}
-              onClick={() => {
-                setTab("search");
-                setSt(k);
-              }}
+              onClick={() => { setTab("search"); setSt(k); }}
             />
           );
         })}
+        {excluded.length > 0 && (
+          <>
+            <div style={{ borderTop: "1px dashed #d4cfbf", margin: "10px 0 6px", fontSize: 11, color: "#b0aca4", fontFamily: "Heebo, system-ui, sans-serif" }}>
+              לא בתכנית הנוכחית
+            </div>
+            {excluded.map(([k, v]) => {
+              let ew = 0;
+              EXAMS.forEach((ex) => { if (stats.yt[ex.code][k]) ew++; });
+              return (
+                <div key={k} style={excludedRowStyle}>
+                  <Bar
+                    label={<span><ExcludedTag />{TOPIC_HE[k] || k}</span>}
+                    val={v}
+                    max={mx}
+                    color="#b0aca4"
+                    pct={Math.round((v / stats.tot) * 100)}
+                  />
+                </div>
+              );
+            })}
+          </>
+        )}
       </div>
 
       <div>

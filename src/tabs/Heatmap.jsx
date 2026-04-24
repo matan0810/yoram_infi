@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { card } from "../styles/theme";
 import { EXAMS } from "../data/exams";
-import { TOPIC_HE } from "../data/topics";
+import { TOPIC_HE, isExcluded } from "../data/topics";
+import ExcludedTag, { excludedRowStyle } from "../components/ExcludedTag";
 
 function heatColor(n) {
   if (n === 0) return "#ece7dc";
@@ -78,57 +79,51 @@ export default function Heatmap({ stats, setTab, setSt }) {
             </tr>
           </thead>
           <tbody>
-            {sorted.map(([tk]) => (
-              <tr key={tk}>
-                <td
-                  style={{
-                    padding: "4px 12px 4px 0",
-                    textAlign: "right",
-                    fontSize: 11,
-                    fontWeight: 500,
-                    borderLeft: "2px solid #d4cfbf",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {TOPIC_HE[tk] || tk}
-                </td>
-                {EXAMS.map((ex) => {
-                  const n = stats.yt[ex.code][tk] || 0;
-                  const bg = heatColor(n);
-                  return (
-                    <td
-                      key={ex.code}
-                      onClick={() => {
-                        if (n > 0) {
-                          setTab("search");
-                          setSt(tk);
-                        }
-                      }}
-                      title={
-                        n ? `${TOPIC_HE[tk]} · ${ex.code} · ${n} שאלות` : ""
-                      }
-                      style={{
-                        background: bg,
-                        color: n > 2 ? "white" : "#c1440e",
-                        textAlign: "center",
-                        fontFamily: "monospace",
-                        fontWeight: 700,
-                        padding: "4px 2px",
-                        cursor: n > 0 ? "pointer" : "default",
-                        border:
-                          ex.year === 2026
-                            ? "2px solid #c1440e"
-                            : "1px solid #f4f1ea",
-                        minWidth: 32,
-                        height: 28,
-                      }}
-                    >
-                      {n || ""}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
+            {sorted.map(([tk]) => {
+              const excl = isExcluded(tk);
+              return (
+                <tr key={tk} style={excl ? { ...excludedRowStyle, pointerEvents: "auto" } : {}}>
+                  <td
+                    style={{
+                      padding: "4px 12px 4px 0",
+                      textAlign: "right",
+                      fontSize: 11,
+                      fontWeight: 500,
+                      borderLeft: "2px solid #d4cfbf",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {excl && <ExcludedTag />}
+                    {TOPIC_HE[tk] || tk}
+                  </td>
+                  {EXAMS.map((ex) => {
+                    const n = stats.yt[ex.code][tk] || 0;
+                    const bg = heatColor(n);
+                    return (
+                      <td
+                        key={ex.code}
+                        onClick={() => { if (n > 0 && !excl) { setTab("search"); setSt(tk); } }}
+                        title={n ? `${TOPIC_HE[tk]} · ${ex.code} · ${n} שאלות` : ""}
+                        style={{
+                          background: bg,
+                          color: n > 2 ? "white" : "#c1440e",
+                          textAlign: "center",
+                          fontFamily: "monospace",
+                          fontWeight: 700,
+                          padding: "4px 2px",
+                          cursor: n > 0 && !excl ? "pointer" : "default",
+                          border: ex.year === 2026 ? "2px solid #c1440e" : "1px solid #f4f1ea",
+                          minWidth: 32,
+                          height: 28,
+                        }}
+                      >
+                        {n || ""}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

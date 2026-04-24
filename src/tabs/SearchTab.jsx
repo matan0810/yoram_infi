@@ -2,7 +2,8 @@ import { useMemo } from "react";
 import Chip, { tc } from "../components/Chip";
 import { card, inp } from "../styles/theme";
 import { EXAMS } from "../data/exams";
-import { TOPIC_HE } from "../data/topics";
+import { TOPIC_HE, isExcluded } from "../data/topics";
+import ExcludedTag from "../components/ExcludedTag";
 
 export default function SearchTab({
   sq,
@@ -219,13 +220,18 @@ export default function SearchTab({
                 onClick={() => setSt(r.q.topic)}
                 style={{
                   fontSize: 12,
-                  color: "#2b4162",
+                  color: isExcluded(r.q.topic) ? "#9b9890" : "#2b4162",
                   marginBottom: 4,
                   fontWeight: 600,
                   cursor: "pointer",
                   textDecoration: "underline",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                  flexWrap: "wrap",
                 }}
               >
+                {isExcluded(r.q.topic) && <ExcludedTag />}
                 {TOPIC_HE[r.q.topic] || r.q.topic}
               </div>
               <div style={{ lineHeight: 1.5, fontSize: 13 }}>{r.q.summary}</div>
