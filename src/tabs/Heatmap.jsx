@@ -22,7 +22,7 @@ export default function Heatmap({ stats, setTab, setSt }) {
     <div style={card}>
       <div
         style={{
-          fontFamily: "Georgia,serif",
+          fontFamily: "Frank Ruhl Libre, Georgia, serif",
           fontWeight: 700,
           fontSize: 18,
           marginBottom: 4,

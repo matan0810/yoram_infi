@@ -118,7 +118,7 @@ export default function SearchTab({ sq, setSq, st, setSt, sch, setSch, sty, setS
             padding: 40,
             color: "#6d6a5e",
             fontStyle: "italic",
-            fontFamily: "Georgia,serif",
+            fontFamily: "Frank Ruhl Libre, Georgia, serif",
           }}
         >
           לא נמצאו שאלות

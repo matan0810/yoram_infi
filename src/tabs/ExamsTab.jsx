@@ -89,7 +89,7 @@ export default function ExamsTab({ yf, setYf, mf, setMf, setTab, setSt }) {
             >
               <div
                 style={{
-                  fontFamily: "Georgia,serif",
+                  fontFamily: "Frank Ruhl Libre, Georgia, serif",
                   fontWeight: 900,
                   fontSize: 22,
                 }}

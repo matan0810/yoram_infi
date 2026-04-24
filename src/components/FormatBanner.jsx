@@ -13,7 +13,7 @@ export default function FormatBanner() {
     >
       <div
         style={{
-          fontFamily: "Georgia,serif",
+          fontFamily: "Frank Ruhl Libre, Georgia, serif",
           fontWeight: 700,
           fontSize: 16,
           marginBottom: 10,

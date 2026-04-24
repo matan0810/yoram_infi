@@ -25,7 +25,7 @@ export default function Header() {
       </div>
       <div
         style={{
-          fontFamily: "Georgia,serif",
+          fontFamily: "Frank Ruhl Libre, Georgia, serif",
           fontWeight: 900,
           fontSize: 42,
           lineHeight: 1,
@@ -55,7 +55,7 @@ export default function Header() {
           <div key={l}>
             <div
               style={{
-                fontFamily: "Georgia,serif",
+                fontFamily: "Frank Ruhl Libre, Georgia, serif",
                 fontWeight: 900,
                 fontSize: 26,
               }}

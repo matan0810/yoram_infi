@@ -56,7 +56,7 @@ export default function Insights({ stats }) {
       <div style={card}>
         <div
           style={{
-            fontFamily: "Georgia,serif",
+            fontFamily: "Frank Ruhl Libre, Georgia, serif",
             fontWeight: 700,
             fontSize: 18,
             marginBottom: 12,
@@ -92,7 +92,7 @@ export default function Insights({ stats }) {
               >
                 {v}
               </span>
-              <strong style={{ color: "#c1440e", fontFamily: "Georgia,serif" }}>
+              <strong style={{ color: "#c1440e", fontFamily: "Frank Ruhl Libre, Georgia, serif" }}>
                 {TOPIC_HE[k]}
               </strong>
               <div style={{ color: "#6d6a5e", fontSize: 11 }}>
@@ -107,7 +107,7 @@ export default function Insights({ stats }) {
       <div style={card}>
         <div
           style={{
-            fontFamily: "Georgia,serif",
+            fontFamily: "Frank Ruhl Libre, Georgia, serif",
             fontWeight: 700,
             fontSize: 18,
             marginBottom: 12,
@@ -137,7 +137,7 @@ export default function Insights({ stats }) {
       <div style={card}>
         <div
           style={{
-            fontFamily: "Georgia,serif",
+            fontFamily: "Frank Ruhl Libre, Georgia, serif",
             fontWeight: 700,
             fontSize: 18,
             marginBottom: 12,
@@ -165,7 +165,7 @@ export default function Insights({ stats }) {
             >
               {v}
             </span>
-            <strong style={{ fontFamily: "Georgia,serif" }}>{TOPIC_HE[k]}</strong>
+            <strong style={{ fontFamily: "Frank Ruhl Libre, Georgia, serif" }}>{TOPIC_HE[k]}</strong>
             <span style={{ color: "#6d6a5e", fontSize: 11 }}>
               {" "}— {Math.round((v / recentTrend.tot) * 100)}%
             </span>
@@ -177,7 +177,7 @@ export default function Insights({ stats }) {
       <div style={card}>
         <div
           style={{
-            fontFamily: "Georgia,serif",
+            fontFamily: "Frank Ruhl Libre, Georgia, serif",
             fontWeight: 700,
             fontSize: 18,
             marginBottom: 12,
@@ -215,7 +215,7 @@ export default function Insights({ stats }) {
                 >
                   {v}
                 </span>
-                <strong style={{ fontFamily: "Georgia,serif" }}>{TOPIC_HE[k]}</strong>
+                <strong style={{ fontFamily: "Frank Ruhl Libre, Georgia, serif" }}>{TOPIC_HE[k]}</strong>
                 <div style={{ color: "#6d6a5e", fontSize: 11 }}>ב-{ew} מבחנים בלבד</div>
               </div>
             );
