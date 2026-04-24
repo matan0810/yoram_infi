@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(npx vite *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Bash(npm list *)",
+      "Bash(grep -c \"\\\\\\\\\\\\\\\\quad\" \"c:/Users/Matan/Downloads/yoram_infi/src/data/exams.js\")",
+      "Bash(python3 -c ' *)"
     ]
   }
 }

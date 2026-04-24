@@ -4,6 +4,7 @@ import { card, inp } from "../styles/theme";
 import { EXAMS } from "../data/exams";
 import { TOPIC_HE, isExcluded } from "../data/topics";
 import ExcludedTag from "../components/ExcludedTag";
+import MathText from "../components/MathText";
 
 export default function SearchTab({
   sq,
@@ -234,7 +235,7 @@ export default function SearchTab({
                 {isExcluded(r.q.topic) && <ExcludedTag />}
                 {TOPIC_HE[r.q.topic] || r.q.topic}
               </div>
-              <div style={{ lineHeight: 1.5, fontSize: 13 }}>{r.q.summary}</div>
+              <div style={{ lineHeight: 1.5, fontSize: 13 }}><MathText>{r.q.summary}</MathText></div>
             </div>
           </div>
         ))}

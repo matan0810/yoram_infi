@@ -4,6 +4,7 @@ import { card, inp } from "../styles/theme";
 import { EXAMS } from "../data/exams";
 import { TOPIC_HE, isExcluded } from "../data/topics";
 import ExcludedTag from "../components/ExcludedTag";
+import MathText from "../components/MathText";
 
 export default function ExamsTab({ yf, setYf, mf, setMf, setTab, setSt }) {
   const years = useMemo(
@@ -120,7 +121,7 @@ export default function ExamsTab({ yf, setYf, mf, setMf, setTab, setSt }) {
                         {TOPIC_HE[q.topic] || q.topic}
                       </span>
                     </div>
-                    <div style={{ fontSize: 12, lineHeight: 1.4, color: "#4a4740" }}>{q.summary}</div>
+                    <div style={{ fontSize: 12, lineHeight: 1.4, color: "#4a4740" }}><MathText>{q.summary}</MathText></div>
                   </div>
                 </div>
               );

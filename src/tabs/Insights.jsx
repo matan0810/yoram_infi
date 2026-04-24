@@ -2,26 +2,27 @@ import { useMemo } from "react";
 import { card } from "../styles/theme";
 import { EXAMS } from "../data/exams";
 import { TOPIC_HE, EXCLUDED_TOPICS } from "../data/topics";
+import MathText from "../components/MathText";
 
 const TRAPS = [
   {
-    t: 'fₙ→f במ"ש ⟹ f רציפה',
+    t: '$f_n \\to f$ במ"ש $\\Rightarrow$ $f$ רציפה',
     n: "חזר 5 פעמים כולל 2026 — חובה מוחלטת בפרק א׳",
   },
   {
-    t: "∫xᵅ sin/cos(xᵝ)dx",
-    n: "8 פעמים! α>-|β|-1 מתכנס — לדעת בעל פה",
+    t: "$\\int x^\\alpha \\sin/\\cos(x^\\beta)\\,dx$",
+    n: "$\\alpha > -|\\beta| - 1$ מתכנס — לדעת בעל פה",
   },
   {
-    t: "limsup ≤M ⟹ ∃N∀n>N aₙ≤M",
+    t: "$\\limsup \\leq M \\Rightarrow \\exists N\\,\\forall n>N\\; a_n \\leq M$",
     n: "2018, 2019, 2021, 2026 — אותה שאלה",
   },
   {
-    t: "פונקציית רימן f(p/q)=1/q",
+    t: "פונקציית רימן $f(p/q)=1/q$",
     n: "2017, 2018, 2022, 2026 — תמיד אינטגרבילית",
   },
   {
-    t: "Σ(n+1)aₙ₊₁xⁿ, ΣaₙRⁿ עם R>0",
+    t: "$\\sum(n+1)a_{n+1}x^n$, $\\sum a_n R^n$ עם $R>0$",
     n: "2018, 2021, 2022, 2023, 2026 — כמעט זהה",
   },
 ];
@@ -134,9 +135,9 @@ export default function Insights({ stats }) {
         {TRAPS.map((item, i) => row(
           <div key={i}>
             <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontWeight: 700, fontSize: 14, color: "#c1440e", marginBottom: 4 }}>
-              {item.t}
+              <MathText>{item.t}</MathText>
             </div>
-            <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontSize: 12, color: "#9b9890" }}>{item.n}</div>
+            <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontSize: 12, color: "#9b9890" }}><MathText>{item.n}</MathText></div>
           </div>
         ))}
       </div>
