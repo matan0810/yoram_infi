@@ -9,6 +9,11 @@ import Heatmap from "./tabs/Heatmap";
 import ExamsTab from "./tabs/ExamsTab";
 import SearchTab from "./tabs/SearchTab";
 import Insights from "./tabs/Insights";
+import { EXAMS } from "./data/exams";
+
+const TOTAL_QUESTIONS = EXAMS.reduce((s, e) => s + e.questions.length, 0);
+const MIN_YEAR = Math.min(...EXAMS.map((e) => e.year));
+const MAX_YEAR = Math.max(...EXAMS.map((e) => e.year));
 
 export default function App() {
   const [tab, setTab] = useState("overview");
@@ -18,6 +23,8 @@ export default function App() {
   const [st, setSt] = useState("");
   const [sch, setSch] = useState("");
   const [sty, setSty] = useState("");
+  const [sy, setSy] = useState("");
+  const [sm, setSm] = useState("");
 
   const stats = useStats();
 
@@ -53,6 +60,10 @@ export default function App() {
           setSch={setSch}
           sty={sty}
           setSty={setSty}
+          sy={sy}
+          setSy={setSy}
+          sm={sm}
+          setSm={setSm}
         />
       )}
       {tab === "insights" && <Insights stats={stats} />}
@@ -72,8 +83,8 @@ export default function App() {
           textTransform: "uppercase",
         }}
       >
-        <span>סיווג ידני · 17 מבחנים · 198 שאלות</span>
-        <span>כולל מועד א׳ תשפ״ו · 2006–2026 · v2.0</span>
+        <span>סיווג ידני · {EXAMS.length} מבחנים · {TOTAL_QUESTIONS} שאלות</span>
+        <span>כולל מועד א׳ תשפ״ו · {MIN_YEAR}–{MAX_YEAR} · v2.0</span>
       </div>
     </div>
   );

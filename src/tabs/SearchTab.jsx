@@ -13,6 +13,10 @@ export default function SearchTab({
   setSch,
   sty,
   setSty,
+  sy,
+  setSy,
+  sm,
+  setSm,
 }) {
   const sorted = useMemo(
     () =>
@@ -27,10 +31,23 @@ export default function SearchTab({
     [],
   );
 
+  const years = useMemo(
+    () => [...new Set(EXAMS.map((e) => e.year))].sort(),
+    [],
+  );
+
+  const types = useMemo(
+    () =>
+      [...new Set(EXAMS.flatMap((e) => e.questions.map((q) => q.type)))].sort(),
+    [],
+  );
+
   const sr = useMemo(() => {
     const r = [];
     const q = sq.toLowerCase();
-    EXAMS.forEach((ex) =>
+    EXAMS.forEach((ex) => {
+      if (sy && String(ex.year) !== sy) return;
+      if (sm && ex.moed !== sm) return;
       ex.questions.forEach((qu) => {
         if (st && qu.topic !== st) return;
         if (sch && qu.chapter !== sch) return;
@@ -41,10 +58,10 @@ export default function SearchTab({
         )
           return;
         r.push({ ex, q: qu });
-      }),
-    );
+      });
+    });
     return r;
-  }, [sq, st, sch, sty]);
+  }, [sq, st, sch, sty, sy, sm]);
 
   return (
     <div>
@@ -88,10 +105,24 @@ export default function SearchTab({
           style={inp}
         >
           <option value="">כל הסוגים</option>
-          <option value="הוכחה">הוכחה</option>
-          <option value="אמת/שקר">אמת/שקר</option>
-          <option value="חישוב">חישוב</option>
-          <option value="חישוב+הוכחה">חישוב+הוכחה</option>
+          {types.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+        <select value={sy} onChange={(e) => setSy(e.target.value)} style={inp}>
+          <option value="">כל השנים</option>
+          {years.map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
+          ))}
+        </select>
+        <select value={sm} onChange={(e) => setSm(e.target.value)} style={inp}>
+          <option value="">כל המועדים</option>
+          <option value="א">מועד א</option>
+          <option value="ב">מועד ב</option>
         </select>
         <span
           style={{
@@ -105,13 +136,15 @@ export default function SearchTab({
         >
           {sr.length}
         </span>
-        {(sq || st || sch || sty) && (
+        {(sq || st || sch || sty || sy || sm) && (
           <button
             onClick={() => {
               setSq("");
               setSt("");
               setSch("");
               setSty("");
+              setSy("");
+              setSm("");
             }}
             style={{
               fontFamily: "monospace",
@@ -151,7 +184,7 @@ export default function SearchTab({
               border: "1px solid #d4cfbf",
               padding: 12,
               display: "grid",
-              gridTemplateColumns: "110px 55px 1fr",
+              gridTemplateColumns: "110px 80px 1fr",
               gap: 12,
               alignItems: "start",
               fontSize: 13,
@@ -171,8 +204,8 @@ export default function SearchTab({
               </span>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <Chip kind={r.q.chapter}>פ{r.q.chapter}</Chip>
-              <Chip kind={tc(r.q.type)}>{r.q.type.slice(0, 4)}</Chip>
+              <Chip kind={r.q.chapter}>פרק {r.q.chapter}</Chip>
+              <Chip kind={tc(r.q.type)}>{r.q.type}</Chip>
             </div>
             <div>
               <div

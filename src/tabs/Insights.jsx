@@ -32,6 +32,24 @@ export default function Insights({ stats }) {
     [stats],
   );
 
+  const overdue = useMemo(() => {
+    const lastSeen = {};
+    const totalCount = {};
+    EXAMS.forEach((ex) => {
+      ex.questions.forEach((q) => {
+        totalCount[q.topic] = (totalCount[q.topic] || 0) + 1;
+        if (!lastSeen[q.topic] || ex.year > lastSeen[q.topic])
+          lastSeen[q.topic] = ex.year;
+      });
+    });
+    const maxYear = Math.max(...EXAMS.map((e) => e.year));
+    return Object.entries(totalCount)
+      .filter(([k, v]) => v >= 3 && maxYear - (lastSeen[k] || 0) >= 3)
+      .sort((a, b) => lastSeen[a[0]] - lastSeen[b[0]])
+      .slice(0, 6)
+      .map(([k, v]) => ({ topic: k, count: v, last: lastSeen[k] }));
+  }, []);
+
   const recentTrend = useMemo(() => {
     const r = {};
     let tot = 0;
@@ -214,6 +232,74 @@ export default function Insights({ stats }) {
             </span>
           </div>
         ))}
+      </div>
+
+      {/* Overdue topics */}
+      <div style={card}>
+        <div
+          style={{
+            fontFamily: "Frank Ruhl Libre, Georgia, serif",
+            fontWeight: 700,
+            fontSize: 18,
+            marginBottom: 12,
+            paddingBottom: 8,
+            borderBottom: "1px solid #d4cfbf",
+          }}
+        >
+          🎯 צפוי לבוא{" "}
+          <span
+            style={{
+              fontFamily: "monospace",
+              fontSize: 10,
+              fontWeight: 400,
+              color: "#6d6a5e",
+            }}
+          >
+            שכיח אך לא הופיע 3+ שנים
+          </span>
+        </div>
+        {overdue.length === 0 ? (
+          <div style={{ color: "#6d6a5e", fontSize: 12, fontStyle: "italic" }}>
+            אין נושאים כאלה
+          </div>
+        ) : (
+          overdue.map(({ topic, count, last }) => (
+            <div
+              key={topic}
+              style={{
+                padding: "8px 0",
+                borderBottom: "1px dotted #d4cfbf",
+                fontSize: 13,
+                lineHeight: 1.5,
+              }}
+            >
+              <span
+                style={{
+                  background: "#c1440e",
+                  color: "#f4f1ea",
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  fontSize: 10,
+                  padding: "1px 6px",
+                  marginLeft: 6,
+                }}
+              >
+                {count}x
+              </span>
+              <strong
+                style={{
+                  color: "#1a1a1a",
+                  fontFamily: "Frank Ruhl Libre, Georgia, serif",
+                }}
+              >
+                {TOPIC_HE[topic] || topic}
+              </strong>
+              <div style={{ color: "#6d6a5e", fontSize: 11 }}>
+                נראה לאחרונה: {last} — {new Date().getFullYear() - last} שנים בלי הופעה
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Rare topics */}
