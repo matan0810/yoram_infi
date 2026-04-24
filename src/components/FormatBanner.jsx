@@ -13,14 +13,39 @@ export default function FormatBanner() {
     >
       <div
         style={{
-          fontFamily: "Frank Ruhl Libre, Georgia, serif",
-          fontWeight: 700,
-          fontSize: 16,
-          marginBottom: 10,
-          color: "#c1440e",
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 14,
         }}
       >
-        🎯 תבנית המבחן הרשמית — מועד א׳ תשפ״ו (02.02.26)
+        <div
+          style={{
+            background: "#c1440e",
+            color: "white",
+            fontFamily: "Heebo, system-ui, sans-serif",
+            fontWeight: 800,
+            fontSize: 13,
+            padding: "5px 14px",
+            letterSpacing: "0.06em",
+            whiteSpace: "nowrap",
+          }}
+        >
+          תבנית רשמית
+        </div>
+        <div
+          style={{
+            fontFamily: "Heebo, system-ui, sans-serif",
+            fontWeight: 600,
+            fontSize: 15,
+            color: "#1a1a1a",
+          }}
+        >
+          מועד א׳ תשפ״ו
+          <span style={{ fontWeight: 400, color: "#9b9890", marginRight: 6, fontSize: 13 }}>
+            02.02.26
+          </span>
+        </div>
       </div>
       <div
         style={{
@@ -51,15 +76,35 @@ export default function FormatBanner() {
       </div>
       <div
         style={{
-          marginTop: 10,
-          fontFamily: "monospace",
-          fontSize: 10,
-          color: "#6d6a5e",
+          marginTop: 12,
           borderTop: "1px dashed #d4cfbf",
-          paddingTop: 8,
+          paddingTop: 10,
+          display: "flex",
+          gap: 8,
+          flexWrap: "wrap",
         }}
       >
-        102 נק׳ אפשריות · מקסימום 100 · חומר סגור · 3 שעות
+        {[
+          ["102 נק׳ אפשריות", "#fef4ee", "#c1440e"],
+          ["מקסימום 100", "#fef4ee", "#c1440e"],
+          ["חומר סגור", "#f4f1ea", "#4a4740"],
+          ["3 שעות", "#f4f1ea", "#4a4740"],
+        ].map(([label, bg, color]) => (
+          <span
+            key={label}
+            style={{
+              fontFamily: "Heebo, system-ui, sans-serif",
+              fontSize: 13,
+              fontWeight: 600,
+              background: bg,
+              color,
+              border: `1px solid ${color}33`,
+              padding: "4px 12px",
+            }}
+          >
+            {label}
+          </span>
+        ))}
       </div>
     </div>
   );

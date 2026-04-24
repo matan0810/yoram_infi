@@ -1,4 +1,6 @@
-﻿export const TOPIC_HE = {
+﻿export const EXCLUDED_TOPICS = new Set(["multivariable"]);
+
+export const TOPIC_HE = {
   countable_sums: "קבוצות בנות מנייה / סכומים לא מסודרים",
   limsup: "lim sup / lim inf",
   series_basic: "טורים — בסיסי / קושי / זנב",
@@ -15,7 +17,7 @@
   riemann_int: "אינטגרביליות רימן",
   ftoc: "המשפט היסודי של החשבון האינטגרלי",
   bv: "השתנות חסומה",
-  multivariable: 'חדו"א רב-משתני (לא בתכנית!)',
+  multivariable: 'חדו"א רב-משתני',
   lhopital: "כלל לופיטל / גבולות",
 };
 

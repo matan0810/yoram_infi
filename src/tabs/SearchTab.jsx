@@ -126,15 +126,15 @@ export default function SearchTab({
         </select>
         <span
           style={{
-            fontFamily: "monospace",
-            fontSize: 11,
+            fontFamily: "Heebo, system-ui, sans-serif",
+            fontSize: 13,
             background: "#1a1a1a",
             color: "#f4f1ea",
-            padding: "3px 8px",
+            padding: "4px 10px",
             fontWeight: 700,
           }}
         >
-          {sr.length}
+          {sr.length} תוצאות
         </span>
         {(sq || st || sch || sty || sy || sm) && (
           <button
@@ -147,16 +147,16 @@ export default function SearchTab({
               setSm("");
             }}
             style={{
-              fontFamily: "monospace",
-              fontSize: 11,
+              fontFamily: "Heebo, system-ui, sans-serif",
+              fontSize: 13,
               background: "transparent",
               border: "1px solid #d4cfbf",
-              padding: "4px 10px",
+              padding: "5px 12px",
               cursor: "pointer",
-              color: "#6d6a5e",
+              color: "#4a4740",
             }}
           >
-            נקה
+            נקה סינון
           </button>
         )}
       </div>
@@ -190,18 +190,25 @@ export default function SearchTab({
               fontSize: 13,
             }}
           >
-            <div
-              style={{
-                fontFamily: "monospace",
-                fontWeight: 700,
-                fontSize: 11,
-              }}
-            >
-              {r.ex.code}
-              <br />
-              <span style={{ fontWeight: 400, fontSize: 10, color: "#6d6a5e" }}>
-                {r.ex.year} · {r.q.id}
-              </span>
+            <div style={{ lineHeight: 1.5 }}>
+              <div style={{ fontWeight: 700, fontSize: 14 }}>{r.ex.year}</div>
+              <div style={{ fontSize: 12, color: "#4a4740" }}>מועד {r.ex.moed}</div>
+              <div style={{ marginTop: 6 }}>
+                <div style={{ fontSize: 10, color: "#9b9890", marginBottom: 1 }}>
+                  שאלה
+                </div>
+                <div
+                  style={{
+                    fontSize: 22,
+                    fontWeight: 900,
+                    color: "#c1440e",
+                    fontFamily: "Frank Ruhl Libre, Georgia, serif",
+                    lineHeight: 1,
+                  }}
+                >
+                  {r.q.id.replace(/^[א-ת]/, "")}
+                </div>
+              </div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
               <Chip kind={r.q.chapter}>פרק {r.q.chapter}</Chip>
@@ -211,17 +218,17 @@ export default function SearchTab({
               <div
                 onClick={() => setSt(r.q.topic)}
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   color: "#2b4162",
-                  marginBottom: 3,
-                  fontFamily: "monospace",
+                  marginBottom: 4,
+                  fontWeight: 600,
                   cursor: "pointer",
                   textDecoration: "underline",
                 }}
               >
                 {TOPIC_HE[r.q.topic] || r.q.topic}
               </div>
-              <div style={{ lineHeight: 1.4 }}>{r.q.summary}</div>
+              <div style={{ lineHeight: 1.5, fontSize: 13 }}>{r.q.summary}</div>
             </div>
           </div>
         ))}

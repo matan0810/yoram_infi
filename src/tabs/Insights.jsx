@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { card } from "../styles/theme";
 import { EXAMS } from "../data/exams";
-import { TOPIC_HE } from "../data/topics";
+import { TOPIC_HE, EXCLUDED_TOPICS } from "../data/topics";
 
 const TRAPS = [
   {
@@ -28,7 +28,10 @@ const TRAPS = [
 
 export default function Insights({ stats }) {
   const sorted = useMemo(
-    () => Object.entries(stats.tc).sort((a, b) => b[1] - a[1]),
+    () =>
+      Object.entries(stats.tc)
+        .filter(([k]) => !EXCLUDED_TOPICS.has(k))
+        .sort((a, b) => b[1] - a[1]),
     [stats],
   );
 
@@ -44,7 +47,7 @@ export default function Insights({ stats }) {
     });
     const maxYear = Math.max(...EXAMS.map((e) => e.year));
     return Object.entries(totalCount)
-      .filter(([k, v]) => v >= 3 && maxYear - (lastSeen[k] || 0) >= 3)
+      .filter(([k, v]) => !EXCLUDED_TOPICS.has(k) && v >= 3 && maxYear - (lastSeen[k] || 0) >= 3)
       .sort((a, b) => lastSeen[a[0]] - lastSeen[b[0]])
       .slice(0, 6)
       .map(([k, v]) => ({ topic: k, count: v, last: lastSeen[k] }));
@@ -55,6 +58,7 @@ export default function Insights({ stats }) {
     let tot = 0;
     EXAMS.filter((e) => e.year >= 2021).forEach((ex) =>
       ex.questions.forEach((q) => {
+        if (EXCLUDED_TOPICS.has(q.topic)) return;
         r[q.topic] = (r[q.topic] || 0) + 1;
         tot++;
       }),
@@ -67,77 +71,57 @@ export default function Insights({ stats }) {
     };
   }, []);
 
+  const cardTitle = (emoji, title, sub) => (
+    <div style={{ marginBottom: 16, paddingBottom: 12, borderBottom: "1px solid #d4cfbf" }}>
+      <div style={{
+        fontFamily: "Heebo, system-ui, sans-serif",
+        fontWeight: 800, fontSize: 17, letterSpacing: "-0.01em",
+      }}>
+        {emoji} {title}
+      </div>
+      {sub && (
+        <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontSize: 12, color: "#9b9890", marginTop: 3 }}>
+          {sub}
+        </div>
+      )}
+    </div>
+  );
+
+  const badge = (text, bg = "#1a1a1a", color = "#f4f1ea") => (
+    <span style={{
+      background: bg, color,
+      fontFamily: "Heebo, system-ui, sans-serif",
+      fontWeight: 800, fontSize: 13,
+      padding: "3px 9px",
+      display: "inline-block", flexShrink: 0,
+    }}>{text}</span>
+  );
+
+  const row = (children) => (
+    <div style={{ padding: "11px 0", borderBottom: "1px solid #ede9e0", lineHeight: 1.5 }}>
+      {children}
+    </div>
+  );
+
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))",
-        gap: 20,
-      }}
-    >
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))", gap: 20 }}>
+
       {/* Top topics */}
       <div style={card}>
-        <div
-          style={{
-            fontFamily: "Frank Ruhl Libre, Georgia, serif",
-            fontWeight: 700,
-            fontSize: 18,
-            marginBottom: 12,
-            paddingBottom: 8,
-            borderBottom: "1px solid #d4cfbf",
-          }}
-        >
-          🔥 חובה ללמוד{" "}
-          <span
-            style={{
-              fontFamily: "monospace",
-              fontSize: 10,
-              fontWeight: 400,
-              color: "#6d6a5e",
-            }}
-          >
-            Top נושאים
-          </span>
-        </div>
+        {cardTitle("🔥", "חובה ללמוד", "הנושאים השכיחים ביותר")}
         {sorted.slice(0, 5).map(([k, v]) => {
           let ew = 0;
-          EXAMS.forEach((ex) => {
-            if (stats.yt[ex.code][k]) ew++;
-          });
-          return (
-            <div
-              key={k}
-              style={{
-                padding: "8px 0",
-                borderBottom: "1px dotted #d4cfbf",
-                fontSize: 13,
-                lineHeight: 1.5,
-              }}
-            >
-              <span
-                style={{
-                  background: "#1a1a1a",
-                  color: "#f4f1ea",
-                  fontFamily: "monospace",
-                  fontWeight: 700,
-                  fontSize: 10,
-                  padding: "1px 6px",
-                  marginLeft: 6,
-                }}
-              >
-                {v}
-              </span>
-              <strong
-                style={{
-                  color: "#c1440e",
-                  fontFamily: "Frank Ruhl Libre, Georgia, serif",
-                }}
-              >
-                {TOPIC_HE[k]}
-              </strong>
-              <div style={{ color: "#6d6a5e", fontSize: 11 }}>
-                ב-{ew}/{EXAMS.length} מבחנים (
-                {Math.round((ew / EXAMS.length) * 100)}%)
+          EXAMS.forEach((ex) => { if (stats.yt[ex.code][k]) ew++; });
+          return row(
+            <div key={k} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+              {badge(v)}
+              <div>
+                <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontWeight: 700, fontSize: 14, color: "#c1440e" }}>
+                  {TOPIC_HE[k]}
+                </div>
+                <div style={{ fontSize: 12, color: "#9b9890", marginTop: 1 }}>
+                  {ew}/{EXAMS.length} מבחנים · {Math.round((ew / EXAMS.length) * 100)}%
+                </div>
               </div>
             </div>
           );
@@ -146,228 +130,75 @@ export default function Insights({ stats }) {
 
       {/* Recurring traps */}
       <div style={card}>
-        <div
-          style={{
-            fontFamily: "Frank Ruhl Libre, Georgia, serif",
-            fontWeight: 700,
-            fontSize: 18,
-            marginBottom: 12,
-            paddingBottom: 8,
-            borderBottom: "1px solid #d4cfbf",
-          }}
-        >
-          ⚠️ מלכודות חוזרות{" "}
-          <span
-            style={{
-              fontFamily: "monospace",
-              fontSize: 10,
-              fontWeight: 400,
-              color: "#6d6a5e",
-            }}
-          >
-            כמעט זהות
-          </span>
-        </div>
-        {TRAPS.map((item, i) => (
-          <div
-            key={i}
-            style={{
-              padding: "8px 0",
-              borderBottom: "1px dotted #d4cfbf",
-              fontSize: 13,
-              lineHeight: 1.5,
-            }}
-          >
-            <strong style={{ color: "#c1440e", display: "block" }}>
-              ⚠️ {item.t}
-            </strong>
-            <span style={{ color: "#6d6a5e", fontSize: 11 }}>{item.n}</span>
+        {cardTitle("⚠️", "מלכודות חוזרות", "שאלות כמעט זהות שחזרו מספר פעמים")}
+        {TRAPS.map((item, i) => row(
+          <div key={i}>
+            <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontWeight: 700, fontSize: 14, color: "#c1440e", marginBottom: 4 }}>
+              {item.t}
+            </div>
+            <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontSize: 12, color: "#9b9890" }}>{item.n}</div>
           </div>
         ))}
       </div>
 
       {/* Recent trend */}
       <div style={card}>
-        <div
-          style={{
-            fontFamily: "Frank Ruhl Libre, Georgia, serif",
-            fontWeight: 700,
-            fontSize: 18,
-            marginBottom: 12,
-            paddingBottom: 8,
-            borderBottom: "1px solid #d4cfbf",
-          }}
-        >
-          📈 טרנד 2021–2026
-        </div>
-        {recentTrend.entries.map(([k, v]) => (
-          <div
-            key={k}
-            style={{
-              padding: "8px 0",
-              borderBottom: "1px dotted #d4cfbf",
-              fontSize: 13,
-              lineHeight: 1.5,
-            }}
-          >
-            <span
-              style={{
-                background: "#1a1a1a",
-                color: "#f4f1ea",
-                fontFamily: "monospace",
-                fontWeight: 700,
-                fontSize: 10,
-                padding: "1px 6px",
-                marginLeft: 6,
-              }}
-            >
-              {v}
-            </span>
-            <strong style={{ fontFamily: "Frank Ruhl Libre, Georgia, serif" }}>
-              {TOPIC_HE[k]}
-            </strong>
-            <span style={{ color: "#6d6a5e", fontSize: 11 }}>
-              {" "}
-              — {Math.round((v / recentTrend.tot) * 100)}%
-            </span>
+        {cardTitle("📈", "טרנד 2021–2026", "הנושאים הדומיננטיים בשנים האחרונות")}
+        {recentTrend.entries.map(([k, v]) => row(
+          <div key={k} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            {badge(v)}
+            <div>
+              <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontWeight: 700, fontSize: 14 }}>
+                {TOPIC_HE[k]}
+              </div>
+              <div style={{ fontSize: 12, color: "#9b9890", marginTop: 1 }}>
+                {Math.round((v / recentTrend.tot) * 100)}% מהשאלות
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
       {/* Overdue topics */}
       <div style={card}>
-        <div
-          style={{
-            fontFamily: "Frank Ruhl Libre, Georgia, serif",
-            fontWeight: 700,
-            fontSize: 18,
-            marginBottom: 12,
-            paddingBottom: 8,
-            borderBottom: "1px solid #d4cfbf",
-          }}
-        >
-          🎯 צפוי לבוא{" "}
-          <span
-            style={{
-              fontFamily: "monospace",
-              fontSize: 10,
-              fontWeight: 400,
-              color: "#6d6a5e",
-            }}
-          >
-            שכיח אך לא הופיע 3+ שנים
-          </span>
-        </div>
+        {cardTitle("🎯", "צפוי לבוא", "שכיח היסטורית אך לא הופיע 3+ שנים")}
         {overdue.length === 0 ? (
-          <div style={{ color: "#6d6a5e", fontSize: 12, fontStyle: "italic" }}>
-            אין נושאים כאלה
-          </div>
-        ) : (
-          overdue.map(({ topic, count, last }) => (
-            <div
-              key={topic}
-              style={{
-                padding: "8px 0",
-                borderBottom: "1px dotted #d4cfbf",
-                fontSize: 13,
-                lineHeight: 1.5,
-              }}
-            >
-              <span
-                style={{
-                  background: "#c1440e",
-                  color: "#f4f1ea",
-                  fontFamily: "monospace",
-                  fontWeight: 700,
-                  fontSize: 10,
-                  padding: "1px 6px",
-                  marginLeft: 6,
-                }}
-              >
-                {count}x
-              </span>
-              <strong
-                style={{
-                  color: "#1a1a1a",
-                  fontFamily: "Frank Ruhl Libre, Georgia, serif",
-                }}
-              >
+          <div style={{ color: "#9b9890", fontSize: 13, fontStyle: "italic" }}>אין נושאים כאלה</div>
+        ) : overdue.map(({ topic, count, last }) => row(
+          <div key={topic} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            {badge(`${count}×`, "#c1440e")}
+            <div>
+              <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontWeight: 700, fontSize: 14 }}>
                 {TOPIC_HE[topic] || topic}
-              </strong>
-              <div style={{ color: "#6d6a5e", fontSize: 11 }}>
-                נראה לאחרונה: {last} — {new Date().getFullYear() - last} שנים בלי הופעה
+              </div>
+              <div style={{ fontSize: 12, color: "#9b9890", marginTop: 1 }}>
+                נראה לאחרונה {last} · {new Date().getFullYear() - last} שנים ללא הופעה
               </div>
             </div>
-          ))
-        )}
+          </div>
+        ))}
       </div>
 
       {/* Rare topics */}
       <div style={card}>
-        <div
-          style={{
-            fontFamily: "Frank Ruhl Libre, Georgia, serif",
-            fontWeight: 700,
-            fontSize: 18,
-            marginBottom: 12,
-            paddingBottom: 8,
-            borderBottom: "1px solid #d4cfbf",
-          }}
-        >
-          ❄️ פחות שכיח{" "}
-          <span
-            style={{
-              fontFamily: "monospace",
-              fontSize: 10,
-              fontWeight: 400,
-              color: "#6d6a5e",
-            }}
-          >
-            ≤3 שאלות
-          </span>
-        </div>
-        {sorted
-          .filter(([, v]) => v <= 3)
-          .map(([k, v]) => {
-            let ew = 0;
-            EXAMS.forEach((ex) => {
-              if (stats.yt[ex.code][k]) ew++;
-            });
-            return (
-              <div
-                key={k}
-                style={{
-                  padding: "8px 0",
-                  borderBottom: "1px dotted #d4cfbf",
-                  fontSize: 13,
-                  lineHeight: 1.5,
-                }}
-              >
-                <span
-                  style={{
-                    background: "#ece7dc",
-                    color: "#6d6a5e",
-                    fontFamily: "monospace",
-                    fontWeight: 700,
-                    fontSize: 10,
-                    padding: "1px 6px",
-                    marginLeft: 6,
-                  }}
-                >
-                  {v}
-                </span>
-                <strong
-                  style={{ fontFamily: "Frank Ruhl Libre, Georgia, serif" }}
-                >
+        {cardTitle("❄️", "פחות שכיח", "נושאים עם ≤3 שאלות בסך הכל")}
+        {sorted.filter(([, v]) => v <= 3).map(([k, v]) => {
+          let ew = 0;
+          EXAMS.forEach((ex) => { if (stats.yt[ex.code][k]) ew++; });
+          return row(
+            <div key={k} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+              {badge(v, "#ece7dc", "#4a4740")}
+              <div>
+                <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontWeight: 700, fontSize: 14 }}>
                   {TOPIC_HE[k]}
-                </strong>
-                <div style={{ color: "#6d6a5e", fontSize: 11 }}>
-                  ב-{ew} מבחנים בלבד
                 </div>
+                <div style={{ fontSize: 12, color: "#9b9890", marginTop: 1 }}>ב-{ew} מבחנים בלבד</div>
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
       </div>
+
     </div>
   );
 }

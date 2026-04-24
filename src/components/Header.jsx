@@ -13,15 +13,13 @@ export default function Header() {
     >
       <div
         style={{
-          fontFamily: "monospace",
-          fontSize: 10,
-          letterSpacing: "0.3em",
-          color: "#6d6a5e",
-          textTransform: "uppercase",
+          fontFamily: "Heebo, system-ui, sans-serif",
+          fontSize: 12,
+          color: "#9b9890",
           marginBottom: 6,
         }}
       >
-        {TEACHER} · {COURSE_NAME} · קורס {COURSE_NUMBER} · {EXAMS.length} מבחנים
+        {TEACHER} · {COURSE_NAME} · קורס {COURSE_NUMBER}
       </div>
       <div
         style={{
@@ -32,9 +30,9 @@ export default function Header() {
           letterSpacing: "-0.02em",
         }}
       >
-        ארכיון{" "}
-        <span style={{ color: "#c1440e", fontStyle: "italic" }}>מבחנים</span> —
-        סטטיסטיקה מלאה
+        מדד{" "}
+        <span style={{ color: "#c1440e", fontStyle: "italic" }}>שאלות</span>
+        {" "}— אינפי 2
       </div>
       <div
         style={{
@@ -47,10 +45,10 @@ export default function Header() {
         }}
       >
         {[
-          ["17", "מבחנים"],
-          ["198", "שאלות"],
-          ["18", "נושאים"],
-          ["2006→2026", "טווח"],
+          [EXAMS.length, "מבחנים"],
+          [EXAMS.reduce((s, e) => s + e.questions.length, 0), "שאלות"],
+          [new Set(EXAMS.flatMap((e) => e.questions.map((q) => q.topic))).size, "נושאים"],
+          [`${Math.min(...EXAMS.map((e) => e.year))}–${Math.max(...EXAMS.map((e) => e.year))}`, "שנים"],
         ].map(([n, l]) => (
           <div key={l}>
             <div
@@ -64,11 +62,9 @@ export default function Header() {
             </div>
             <div
               style={{
-                fontFamily: "monospace",
-                fontSize: 9,
-                letterSpacing: "0.2em",
-                color: "#6d6a5e",
-                textTransform: "uppercase",
+                fontFamily: "Heebo, system-ui, sans-serif",
+                fontSize: 12,
+                color: "#4a4740",
               }}
             >
               {l}

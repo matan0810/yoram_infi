@@ -72,19 +72,18 @@ export default function App() {
         style={{
           marginTop: 28,
           paddingTop: 14,
-          borderTop: "2px solid #1a1a1a",
+          borderTop: "1px solid #d4cfbf",
           display: "flex",
           justifyContent: "space-between",
           flexWrap: "wrap",
           gap: 8,
-          fontFamily: "monospace",
-          fontSize: 9,
-          color: "#6d6a5e",
-          textTransform: "uppercase",
+          fontFamily: "Heebo, system-ui, sans-serif",
+          fontSize: 12,
+          color: "#4a4740",
         }}
       >
         <span>סיווג ידני · {EXAMS.length} מבחנים · {TOTAL_QUESTIONS} שאלות</span>
-        <span>כולל מועד א׳ תשפ״ו · {MIN_YEAR}–{MAX_YEAR} · v2.0</span>
+        <span>{MIN_YEAR}–{MAX_YEAR} · v2.0</span>
       </div>
     </div>
   );
