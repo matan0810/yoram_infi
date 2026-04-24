@@ -4,7 +4,16 @@ import { card, inp } from "../styles/theme";
 import { EXAMS } from "../data/exams";
 import { TOPIC_HE } from "../data/topics";
 
-export default function SearchTab({ sq, setSq, st, setSt, sch, setSch, sty, setSty }) {
+export default function SearchTab({
+  sq,
+  setSq,
+  st,
+  setSt,
+  sch,
+  setSch,
+  sty,
+  setSty,
+}) {
   const sorted = useMemo(
     () =>
       Object.entries(
@@ -63,13 +72,21 @@ export default function SearchTab({ sq, setSq, st, setSt, sch, setSch, sty, setS
             </option>
           ))}
         </select>
-        <select value={sch} onChange={(e) => setSch(e.target.value)} style={inp}>
+        <select
+          value={sch}
+          onChange={(e) => setSch(e.target.value)}
+          style={inp}
+        >
           <option value="">כל הפרקים</option>
           <option value="א">פרק א</option>
           <option value="ב">פרק ב</option>
           <option value="ג">פרק ג</option>
         </select>
-        <select value={sty} onChange={(e) => setSty(e.target.value)} style={inp}>
+        <select
+          value={sty}
+          onChange={(e) => setSty(e.target.value)}
+          style={inp}
+        >
           <option value="">כל הסוגים</option>
           <option value="הוכחה">הוכחה</option>
           <option value="אמת/שקר">אמת/שקר</option>

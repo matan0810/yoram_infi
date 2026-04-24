@@ -41,7 +41,12 @@ export default function Insights({ stats }) {
         tot++;
       }),
     );
-    return { entries: Object.entries(r).sort((a, b) => b[1] - a[1]).slice(0, 6), tot };
+    return {
+      entries: Object.entries(r)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6),
+      tot,
+    };
   }, []);
 
   return (
@@ -66,18 +71,30 @@ export default function Insights({ stats }) {
         >
           🔥 חובה ללמוד{" "}
           <span
-            style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 400, color: "#6d6a5e" }}
+            style={{
+              fontFamily: "monospace",
+              fontSize: 10,
+              fontWeight: 400,
+              color: "#6d6a5e",
+            }}
           >
             Top נושאים
           </span>
         </div>
         {sorted.slice(0, 5).map(([k, v]) => {
           let ew = 0;
-          EXAMS.forEach((ex) => { if (stats.yt[ex.code][k]) ew++; });
+          EXAMS.forEach((ex) => {
+            if (stats.yt[ex.code][k]) ew++;
+          });
           return (
             <div
               key={k}
-              style={{ padding: "8px 0", borderBottom: "1px dotted #d4cfbf", fontSize: 13, lineHeight: 1.5 }}
+              style={{
+                padding: "8px 0",
+                borderBottom: "1px dotted #d4cfbf",
+                fontSize: 13,
+                lineHeight: 1.5,
+              }}
             >
               <span
                 style={{
@@ -92,11 +109,17 @@ export default function Insights({ stats }) {
               >
                 {v}
               </span>
-              <strong style={{ color: "#c1440e", fontFamily: "Frank Ruhl Libre, Georgia, serif" }}>
+              <strong
+                style={{
+                  color: "#c1440e",
+                  fontFamily: "Frank Ruhl Libre, Georgia, serif",
+                }}
+              >
                 {TOPIC_HE[k]}
               </strong>
               <div style={{ color: "#6d6a5e", fontSize: 11 }}>
-                ב-{ew}/{EXAMS.length} מבחנים ({Math.round((ew / EXAMS.length) * 100)}%)
+                ב-{ew}/{EXAMS.length} מבחנים (
+                {Math.round((ew / EXAMS.length) * 100)}%)
               </div>
             </div>
           );
@@ -117,7 +140,12 @@ export default function Insights({ stats }) {
         >
           ⚠️ מלכודות חוזרות{" "}
           <span
-            style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 400, color: "#6d6a5e" }}
+            style={{
+              fontFamily: "monospace",
+              fontSize: 10,
+              fontWeight: 400,
+              color: "#6d6a5e",
+            }}
           >
             כמעט זהות
           </span>
@@ -125,9 +153,16 @@ export default function Insights({ stats }) {
         {TRAPS.map((item, i) => (
           <div
             key={i}
-            style={{ padding: "8px 0", borderBottom: "1px dotted #d4cfbf", fontSize: 13, lineHeight: 1.5 }}
+            style={{
+              padding: "8px 0",
+              borderBottom: "1px dotted #d4cfbf",
+              fontSize: 13,
+              lineHeight: 1.5,
+            }}
           >
-            <strong style={{ color: "#c1440e", display: "block" }}>⚠️ {item.t}</strong>
+            <strong style={{ color: "#c1440e", display: "block" }}>
+              ⚠️ {item.t}
+            </strong>
             <span style={{ color: "#6d6a5e", fontSize: 11 }}>{item.n}</span>
           </div>
         ))}
@@ -150,7 +185,12 @@ export default function Insights({ stats }) {
         {recentTrend.entries.map(([k, v]) => (
           <div
             key={k}
-            style={{ padding: "8px 0", borderBottom: "1px dotted #d4cfbf", fontSize: 13, lineHeight: 1.5 }}
+            style={{
+              padding: "8px 0",
+              borderBottom: "1px dotted #d4cfbf",
+              fontSize: 13,
+              lineHeight: 1.5,
+            }}
           >
             <span
               style={{
@@ -165,9 +205,12 @@ export default function Insights({ stats }) {
             >
               {v}
             </span>
-            <strong style={{ fontFamily: "Frank Ruhl Libre, Georgia, serif" }}>{TOPIC_HE[k]}</strong>
+            <strong style={{ fontFamily: "Frank Ruhl Libre, Georgia, serif" }}>
+              {TOPIC_HE[k]}
+            </strong>
             <span style={{ color: "#6d6a5e", fontSize: 11 }}>
-              {" "}— {Math.round((v / recentTrend.tot) * 100)}%
+              {" "}
+              — {Math.round((v / recentTrend.tot) * 100)}%
             </span>
           </div>
         ))}
@@ -187,7 +230,12 @@ export default function Insights({ stats }) {
         >
           ❄️ פחות שכיח{" "}
           <span
-            style={{ fontFamily: "monospace", fontSize: 10, fontWeight: 400, color: "#6d6a5e" }}
+            style={{
+              fontFamily: "monospace",
+              fontSize: 10,
+              fontWeight: 400,
+              color: "#6d6a5e",
+            }}
           >
             ≤3 שאלות
           </span>
@@ -196,11 +244,18 @@ export default function Insights({ stats }) {
           .filter(([, v]) => v <= 3)
           .map(([k, v]) => {
             let ew = 0;
-            EXAMS.forEach((ex) => { if (stats.yt[ex.code][k]) ew++; });
+            EXAMS.forEach((ex) => {
+              if (stats.yt[ex.code][k]) ew++;
+            });
             return (
               <div
                 key={k}
-                style={{ padding: "8px 0", borderBottom: "1px dotted #d4cfbf", fontSize: 13, lineHeight: 1.5 }}
+                style={{
+                  padding: "8px 0",
+                  borderBottom: "1px dotted #d4cfbf",
+                  fontSize: 13,
+                  lineHeight: 1.5,
+                }}
               >
                 <span
                   style={{
@@ -215,8 +270,14 @@ export default function Insights({ stats }) {
                 >
                   {v}
                 </span>
-                <strong style={{ fontFamily: "Frank Ruhl Libre, Georgia, serif" }}>{TOPIC_HE[k]}</strong>
-                <div style={{ color: "#6d6a5e", fontSize: 11 }}>ב-{ew} מבחנים בלבד</div>
+                <strong
+                  style={{ fontFamily: "Frank Ruhl Libre, Georgia, serif" }}
+                >
+                  {TOPIC_HE[k]}
+                </strong>
+                <div style={{ color: "#6d6a5e", fontSize: 11 }}>
+                  ב-{ew} מבחנים בלבד
+                </div>
               </div>
             );
           })}

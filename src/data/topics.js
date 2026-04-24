@@ -29,4 +29,3 @@ export const COLORS = [
   "#7a5c3e",
   "#2a6b6b",
 ];
-

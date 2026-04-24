@@ -148,7 +148,12 @@ export default function Heatmap({ stats, setTab, setSt }) {
           (bg) => (
             <span
               key={bg}
-              style={{ width: 18, height: 18, background: bg, display: "inline-block" }}
+              style={{
+                width: 18,
+                height: 18,
+                background: bg,
+                display: "inline-block",
+              }}
             />
           ),
         )}{" "}

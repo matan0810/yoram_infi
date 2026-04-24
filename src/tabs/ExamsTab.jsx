@@ -74,7 +74,8 @@ export default function ExamsTab({ yf, setYf, mf, setMf, setTab, setSt }) {
             key={ex.code}
             style={{
               ...card,
-              border: ex.year === 2026 ? "2px solid #c1440e" : "1px solid #1a1a1a",
+              border:
+                ex.year === 2026 ? "2px solid #c1440e" : "1px solid #1a1a1a",
               background: ex.year === 2026 ? "#fef8f3" : "white",
               boxShadow: "3px 3px 0 #1a1a1a",
             }}

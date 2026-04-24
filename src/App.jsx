@@ -35,17 +35,24 @@ export default function App() {
       )}
       {tab === "exams" && (
         <ExamsTab
-          yf={yf} setYf={setYf}
-          mf={mf} setMf={setMf}
-          setTab={setTab} setSt={setSt}
+          yf={yf}
+          setYf={setYf}
+          mf={mf}
+          setMf={setMf}
+          setTab={setTab}
+          setSt={setSt}
         />
       )}
       {tab === "search" && (
         <SearchTab
-          sq={sq} setSq={setSq}
-          st={st} setSt={setSt}
-          sch={sch} setSch={setSch}
-          sty={sty} setSty={setSty}
+          sq={sq}
+          setSq={setSq}
+          st={st}
+          setSt={setSt}
+          sch={sch}
+          setSch={setSch}
+          sty={sty}
+          setSty={setSty}
         />
       )}
       {tab === "insights" && <Insights stats={stats} />}
