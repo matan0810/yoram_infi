@@ -23,16 +23,15 @@ export default function Header() {
       </div>
       <div
         style={{
-          fontFamily: "Frank Ruhl Libre, Georgia, serif",
-          fontWeight: 900,
-          fontSize: 42,
+          fontFamily: "Heebo, system-ui, sans-serif",
+          fontWeight: 800,
+          fontSize: 38,
           lineHeight: 1,
-          letterSpacing: "-0.02em",
+          letterSpacing: "-0.03em",
         }}
       >
-        מדד{" "}
-        <span style={{ color: "#c1440e", fontStyle: "italic" }}>שאלות</span>
-        {" "}— אינפי 2
+        מדד שאלות{" "}
+        <span style={{ color: "#c1440e" }}>אינפי 2</span>
       </div>
       <div
         style={{

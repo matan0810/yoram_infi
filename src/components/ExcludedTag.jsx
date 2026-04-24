@@ -4,17 +4,18 @@ export default function ExcludedTag() {
       style={{
         fontFamily: "Heebo, system-ui, sans-serif",
         fontSize: 10,
-        fontWeight: 600,
-        background: "#ece7dc",
-        color: "#9b9890",
-        border: "1px solid #d4cfbf",
-        padding: "1px 6px",
-        marginRight: 6,
+        fontWeight: 700,
+        background: "#f0ece4",
+        color: "#7a776e",
+        border: "1px solid #c8c3b8",
+        padding: "2px 7px",
+        marginLeft: 8,
         verticalAlign: "middle",
         whiteSpace: "nowrap",
+        letterSpacing: "0.02em",
       }}
     >
-      לא בחומר
+      ✕ לא בחומר
     </span>
   );
 }
