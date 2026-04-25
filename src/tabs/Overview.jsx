@@ -1,57 +1,47 @@
 import { useMemo } from "react";
 import Bar from "../components/Bar";
+import CardTitle from "../components/CardTitle";
 import { card } from "../styles/theme";
 import { EXAMS } from "../data/exams";
 import { TOPIC_HE, COLORS, isExcluded } from "../data/topics";
 import ExcludedTag, { excludedRowStyle } from "../components/ExcludedTag";
 
-const cardTitle = (emoji, title, sub) => (
-  <div style={{ marginBottom: 16, paddingBottom: 12, borderBottom: "1px solid #d4cfbf" }}>
-    <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontWeight: 800, fontSize: 17, letterSpacing: "-0.01em" }}>
-      {emoji} {title}
-    </div>
-    {sub && (
-      <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontSize: 12, color: "#9b9890", marginTop: 3 }}>
-        {sub}
-      </div>
-    )}
-  </div>
-);
-
-export default function Overview({ stats, setTab, setSt }) {
+export default function Overview({ stats, setTab, setSearchTopic }) {
   const { active, excluded } = useMemo(() => {
-    const all = Object.entries(stats.tc).sort((a, b) => b[1] - a[1]);
+    const all = Object.entries(stats.topicCounts).sort((a, b) => b[1] - a[1]);
     return {
-      active: all.filter(([k]) => !isExcluded(k)),
-      excluded: all.filter(([k]) => isExcluded(k)),
+      active: all.filter(([key]) => !isExcluded(key)),
+      excluded: all.filter(([key]) => isExcluded(key)),
     };
   }, [stats]);
-  const mx = active[0]?.[1] || 1;
+
+  const maxTopicCount = active[0]?.[1] || 1;
+  const maxChapterCount = Math.max(...Object.values(stats.chapterCounts));
+  const maxTypeCount = Object.values(stats.typeCounts).sort((a, b) => b - a)[0];
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))", gap: 20 }}>
 
       <div style={card}>
-        {cardTitle("📊", "דירוג נושאים", "לחץ על נושא לחיפוש שאלות")}
-        {active.map(([k, v], i) => {
-          let ew = 0;
-          EXAMS.forEach((ex) => { if (stats.yt[ex.code][k]) ew++; });
+        <CardTitle emoji="📊" title="דירוג נושאים" sub="לחץ על נושא לחיפוש שאלות" />
+        {active.map(([topicKey, count], i) => {
+          const examCount = EXAMS.filter((exam) => stats.examTopics[exam.code][topicKey]).length;
           return (
             <Bar
-              key={k}
+              key={topicKey}
               label={
                 <span>
-                  {TOPIC_HE[k] || k}
-                  <span style={{ fontFamily: "Heebo, system-ui, sans-serif", fontSize: 11, color: "#9b9890", marginRight: 8 }}>
-                    {ew}/{EXAMS.length} מבחנים
+                  {TOPIC_HE[topicKey] || topicKey}
+                  <span style={{ fontSize: 11, color: "#9b9890", marginRight: 8 }}>
+                    {examCount}/{EXAMS.length} מבחנים
                   </span>
                 </span>
               }
-              val={v}
-              max={mx}
+              val={count}
+              max={maxTopicCount}
               color={COLORS[i % COLORS.length]}
-              pct={Math.round((v / stats.tot) * 100)}
-              onClick={() => { setTab("search"); setSt(k); }}
+              pct={Math.round((count / stats.total) * 100)}
+              onClick={() => { setTab("search"); setSearchTopic(topicKey); }}
             />
           );
         })}
@@ -62,18 +52,17 @@ export default function Overview({ stats, setTab, setSt }) {
               margin: "12px 0 6px",
               fontSize: 11,
               color: "#b0aca4",
-              fontFamily: "Heebo, system-ui, sans-serif",
             }}>
               לא בתכנית הנוכחית
             </div>
-            {excluded.map(([k, v]) => (
-              <div key={k} style={excludedRowStyle}>
+            {excluded.map(([topicKey, count]) => (
+              <div key={topicKey} style={excludedRowStyle}>
                 <Bar
-                  label={<span><ExcludedTag />{TOPIC_HE[k] || k}</span>}
-                  val={v}
-                  max={mx}
+                  label={<span><ExcludedTag />{TOPIC_HE[topicKey] || topicKey}</span>}
+                  val={count}
+                  max={maxTopicCount}
                   color="#b0aca4"
-                  pct={Math.round((v / stats.tot) * 100)}
+                  pct={Math.round((count / stats.total) * 100)}
                 />
               </div>
             ))}
@@ -83,35 +72,35 @@ export default function Overview({ stats, setTab, setSt }) {
 
       <div>
         <div style={card}>
-          {cardTitle("📚", "פרקים", "התפלגות שאלות לפי פרק")}
+          <CardTitle emoji="📚" title="פרקים" sub="התפלגות שאלות לפי פרק" />
           {[
             ["א", "פרק א — הוכחות", "#c1440e"],
             ["ב", "פרק ב — חישוב והוכחה", "#2b4162"],
             ["ג", "פרק ג — אמת/שקר", "#3a5a40"],
-          ].map(([ch, l, col]) => (
+          ].map(([chapter, label, color]) => (
             <Bar
-              key={ch}
-              label={l}
-              val={stats.cc[ch] || 0}
-              max={Math.max(...Object.values(stats.cc))}
-              color={col}
-              pct={Math.round(((stats.cc[ch] || 0) / stats.tot) * 100)}
+              key={chapter}
+              label={label}
+              val={stats.chapterCounts[chapter] || 0}
+              max={maxChapterCount}
+              color={color}
+              pct={Math.round(((stats.chapterCounts[chapter] || 0) / stats.total) * 100)}
             />
           ))}
         </div>
 
         <div style={card}>
-          {cardTitle("🏷️", "סוג שאלה", "התפלגות לפי סוג")}
-          {Object.entries(stats.tyc)
+          <CardTitle emoji="🏷️" title="סוג שאלה" sub="התפלגות לפי סוג" />
+          {Object.entries(stats.typeCounts)
             .sort((a, b) => b[1] - a[1])
-            .map(([k, v], i) => (
+            .map(([type, count], i) => (
               <Bar
-                key={k}
-                label={k}
-                val={v}
-                max={Object.values(stats.tyc).sort((a, b) => b - a)[0]}
+                key={type}
+                label={type}
+                val={count}
+                max={maxTypeCount}
                 color={COLORS[i % COLORS.length]}
-                pct={Math.round((v / stats.tot) * 100)}
+                pct={Math.round((count / stats.total) * 100)}
               />
             ))}
         </div>

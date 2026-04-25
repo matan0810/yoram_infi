@@ -3,21 +3,23 @@ import { EXAMS } from "../data/exams";
 
 export function useStats() {
   return useMemo(() => {
-    const tc = {},
-      cc = { א: 0, ב: 0, ג: 0 },
-      tyc = {},
-      yt = {};
-    let tot = 0;
-    EXAMS.forEach((ex) => {
-      yt[ex.code] = {};
-      ex.questions.forEach((q) => {
-        tot++;
-        tc[q.topic] = (tc[q.topic] || 0) + 1;
-        cc[q.chapter]++;
-        tyc[q.type] = (tyc[q.type] || 0) + 1;
-        yt[ex.code][q.topic] = (yt[ex.code][q.topic] || 0) + 1;
+    const topicCounts = {};
+    const chapterCounts = { א: 0, ב: 0, ג: 0 };
+    const typeCounts = {};
+    const examTopics = {};
+    let total = 0;
+
+    EXAMS.forEach((exam) => {
+      examTopics[exam.code] = {};
+      exam.questions.forEach((q) => {
+        total++;
+        topicCounts[q.topic] = (topicCounts[q.topic] || 0) + 1;
+        chapterCounts[q.chapter]++;
+        typeCounts[q.type] = (typeCounts[q.type] || 0) + 1;
+        examTopics[exam.code][q.topic] = (examTopics[exam.code][q.topic] || 0) + 1;
       });
     });
-    return { tc, cc, tyc, yt, tot };
+
+    return { topicCounts, chapterCounts, typeCounts, examTopics, total };
   }, []);
 }

@@ -1,15 +1,16 @@
 import { useMemo } from "react";
 import { card } from "../styles/theme";
+import CardTitle from "../components/CardTitle";
 import { EXAMS } from "../data/exams";
 import { TOPIC_HE, isExcluded } from "../data/topics";
 import ExcludedTag, { excludedRowStyle } from "../components/ExcludedTag";
 
-function heatColor(n) {
-  if (n === 0) return "#ece7dc";
-  if (n === 1) return "#fde9d9";
-  if (n === 2) return "#f5c39a";
-  if (n === 3) return "#ec965a";
-  if (n === 4) return "#c1440e";
+function heatColor(count) {
+  if (count === 0) return "#ece7dc";
+  if (count === 1) return "#fde9d9";
+  if (count === 2) return "#f5c39a";
+  if (count === 3) return "#ec965a";
+  if (count === 4) return "#c1440e";
   return "#8a2a06";
 }
 
@@ -22,23 +23,19 @@ const LEGEND = [
   { bg: "#8a2a06", label: "5+" },
 ];
 
-export default function Heatmap({ stats, setTab, setSt }) {
-  const sorted = useMemo(
-    () => Object.entries(stats.tc).sort((a, b) => b[1] - a[1]),
+export default function Heatmap({ stats, setTab, setSearchTopic }) {
+  const sortedTopics = useMemo(
+    () => Object.entries(stats.topicCounts).sort((a, b) => b[1] - a[1]),
     [stats],
   );
 
   return (
     <div style={card}>
-      {/* Header — same pattern as Insights & Overview */}
-      <div style={{ marginBottom: 16, paddingBottom: 12, borderBottom: "1px solid #d4cfbf" }}>
-        <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontWeight: 800, fontSize: 17, letterSpacing: "-0.01em" }}>
-          🗺️ מפת חום — נושאים × מבחנים
-        </div>
-        <div style={{ fontFamily: "Heebo, system-ui, sans-serif", fontSize: 12, color: "#9b9890", marginTop: 3 }}>
-          כהה יותר = יותר שאלות · לחץ על תא לחיפוש · עמודת 2026 מסומנת
-        </div>
-      </div>
+      <CardTitle
+        emoji="🗺️"
+        title="מפת חום — נושאים × מבחנים"
+        sub="כהה יותר = יותר שאלות · לחץ על תא לחיפוש · עמודת 2026 מסומנת"
+      />
 
       <div style={{ overflowX: "auto" }}>
         <table style={{ borderCollapse: "collapse", fontSize: 11, minWidth: 1000 }}>
@@ -47,7 +44,6 @@ export default function Heatmap({ stats, setTab, setSt }) {
               <th style={{
                 padding: "4px 16px 4px 0",
                 textAlign: "right",
-                fontFamily: "Heebo, system-ui, sans-serif",
                 fontSize: 11,
                 fontWeight: 700,
                 color: "#4a4740",
@@ -55,23 +51,21 @@ export default function Heatmap({ stats, setTab, setSt }) {
               }}>
                 נושא
               </th>
-              {EXAMS.map((ex) => (
-                <th key={ex.code} style={{
+              {EXAMS.map((exam) => (
+                <th key={exam.code} style={{
                   writingMode: "vertical-rl",
                   transform: "rotate(180deg)",
                   padding: "6px 3px",
-                  fontFamily: "Heebo, system-ui, sans-serif",
                   fontSize: 9,
-                  color: ex.year === 2026 ? "#c1440e" : "#6d6a5e",
-                  fontWeight: ex.year === 2026 ? 800 : 500,
+                  color: exam.year === 2026 ? "#c1440e" : "#6d6a5e",
+                  fontWeight: exam.year === 2026 ? 800 : 500,
                   minWidth: 34,
                   whiteSpace: "nowrap",
                 }}>
-                  {ex.year}/{ex.moed}
+                  {exam.year}/{exam.moed}
                 </th>
               ))}
               <th style={{
-                fontFamily: "Heebo, system-ui, sans-serif",
                 fontSize: 10,
                 fontWeight: 700,
                 color: "#f4f1ea",
@@ -85,51 +79,48 @@ export default function Heatmap({ stats, setTab, setSt }) {
             </tr>
           </thead>
           <tbody>
-            {sorted.map(([tk, totalCount]) => {
-              const excl = isExcluded(tk);
+            {sortedTopics.map(([topicKey, totalCount]) => {
+              const excluded = isExcluded(topicKey);
               return (
-                <tr key={tk} style={excl ? { ...excludedRowStyle, pointerEvents: "auto" } : {}}>
+                <tr key={topicKey} style={excluded ? { ...excludedRowStyle, pointerEvents: "auto" } : {}}>
                   <td style={{
                     padding: "5px 16px 5px 0",
                     textAlign: "right",
                     fontSize: 12,
-                    fontFamily: "Heebo, system-ui, sans-serif",
                     fontWeight: 600,
-                    color: excl ? "#9b9890" : "#1a1a1a",
+                    color: excluded ? "#9b9890" : "#1a1a1a",
                     borderLeft: "2px solid #d4cfbf",
                     whiteSpace: "nowrap",
                   }}>
-                    {excl && <ExcludedTag />}
-                    {TOPIC_HE[tk] || tk}
+                    {excluded && <ExcludedTag />}
+                    {TOPIC_HE[topicKey] || topicKey}
                   </td>
-                  {EXAMS.map((ex) => {
-                    const n = stats.yt[ex.code][tk] || 0;
+                  {EXAMS.map((exam) => {
+                    const count = stats.examTopics[exam.code][topicKey] || 0;
                     return (
                       <td
-                        key={ex.code}
-                        onClick={() => { if (n > 0 && !excl) { setTab("search"); setSt(tk); } }}
-                        title={n ? `${TOPIC_HE[tk]} · ${ex.year} מועד ${ex.moed} · ${n} שאלות` : ""}
+                        key={exam.code}
+                        onClick={() => { if (count > 0 && !excluded) { setTab("search"); setSearchTopic(topicKey); } }}
+                        title={count ? `${TOPIC_HE[topicKey]} · ${exam.year} מועד ${exam.moed} · ${count} שאלות` : ""}
                         style={{
-                          background: heatColor(n),
-                          color: n > 2 ? "white" : n > 0 ? "#c1440e" : "transparent",
+                          background: heatColor(count),
+                          color: count > 2 ? "white" : count > 0 ? "#c1440e" : "transparent",
                           textAlign: "center",
-                          fontFamily: "Heebo, system-ui, sans-serif",
                           fontWeight: 800,
                           fontSize: 11,
                           padding: "3px 2px",
-                          cursor: n > 0 && !excl ? "pointer" : "default",
-                          border: ex.year === 2026 ? "2px solid #c1440e" : "1px solid #f4f1ea",
+                          cursor: count > 0 && !excluded ? "pointer" : "default",
+                          border: exam.year === 2026 ? "2px solid #c1440e" : "1px solid #f4f1ea",
                           minWidth: 32,
                           height: 30,
                         }}
                       >
-                        {n || ""}
+                        {count || ""}
                       </td>
                     );
                   })}
                   <td style={{
                     textAlign: "center",
-                    fontFamily: "Heebo, system-ui, sans-serif",
                     fontWeight: 800,
                     fontSize: 12,
                     background: "#1a1a1a",
@@ -145,7 +136,6 @@ export default function Heatmap({ stats, setTab, setSt }) {
         </table>
       </div>
 
-      {/* Legend */}
       <div style={{
         marginTop: 14,
         paddingTop: 12,
@@ -155,13 +145,13 @@ export default function Heatmap({ stats, setTab, setSt }) {
         alignItems: "center",
         flexWrap: "wrap",
       }}>
-        <span style={{ fontFamily: "Heebo, system-ui, sans-serif", fontSize: 11, color: "#6d6a5e", marginLeft: 8 }}>
+        <span style={{ fontSize: 11, color: "#6d6a5e", marginLeft: 8 }}>
           מס׳ שאלות לפי מבחן:
         </span>
         {LEGEND.map(({ bg, label }) => (
           <span key={bg} style={{ display: "flex", alignItems: "center", gap: 4 }}>
             <span style={{ width: 20, height: 20, background: bg, display: "inline-block", border: "1px solid #d4cfbf" }} />
-            <span style={{ fontFamily: "Heebo, system-ui, sans-serif", fontSize: 11, fontWeight: 600, color: "#4a4740" }}>
+            <span style={{ fontSize: 11, fontWeight: 600, color: "#4a4740" }}>
               {label}
             </span>
           </span>

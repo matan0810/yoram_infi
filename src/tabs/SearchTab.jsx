@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import Chip, { tc } from "../components/Chip";
+import Chip, { typeToKind } from "../components/Chip";
 import { card, inp } from "../styles/theme";
 import { EXAMS } from "../data/exams";
 import { TOPIC_HE, isExcluded } from "../data/topics";
@@ -7,24 +7,18 @@ import ExcludedTag from "../components/ExcludedTag";
 import MathText from "../components/MathText";
 
 export default function SearchTab({
-  sq,
-  setSq,
-  st,
-  setSt,
-  sch,
-  setSch,
-  sty,
-  setSty,
-  sy,
-  setSy,
-  sm,
-  setSm,
+  query, setQuery,
+  topic, setTopic,
+  chapter, setChapter,
+  type, setType,
+  year, setYear,
+  moed, setMoed,
 }) {
-  const sorted = useMemo(
+  const topicsByFrequency = useMemo(
     () =>
       Object.entries(
-        EXAMS.reduce((acc, ex) => {
-          ex.questions.forEach((q) => {
+        EXAMS.reduce((acc, exam) => {
+          exam.questions.forEach((q) => {
             acc[q.topic] = (acc[q.topic] || 0) + 1;
           });
           return acc;
@@ -39,117 +33,77 @@ export default function SearchTab({
   );
 
   const types = useMemo(
-    () =>
-      [...new Set(EXAMS.flatMap((e) => e.questions.map((q) => q.type)))].sort(),
+    () => [...new Set(EXAMS.flatMap((e) => e.questions.map((q) => q.type)))].sort(),
     [],
   );
 
-  const sr = useMemo(() => {
-    const r = [];
-    const q = sq.toLowerCase();
-    EXAMS.forEach((ex) => {
-      if (sy && String(ex.year) !== sy) return;
-      if (sm && ex.moed !== sm) return;
-      ex.questions.forEach((qu) => {
-        if (st && qu.topic !== st) return;
-        if (sch && qu.chapter !== sch) return;
-        if (sty && qu.type !== sty) return;
-        if (
-          q &&
-          !(qu.summary + TOPIC_HE[qu.topic] + ex.code).toLowerCase().includes(q)
-        )
-          return;
-        r.push({ ex, q: qu });
+  const results = useMemo(() => {
+    const queryLower = query.toLowerCase();
+    const matches = [];
+    EXAMS.forEach((exam) => {
+      if (year && String(exam.year) !== year) return;
+      if (moed && exam.moed !== moed) return;
+      exam.questions.forEach((q) => {
+        if (topic && q.topic !== topic) return;
+        if (chapter && q.chapter !== chapter) return;
+        if (type && q.type !== type) return;
+        if (queryLower && !(q.summary + TOPIC_HE[q.topic] + exam.code).toLowerCase().includes(queryLower)) return;
+        matches.push({ exam, question: q });
       });
     });
-    return r;
-  }, [sq, st, sch, sty, sy, sm]);
+    return matches;
+  }, [query, topic, chapter, type, year, moed]);
+
+  const hasActiveFilters = query || topic || chapter || type || year || moed;
 
   return (
     <div>
-      <div
-        style={{
-          ...card,
-          display: "flex",
-          gap: 12,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
+      <div style={{ ...card, display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
         <input
           type="text"
-          value={sq}
-          onChange={(e) => setSq(e.target.value)}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="חפש שאלה, נוסחה, נושא..."
           style={{ ...inp, minWidth: 220 }}
         />
-        <select value={st} onChange={(e) => setSt(e.target.value)} style={inp}>
+        <select value={topic} onChange={(e) => setTopic(e.target.value)} style={inp}>
           <option value="">כל הנושאים</option>
-          {sorted.map(([k]) => (
-            <option key={k} value={k}>
-              {TOPIC_HE[k] || k}
+          {topicsByFrequency.map(([key]) => (
+            <option key={key} value={key}>
+              {TOPIC_HE[key] || key}
             </option>
           ))}
         </select>
-        <select
-          value={sch}
-          onChange={(e) => setSch(e.target.value)}
-          style={inp}
-        >
+        <select value={chapter} onChange={(e) => setChapter(e.target.value)} style={inp}>
           <option value="">כל הפרקים</option>
           <option value="א">פרק א</option>
           <option value="ב">פרק ב</option>
           <option value="ג">פרק ג</option>
         </select>
-        <select
-          value={sty}
-          onChange={(e) => setSty(e.target.value)}
-          style={inp}
-        >
+        <select value={type} onChange={(e) => setType(e.target.value)} style={inp}>
           <option value="">כל הסוגים</option>
           {types.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
+            <option key={t} value={t}>{t}</option>
           ))}
         </select>
-        <select value={sy} onChange={(e) => setSy(e.target.value)} style={inp}>
+        <select value={year} onChange={(e) => setYear(e.target.value)} style={inp}>
           <option value="">כל השנים</option>
           {years.map((y) => (
-            <option key={y} value={y}>
-              {y}
-            </option>
+            <option key={y} value={y}>{y}</option>
           ))}
         </select>
-        <select value={sm} onChange={(e) => setSm(e.target.value)} style={inp}>
+        <select value={moed} onChange={(e) => setMoed(e.target.value)} style={inp}>
           <option value="">כל המועדים</option>
           <option value="א">מועד א</option>
           <option value="ב">מועד ב</option>
         </select>
-        <span
-          style={{
-            fontFamily: "Heebo, system-ui, sans-serif",
-            fontSize: 13,
-            background: "#1a1a1a",
-            color: "#f4f1ea",
-            padding: "4px 10px",
-            fontWeight: 700,
-          }}
-        >
-          {sr.length} תוצאות
+        <span style={{ fontSize: 13, fontWeight: 700, background: "#1a1a1a", color: "#f4f1ea", padding: "4px 10px" }}>
+          {results.length} תוצאות
         </span>
-        {(sq || st || sch || sty || sy || sm) && (
+        {hasActiveFilters && (
           <button
-            onClick={() => {
-              setSq("");
-              setSt("");
-              setSch("");
-              setSty("");
-              setSy("");
-              setSm("");
-            }}
+            onClick={() => { setQuery(""); setTopic(""); setChapter(""); setType(""); setYear(""); setMoed(""); }}
             style={{
-              fontFamily: "Heebo, system-ui, sans-serif",
               fontSize: 13,
               background: "transparent",
               border: "1px solid #d4cfbf",
@@ -163,22 +117,20 @@ export default function SearchTab({
         )}
       </div>
 
-      {sr.length === 0 && (
-        <div
-          style={{
-            textAlign: "center",
-            padding: 40,
-            color: "#6d6a5e",
-            fontStyle: "italic",
-            fontFamily: "Frank Ruhl Libre, Georgia, serif",
-          }}
-        >
+      {results.length === 0 && (
+        <div style={{
+          textAlign: "center",
+          padding: 40,
+          color: "#6d6a5e",
+          fontStyle: "italic",
+          fontFamily: "Frank Ruhl Libre, Georgia, serif",
+        }}>
           לא נמצאו שאלות
         </div>
       )}
 
       <div style={{ display: "grid", gap: 8 }}>
-        {sr.map((r, i) => (
+        {results.map(({ exam, question }, i) => (
           <div
             key={i}
             style={{
@@ -193,35 +145,31 @@ export default function SearchTab({
             }}
           >
             <div style={{ lineHeight: 1.5 }}>
-              <div style={{ fontWeight: 700, fontSize: 14 }}>{r.ex.year}</div>
-              <div style={{ fontSize: 12, color: "#4a4740" }}>מועד {r.ex.moed}</div>
+              <div style={{ fontWeight: 700, fontSize: 14 }}>{exam.year}</div>
+              <div style={{ fontSize: 12, color: "#4a4740" }}>מועד {exam.moed}</div>
               <div style={{ marginTop: 6 }}>
-                <div style={{ fontSize: 10, color: "#9b9890", marginBottom: 1 }}>
-                  שאלה
-                </div>
-                <div
-                  style={{
-                    fontSize: 22,
-                    fontWeight: 900,
-                    color: "#c1440e",
-                    fontFamily: "Frank Ruhl Libre, Georgia, serif",
-                    lineHeight: 1,
-                  }}
-                >
-                  {r.q.id.replace(/^[א-ת]/, "")}
+                <div style={{ fontSize: 10, color: "#9b9890", marginBottom: 1 }}>שאלה</div>
+                <div style={{
+                  fontSize: 22,
+                  fontWeight: 900,
+                  color: "#c1440e",
+                  fontFamily: "Frank Ruhl Libre, Georgia, serif",
+                  lineHeight: 1,
+                }}>
+                  {question.id.replace(/^[א-ת]/, "")}
                 </div>
               </div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <Chip kind={r.q.chapter}>פרק {r.q.chapter}</Chip>
-              <Chip kind={tc(r.q.type)}>{r.q.type}</Chip>
+              <Chip kind={question.chapter}>פרק {question.chapter}</Chip>
+              <Chip kind={typeToKind(question.type)}>{question.type}</Chip>
             </div>
             <div>
               <div
-                onClick={() => setSt(r.q.topic)}
+                onClick={() => setTopic(question.topic)}
                 style={{
                   fontSize: 12,
-                  color: isExcluded(r.q.topic) ? "#9b9890" : "#2b4162",
+                  color: isExcluded(question.topic) ? "#9b9890" : "#2b4162",
                   marginBottom: 4,
                   fontWeight: 600,
                   cursor: "pointer",
@@ -232,10 +180,12 @@ export default function SearchTab({
                   flexWrap: "wrap",
                 }}
               >
-                {isExcluded(r.q.topic) && <ExcludedTag />}
-                {TOPIC_HE[r.q.topic] || r.q.topic}
+                {isExcluded(question.topic) && <ExcludedTag />}
+                {TOPIC_HE[question.topic] || question.topic}
               </div>
-              <div style={{ lineHeight: 1.5, fontSize: 13 }}><MathText>{r.q.summary}</MathText></div>
+              <div style={{ lineHeight: 1.5, fontSize: 13 }}>
+                <MathText>{question.summary}</MathText>
+              </div>
             </div>
           </div>
         ))}
