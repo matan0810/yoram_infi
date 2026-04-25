@@ -1,16 +1,15 @@
+import { CHAPTERS } from "../data/config";
+
 export const COLORS_UI = {
-  primary: "#c1440e",
-  dark: "#1a1a1a",
-  bg: "#f4f1ea",
-  border: "#d4cfbf",
-  muted: "#9b9890",
-  text: "#4a4740",
-  subdued: "#6d6a5e",
-  chapter: {
-    א: "#c1440e",
-    ב: "#2b4162",
-    ג: "#3a5a40",
-  },
+  primary:   CHAPTERS[0].color,
+  secondary: CHAPTERS[1].color,
+  dark:      "#1a1a1a",
+  bg:        "#f4f1ea",
+  border:    "#d4cfbf",
+  muted:     "#9b9890",
+  text:      "#4a4740",
+  subdued:   "#6d6a5e",
+  chapter:   Object.fromEntries(CHAPTERS.map((ch) => [ch.key, ch.color])),
 };
 
 export const c = {

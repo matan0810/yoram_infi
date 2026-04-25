@@ -1,14 +1,15 @@
 export const COURSE = {
   teacher:    "פרופ׳ יורם לסט",
   name:       "חשבון אינפיניטסימלי 2",
+  shortName:  "אינפי 2",
   number:     "80132",
   university: "האוניברסיטה העברית בירושלים",
 };
 
 export const CHAPTERS = [
-  { key: "א", label: "פרק א — הוכחות",       color: "#c1440e" },
-  { key: "ב", label: "פרק ב — חישוב והוכחה", color: "#2b4162" },
-  { key: "ג", label: "פרק ג — אמת/שקר",      color: "#3a5a40" },
+  { key: "א", label: "פרק א — הוכחות",       color: "#c1440e", chipBg: "#fef1e6" },
+  { key: "ב", label: "פרק ב — חישוב והוכחה", color: "#2b4162", chipBg: "#e8eef6" },
+  { key: "ג", label: "פרק ג — אמת/שקר",      color: "#3a5a40", chipBg: "#eaf0e6" },
 ];
 
 export const EXCLUDED_TOPICS = new Set(["multivariable"]);

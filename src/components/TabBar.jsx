@@ -1,3 +1,5 @@
+import { COLORS_UI } from "../styles";
+
 const TABS = [
   { id: "overview", l: "📊 סקירה" },
   { id: "heatmap", l: "🔥 מפת חום" },
@@ -29,9 +31,9 @@ export default function TabBar({ tab, setTab }) {
             background: tab === t.id ? "#ece7dc" : "transparent",
             border: "none",
             cursor: "pointer",
-            color: tab === t.id ? "#c1440e" : "#6d6a5e",
+            color: tab === t.id ? COLORS_UI.primary : "#6d6a5e",
             borderBottom:
-              tab === t.id ? "3px solid #c1440e" : "3px solid transparent",
+              tab === t.id ? `3px solid ${COLORS_UI.primary}` : "3px solid transparent",
             marginBottom: -2,
           }}
         >

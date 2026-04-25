@@ -1,4 +1,4 @@
-﻿import { EXCLUDED_TOPICS } from "./config";
+﻿import { EXCLUDED_TOPICS, CHAPTERS } from "./config";
 export { EXCLUDED_TOPICS };
 export const isExcluded = (topic) => EXCLUDED_TOPICS.has(topic);
 
@@ -24,9 +24,9 @@ export const TOPIC_HE = {
 };
 
 export const COLORS = [
-  "#c1440e",
-  "#2b4162",
-  "#3a5a40",
+  CHAPTERS[0].color,
+  CHAPTERS[1].color,
+  CHAPTERS[2].color,
   "#d4a017",
   "#5a3a6b",
   "#9a3232",

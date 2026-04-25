@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
-import { card, inp } from "../styles";
+import { card, inp, COLORS_UI } from "../styles";
 import { EXAMS, TOPIC_HE, isExcluded } from "../data";
 
 export default function ExamsTab({
@@ -107,7 +107,7 @@ export default function ExamsTab({
             style={{
               ...card,
               border:
-                exam.year === 2026 ? "2px solid #c1440e" : "1px solid #1a1a1a",
+                exam.year === 2026 ? `2px solid ${COLORS_UI.primary}` : "1px solid #1a1a1a",
               background: exam.year === 2026 ? "#fef8f3" : "white",
               boxShadow: "3px 3px 0 #1a1a1a",
             }}
@@ -161,7 +161,7 @@ export default function ExamsTab({
                       fontFamily: "Frank Ruhl Libre, Georgia, serif",
                       fontWeight: 900,
                       fontSize: 16,
-                      color: "#c1440e",
+                      color: COLORS_UI.primary,
                       textAlign: "center",
                     }}
                   >
@@ -187,8 +187,8 @@ export default function ExamsTab({
                         style={{
                           fontSize: 11,
                           fontWeight: 600,
-                          color: excluded ? "#9b9890" : "#2b4162",
-                          border: `1px dashed ${excluded ? "#b0aca4" : "#2b4162"}`,
+                          color: excluded ? "#9b9890" : COLORS_UI.secondary,
+                          border: `1px dashed ${excluded ? "#b0aca4" : COLORS_UI.secondary}`,
                           padding: "1px 6px",
                           cursor: "pointer",
                           display: "inline-flex",

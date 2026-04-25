@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { card } from "../styles";
+import { card, COLORS_UI } from "../styles";
 import { CardTitle, ExcludedTag, excludedRowStyle } from "../components";
 import { EXAMS, TOPIC_HE, isExcluded } from "../data";
 
@@ -8,7 +8,7 @@ function heatColor(count) {
   if (count === 1) return "#fde9d9";
   if (count === 2) return "#f5c39a";
   if (count === 3) return "#ec965a";
-  if (count === 4) return "#c1440e";
+  if (count === 4) return COLORS_UI.primary;
   return "#8a2a06";
 }
 
@@ -17,7 +17,7 @@ const LEGEND = [
   { bg: "#fde9d9", label: "1" },
   { bg: "#f5c39a", label: "2" },
   { bg: "#ec965a", label: "3" },
-  { bg: "#c1440e", label: "4" },
+  { bg: COLORS_UI.primary, label: "4" },
   { bg: "#8a2a06", label: "5+" },
 ];
 
@@ -61,7 +61,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                     transform: "rotate(180deg)",
                     padding: "6px 3px",
                     fontSize: 9,
-                    color: exam.year === 2026 ? "#c1440e" : "#6d6a5e",
+                    color: exam.year === 2026 ? COLORS_UI.primary : "#6d6a5e",
                     fontWeight: exam.year === 2026 ? 800 : 500,
                     minWidth: 34,
                     whiteSpace: "nowrap",
@@ -133,7 +133,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                             count > 2
                               ? "white"
                               : count > 0
-                                ? "#c1440e"
+                                ? COLORS_UI.primary
                                 : "transparent",
                           textAlign: "center",
                           fontWeight: 800,
@@ -143,7 +143,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                             count > 0 && !excluded ? "pointer" : "default",
                           border:
                             exam.year === 2026
-                              ? "2px solid #c1440e"
+                              ? `2px solid ${COLORS_UI.primary}`
                               : "1px solid #f4f1ea",
                           minWidth: 32,
                           height: 30,

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
-import { card, inp } from "../styles";
+import { card, inp, COLORS_UI } from "../styles";
 import { EXAMS, TOPIC_HE, isExcluded, CHAPTERS } from "../data";
 
 export default function SearchTab({
@@ -220,7 +220,7 @@ export default function SearchTab({
                   style={{
                     fontSize: 22,
                     fontWeight: 900,
-                    color: "#c1440e",
+                    color: COLORS_UI.primary,
                     fontFamily: "Frank Ruhl Libre, Georgia, serif",
                     lineHeight: 1,
                   }}
@@ -238,7 +238,9 @@ export default function SearchTab({
                 onClick={() => setTopic(question.topic)}
                 style={{
                   fontSize: 12,
-                  color: isExcluded(question.topic) ? "#9b9890" : "#2b4162",
+                  color: isExcluded(question.topic)
+                    ? "#9b9890"
+                    : COLORS_UI.secondary,
                   marginBottom: 4,
                   fontWeight: 600,
                   cursor: "pointer",

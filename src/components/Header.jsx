@@ -1,4 +1,5 @@
 import { EXAMS, COURSE } from "../data";
+import { COLORS_UI } from "../styles";
 
 export default function Header() {
   return (
@@ -29,7 +30,7 @@ export default function Header() {
           letterSpacing: "-0.03em",
         }}
       >
-        מדד שאלות <span style={{ color: "#c1440e" }}>אינפי 2</span>
+        מדד שאלות <span style={{ color: COLORS_UI.primary }}>{COURSE.shortName}</span>
       </div>
       <div
         style={{

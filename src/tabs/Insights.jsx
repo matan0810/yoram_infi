@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { card } from "../styles";
+import { card, COLORS_UI } from "../styles";
 import { CardTitle, Badge, MathText } from "../components";
 import { EXAMS, TOPIC_HE, EXCLUDED_TOPICS } from "../data";
 
@@ -129,7 +129,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
                 <Badge>{count}</Badge>
                 <div>
                   <div
-                    style={{ fontWeight: 700, fontSize: 14, color: "#c1440e" }}
+                    style={{ fontWeight: 700, fontSize: 14, color: COLORS_UI.primary }}
                   >
                     {TOPIC_HE[key]}
                   </div>
@@ -156,7 +156,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
               style={{
                 fontWeight: 700,
                 fontSize: 14,
-                color: "#c1440e",
+                color: COLORS_UI.primary,
                 marginBottom: 4,
               }}
             >
@@ -208,7 +208,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
               <div
                 style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
               >
-                <Badge bg="#c1440e">{count}×</Badge>
+                <Badge bg={COLORS_UI.primary}>{count}×</Badge>
                 <div>
                   <div style={{ fontWeight: 700, fontSize: 14 }}>
                     {TOPIC_HE[topic] || topic}
