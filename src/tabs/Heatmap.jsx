@@ -1,9 +1,7 @@
 import { useMemo } from "react";
-import { card } from "../styles/theme";
-import CardTitle from "../components/CardTitle";
-import { EXAMS } from "../data/exams";
-import { TOPIC_HE, isExcluded } from "../data/topics";
-import ExcludedTag, { excludedRowStyle } from "../components/ExcludedTag";
+import { card } from "../styles";
+import { CardTitle, ExcludedTag, excludedRowStyle } from "../components";
+import { EXAMS, TOPIC_HE, isExcluded } from "../data";
 
 function heatColor(count) {
   if (count === 0) return "#ece7dc";

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { EXAMS } from "../data/exams";
+import { EXAMS } from "../data";
 
 export function useStats() {
   return useMemo(() => {

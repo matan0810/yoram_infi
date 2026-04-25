@@ -1,10 +1,7 @@
 import { useMemo } from "react";
-import { card } from "../styles/theme";
-import CardTitle from "../components/CardTitle";
-import Badge from "../components/Badge";
-import { EXAMS } from "../data/exams";
-import { TOPIC_HE, EXCLUDED_TOPICS } from "../data/topics";
-import MathText from "../components/MathText";
+import { card } from "../styles";
+import { CardTitle, Badge, MathText } from "../components";
+import { EXAMS, TOPIC_HE, EXCLUDED_TOPICS } from "../data";
 
 const TRAPS = [
   {

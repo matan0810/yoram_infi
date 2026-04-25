@@ -1,10 +1,7 @@
 import { useMemo } from "react";
-import Chip, { typeToKind } from "../components/Chip";
-import { card, inp } from "../styles/theme";
-import { EXAMS } from "../data/exams";
-import { TOPIC_HE, isExcluded } from "../data/topics";
-import ExcludedTag from "../components/ExcludedTag";
-import MathText from "../components/MathText";
+import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
+import { card, inp } from "../styles";
+import { EXAMS, TOPIC_HE, isExcluded } from "../data";
 
 export default function ExamsTab({ yearFilter, setYearFilter, moedFilter, setMoedFilter, setTab, setSearchTopic }) {
   const years = useMemo(

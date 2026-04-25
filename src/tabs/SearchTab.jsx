@@ -1,10 +1,7 @@
 import { useMemo } from "react";
-import Chip, { typeToKind } from "../components/Chip";
-import { card, inp } from "../styles/theme";
-import { EXAMS } from "../data/exams";
-import { TOPIC_HE, isExcluded } from "../data/topics";
-import ExcludedTag from "../components/ExcludedTag";
-import MathText from "../components/MathText";
+import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
+import { card, inp } from "../styles";
+import { EXAMS, TOPIC_HE, isExcluded, CHAPTERS } from "../data";
 
 export default function SearchTab({
   query, setQuery,
@@ -76,9 +73,9 @@ export default function SearchTab({
         </select>
         <select value={chapter} onChange={(e) => setChapter(e.target.value)} style={inp}>
           <option value="">כל הפרקים</option>
-          <option value="א">פרק א</option>
-          <option value="ב">פרק ב</option>
-          <option value="ג">פרק ג</option>
+          {CHAPTERS.map(({ key, label }) => (
+            <option key={key} value={key}>{label}</option>
+          ))}
         </select>
         <select value={type} onChange={(e) => setType(e.target.value)} style={inp}>
           <option value="">כל הסוגים</option>

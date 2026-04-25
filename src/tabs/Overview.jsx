@@ -1,12 +1,9 @@
 import { useMemo } from "react";
-import Bar from "../components/Bar";
-import CardTitle from "../components/CardTitle";
-import { card } from "../styles/theme";
-import { EXAMS } from "../data/exams";
-import { TOPIC_HE, COLORS, isExcluded } from "../data/topics";
-import ExcludedTag, { excludedRowStyle } from "../components/ExcludedTag";
+import { Bar, CardTitle, ExcludedTag, excludedRowStyle } from "../components";
+import { card } from "../styles";
+import { EXAMS, TOPIC_HE, COLORS, isExcluded, CHAPTERS } from "../data";
 
-export default function Overview({ stats, setTab, setSearchTopic }) {
+export default function Overview({ stats, setTab, setSearchTopic, setSearchChapter, setSearchType }) {
   const { active, excluded } = useMemo(() => {
     const all = Object.entries(stats.topicCounts).sort((a, b) => b[1] - a[1]);
     return {
@@ -72,25 +69,22 @@ export default function Overview({ stats, setTab, setSearchTopic }) {
 
       <div>
         <div style={card}>
-          <CardTitle emoji="📚" title="פרקים" sub="התפלגות שאלות לפי פרק" />
-          {[
-            ["א", "פרק א — הוכחות", "#c1440e"],
-            ["ב", "פרק ב — חישוב והוכחה", "#2b4162"],
-            ["ג", "פרק ג — אמת/שקר", "#3a5a40"],
-          ].map(([chapter, label, color]) => (
+          <CardTitle emoji="📚" title="פרקים" sub="לחץ על פרק לחיפוש שאלות" />
+          {CHAPTERS.map(({ key, label, color }) => (
             <Bar
-              key={chapter}
+              key={key}
               label={label}
-              val={stats.chapterCounts[chapter] || 0}
+              val={stats.chapterCounts[key] || 0}
               max={maxChapterCount}
               color={color}
-              pct={Math.round(((stats.chapterCounts[chapter] || 0) / stats.total) * 100)}
+              pct={Math.round(((stats.chapterCounts[key] || 0) / stats.total) * 100)}
+              onClick={() => { setTab("search"); setSearchChapter(key); }}
             />
           ))}
         </div>
 
         <div style={card}>
-          <CardTitle emoji="🏷️" title="סוג שאלה" sub="התפלגות לפי סוג" />
+          <CardTitle emoji="🏷️" title="סוג שאלה" sub="לחץ על סוג לחיפוש שאלות" />
           {Object.entries(stats.typeCounts)
             .sort((a, b) => b[1] - a[1])
             .map(([type, count], i) => (
@@ -101,6 +95,7 @@ export default function Overview({ stats, setTab, setSearchTopic }) {
                 max={maxTypeCount}
                 color={COLORS[i % COLORS.length]}
                 pct={Math.round((count / stats.total) * 100)}
+                onClick={() => { setTab("search"); setSearchType(type); }}
               />
             ))}
         </div>

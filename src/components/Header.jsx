@@ -1,5 +1,4 @@
-import { EXAMS } from "../data/exams";
-import { TEACHER, COURSE_NAME, COURSE_NUMBER } from "../data/config";
+import { EXAMS, TEACHER, COURSE_NAME, COURSE_NUMBER } from "../data";
 
 export default function Header() {
   return (
