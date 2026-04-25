@@ -26,15 +26,22 @@ const TRAPS = [
   },
 ];
 
-function InsightRow({ children }) {
+function InsightRow({ children, onClick }) {
   return (
-    <div style={{ padding: "11px 0", borderBottom: "1px solid #ede9e0", lineHeight: 1.5 }}>
+    <div
+      onClick={onClick}
+      style={{ padding: "11px 0", borderBottom: "1px solid #ede9e0", lineHeight: 1.5, cursor: onClick ? "pointer" : "default" }}
+      onMouseEnter={(e) => { if (onClick) e.currentTarget.style.background = "#fef4ee"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+    >
       {children}
     </div>
   );
 }
 
-export default function Insights({ stats }) {
+export default function Insights({ stats, setTab, setSearchTopic }) {
+  const nav = (key) => { setTab("search"); setSearchTopic(key); };
+
   const sortedTopics = useMemo(
     () =>
       Object.entries(stats.topicCounts)
@@ -81,11 +88,11 @@ export default function Insights({ stats }) {
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))", gap: 20 }}>
 
       <div style={card}>
-        <CardTitle emoji="🔥" title="חובה ללמוד" sub="הנושאים השכיחים ביותר" />
+        <CardTitle emoji="🔥" title="חובה ללמוד" sub="לחץ על נושא לחיפוש שאלות" />
         {sortedTopics.slice(0, 5).map(([key, count]) => {
           const examCount = EXAMS.filter((exam) => stats.examTopics[exam.code][key]).length;
           return (
-            <InsightRow key={key}>
+            <InsightRow key={key} onClick={() => nav(key)}>
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                 <Badge>{count}</Badge>
                 <div>
@@ -117,9 +124,9 @@ export default function Insights({ stats }) {
       </div>
 
       <div style={card}>
-        <CardTitle emoji="📈" title="טרנד 2021–2026" sub="הנושאים הדומיננטיים בשנים האחרונות" />
+        <CardTitle emoji="📈" title="טרנד 2021–2026" sub="לחץ על נושא לחיפוש שאלות" />
         {recentTrend.entries.map(([key, count]) => (
-          <InsightRow key={key}>
+          <InsightRow key={key} onClick={() => nav(key)}>
             <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
               <Badge>{count}</Badge>
               <div>
@@ -136,11 +143,11 @@ export default function Insights({ stats }) {
       </div>
 
       <div style={card}>
-        <CardTitle emoji="🎯" title="צפוי לבוא" sub="שכיח היסטורית אך לא הופיע 3+ שנים" />
+        <CardTitle emoji="🎯" title="צפוי לבוא" sub="לחץ על נושא לחיפוש שאלות" />
         {overdueTopics.length === 0 ? (
           <div style={{ color: "#9b9890", fontSize: 13, fontStyle: "italic" }}>אין נושאים כאלה</div>
         ) : overdueTopics.map(({ topic, count, last }) => (
-          <InsightRow key={topic}>
+          <InsightRow key={topic} onClick={() => nav(topic)}>
             <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
               <Badge bg="#c1440e">{count}×</Badge>
               <div>
@@ -157,11 +164,11 @@ export default function Insights({ stats }) {
       </div>
 
       <div style={card}>
-        <CardTitle emoji="❄️" title="פחות שכיח" sub="נושאים עם ≤3 שאלות בסך הכל" />
+        <CardTitle emoji="❄️" title="פחות שכיח" sub="לחץ על נושא לחיפוש שאלות" />
         {sortedTopics.filter(([, count]) => count <= 3).map(([key, count]) => {
           const examCount = EXAMS.filter((exam) => stats.examTopics[exam.code][key]).length;
           return (
-            <InsightRow key={key}>
+            <InsightRow key={key} onClick={() => nav(key)}>
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                 <Badge bg="#ece7dc" color="#4a4740">{count}</Badge>
                 <div>

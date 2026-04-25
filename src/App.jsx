@@ -77,7 +77,7 @@ export default function App() {
           setMoed={setSearchMoed}
         />
       )}
-      {tab === "insights" && <Insights stats={stats} />}
+      {tab === "insights" && <Insights stats={stats} setTab={setTab} setSearchTopic={setSearchTopic} />}
 
       <div
         style={{
