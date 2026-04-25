@@ -1,4 +1,5 @@
-﻿export const EXCLUDED_TOPICS = new Set(["multivariable"]);
+﻿import { EXCLUDED_TOPICS } from "./config";
+export { EXCLUDED_TOPICS };
 export const isExcluded = (topic) => EXCLUDED_TOPICS.has(topic);
 
 export const TOPIC_HE = {

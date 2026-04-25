@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useStats } from "./hooks";
 import { c } from "./styles";
 import { Header, FormatBanner, TabBar } from "./components";
 import { Overview, Heatmap, ExamsTab, SearchTab, Insights } from "./tabs";
-import { EXAMS } from "./data";
+import { EXAMS, COURSE } from "./data";
 
 const TOTAL_QUESTIONS = EXAMS.reduce(
   (sum, exam) => sum + exam.questions.length,
@@ -13,6 +13,10 @@ const MIN_YEAR = Math.min(...EXAMS.map((e) => e.year));
 const MAX_YEAR = Math.max(...EXAMS.map((e) => e.year));
 
 export default function App() {
+  useEffect(() => {
+    document.title = `ארכיון מבחנים — ${COURSE.name} · ${COURSE.number}`;
+  }, []);
+
   const [tab, setTab] = useState("overview");
 
   // ExamsTab filters

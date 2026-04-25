@@ -1,4 +1,4 @@
-import { EXAMS, TEACHER, COURSE_NAME, COURSE_NUMBER } from "../data";
+import { EXAMS, COURSE } from "../data";
 
 export default function Header() {
   return (
@@ -18,7 +18,7 @@ export default function Header() {
           marginBottom: 6,
         }}
       >
-        {TEACHER} · {COURSE_NAME} · קורס {COURSE_NUMBER}
+        {COURSE.teacher} · {COURSE.name} · קורס {COURSE.number}
       </div>
       <div
         style={{
