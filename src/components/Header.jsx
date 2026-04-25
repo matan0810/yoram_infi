@@ -29,8 +29,7 @@ export default function Header() {
           letterSpacing: "-0.03em",
         }}
       >
-        מדד שאלות{" "}
-        <span style={{ color: "#c1440e" }}>אינפי 2</span>
+        מדד שאלות <span style={{ color: "#c1440e" }}>אינפי 2</span>
       </div>
       <div
         style={{
@@ -45,8 +44,14 @@ export default function Header() {
         {[
           [EXAMS.length, "מבחנים"],
           [EXAMS.reduce((s, e) => s + e.questions.length, 0), "שאלות"],
-          [new Set(EXAMS.flatMap((e) => e.questions.map((q) => q.topic))).size, "נושאים"],
-          [`${Math.min(...EXAMS.map((e) => e.year))}–${Math.max(...EXAMS.map((e) => e.year))}`, "שנים"],
+          [
+            new Set(EXAMS.flatMap((e) => e.questions.map((q) => q.topic))).size,
+            "נושאים",
+          ],
+          [
+            `${Math.min(...EXAMS.map((e) => e.year))}–${Math.max(...EXAMS.map((e) => e.year))}`,
+            "שנים",
+          ],
         ].map(([n, l]) => (
           <div key={l}>
             <div

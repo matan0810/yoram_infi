@@ -4,12 +4,18 @@ import { card, inp } from "../styles";
 import { EXAMS, TOPIC_HE, isExcluded, CHAPTERS } from "../data";
 
 export default function SearchTab({
-  query, setQuery,
-  topic, setTopic,
-  chapter, setChapter,
-  type, setType,
-  year, setYear,
-  moed, setMoed,
+  query,
+  setQuery,
+  topic,
+  setTopic,
+  chapter,
+  setChapter,
+  type,
+  setType,
+  year,
+  setYear,
+  moed,
+  setMoed,
 }) {
   const topicsByFrequency = useMemo(
     () =>
@@ -30,7 +36,8 @@ export default function SearchTab({
   );
 
   const types = useMemo(
-    () => [...new Set(EXAMS.flatMap((e) => e.questions.map((q) => q.type)))].sort(),
+    () =>
+      [...new Set(EXAMS.flatMap((e) => e.questions.map((q) => q.type)))].sort(),
     [],
   );
 
@@ -44,7 +51,13 @@ export default function SearchTab({
         if (topic && q.topic !== topic) return;
         if (chapter && q.chapter !== chapter) return;
         if (type && q.type !== type) return;
-        if (queryLower && !(q.summary + TOPIC_HE[q.topic] + exam.code).toLowerCase().includes(queryLower)) return;
+        if (
+          queryLower &&
+          !(q.summary + TOPIC_HE[q.topic] + exam.code)
+            .toLowerCase()
+            .includes(queryLower)
+        )
+          return;
         matches.push({ exam, question: q });
       });
     });
@@ -55,7 +68,15 @@ export default function SearchTab({
 
   return (
     <div>
-      <div style={{ ...card, display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+      <div
+        style={{
+          ...card,
+          display: "flex",
+          gap: 12,
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
         <input
           type="text"
           value={query}
@@ -63,7 +84,11 @@ export default function SearchTab({
           placeholder="חפש שאלה, נוסחה, נושא..."
           style={{ ...inp, minWidth: 220 }}
         />
-        <select value={topic} onChange={(e) => setTopic(e.target.value)} style={inp}>
+        <select
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+          style={inp}
+        >
           <option value="">כל הנושאים</option>
           {topicsByFrequency.map(([key]) => (
             <option key={key} value={key}>
@@ -71,35 +96,72 @@ export default function SearchTab({
             </option>
           ))}
         </select>
-        <select value={chapter} onChange={(e) => setChapter(e.target.value)} style={inp}>
+        <select
+          value={chapter}
+          onChange={(e) => setChapter(e.target.value)}
+          style={inp}
+        >
           <option value="">כל הפרקים</option>
           {CHAPTERS.map(({ key, label }) => (
-            <option key={key} value={key}>{label}</option>
+            <option key={key} value={key}>
+              {label}
+            </option>
           ))}
         </select>
-        <select value={type} onChange={(e) => setType(e.target.value)} style={inp}>
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          style={inp}
+        >
           <option value="">כל הסוגים</option>
           {types.map((t) => (
-            <option key={t} value={t}>{t}</option>
+            <option key={t} value={t}>
+              {t}
+            </option>
           ))}
         </select>
-        <select value={year} onChange={(e) => setYear(e.target.value)} style={inp}>
+        <select
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+          style={inp}
+        >
           <option value="">כל השנים</option>
           {years.map((y) => (
-            <option key={y} value={y}>{y}</option>
+            <option key={y} value={y}>
+              {y}
+            </option>
           ))}
         </select>
-        <select value={moed} onChange={(e) => setMoed(e.target.value)} style={inp}>
+        <select
+          value={moed}
+          onChange={(e) => setMoed(e.target.value)}
+          style={inp}
+        >
           <option value="">כל המועדים</option>
           <option value="א">מועד א</option>
           <option value="ב">מועד ב</option>
         </select>
-        <span style={{ fontSize: 13, fontWeight: 700, background: "#1a1a1a", color: "#f4f1ea", padding: "4px 10px" }}>
+        <span
+          style={{
+            fontSize: 13,
+            fontWeight: 700,
+            background: "#1a1a1a",
+            color: "#f4f1ea",
+            padding: "4px 10px",
+          }}
+        >
           {results.length} תוצאות
         </span>
         {hasActiveFilters && (
           <button
-            onClick={() => { setQuery(""); setTopic(""); setChapter(""); setType(""); setYear(""); setMoed(""); }}
+            onClick={() => {
+              setQuery("");
+              setTopic("");
+              setChapter("");
+              setType("");
+              setYear("");
+              setMoed("");
+            }}
             style={{
               fontSize: 13,
               background: "transparent",
@@ -115,13 +177,15 @@ export default function SearchTab({
       </div>
 
       {results.length === 0 && (
-        <div style={{
-          textAlign: "center",
-          padding: 40,
-          color: "#6d6a5e",
-          fontStyle: "italic",
-          fontFamily: "Frank Ruhl Libre, Georgia, serif",
-        }}>
+        <div
+          style={{
+            textAlign: "center",
+            padding: 40,
+            color: "#6d6a5e",
+            fontStyle: "italic",
+            fontFamily: "Frank Ruhl Libre, Georgia, serif",
+          }}
+        >
           לא נמצאו שאלות
         </div>
       )}
@@ -143,16 +207,24 @@ export default function SearchTab({
           >
             <div style={{ lineHeight: 1.5 }}>
               <div style={{ fontWeight: 700, fontSize: 14 }}>{exam.year}</div>
-              <div style={{ fontSize: 12, color: "#4a4740" }}>מועד {exam.moed}</div>
+              <div style={{ fontSize: 12, color: "#4a4740" }}>
+                מועד {exam.moed}
+              </div>
               <div style={{ marginTop: 6 }}>
-                <div style={{ fontSize: 10, color: "#9b9890", marginBottom: 1 }}>שאלה</div>
-                <div style={{
-                  fontSize: 22,
-                  fontWeight: 900,
-                  color: "#c1440e",
-                  fontFamily: "Frank Ruhl Libre, Georgia, serif",
-                  lineHeight: 1,
-                }}>
+                <div
+                  style={{ fontSize: 10, color: "#9b9890", marginBottom: 1 }}
+                >
+                  שאלה
+                </div>
+                <div
+                  style={{
+                    fontSize: 22,
+                    fontWeight: 900,
+                    color: "#c1440e",
+                    fontFamily: "Frank Ruhl Libre, Georgia, serif",
+                    lineHeight: 1,
+                  }}
+                >
                   {question.id.replace(/^[א-ת]/, "")}
                 </div>
               </div>

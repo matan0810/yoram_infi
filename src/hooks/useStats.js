@@ -16,7 +16,8 @@ export function useStats() {
         topicCounts[q.topic] = (topicCounts[q.topic] || 0) + 1;
         chapterCounts[q.chapter]++;
         typeCounts[q.type] = (typeCounts[q.type] || 0) + 1;
-        examTopics[exam.code][q.topic] = (examTopics[exam.code][q.topic] || 0) + 1;
+        examTopics[exam.code][q.topic] =
+          (examTopics[exam.code][q.topic] || 0) + 1;
       });
     });
 

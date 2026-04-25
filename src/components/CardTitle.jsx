@@ -1,6 +1,12 @@
 export default function CardTitle({ emoji, title, sub }) {
   return (
-    <div style={{ marginBottom: 16, paddingBottom: 12, borderBottom: "1px solid #d4cfbf" }}>
+    <div
+      style={{
+        marginBottom: 16,
+        paddingBottom: 12,
+        borderBottom: "1px solid #d4cfbf",
+      }}
+    >
       <div style={{ fontWeight: 800, fontSize: 17, letterSpacing: "-0.01em" }}>
         {emoji} {title}
       </div>

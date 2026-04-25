@@ -26,7 +26,11 @@ export default function MathText({ children }) {
             return <span key={i}>{latex}</span>;
           }
         }
-        return <span key={i} dir="rtl" style={{ unicodeBidi: "embed" }}>{part}</span>;
+        return (
+          <span key={i} dir="rtl" style={{ unicodeBidi: "embed" }}>
+            {part}
+          </span>
+        );
       })}
     </span>
   );

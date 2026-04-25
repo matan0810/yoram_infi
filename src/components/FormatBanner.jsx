@@ -42,7 +42,14 @@ export default function FormatBanner() {
           }}
         >
           מועד א׳ תשפ״ו
-          <span style={{ fontWeight: 400, color: "#9b9890", marginRight: 6, fontSize: 13 }}>
+          <span
+            style={{
+              fontWeight: 400,
+              color: "#9b9890",
+              marginRight: 6,
+              fontSize: 13,
+            }}
+          >
             02.02.26
           </span>
         </div>

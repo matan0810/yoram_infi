@@ -3,7 +3,14 @@ import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
 import { card, inp } from "../styles";
 import { EXAMS, TOPIC_HE, isExcluded } from "../data";
 
-export default function ExamsTab({ yearFilter, setYearFilter, moedFilter, setMoedFilter, setTab, setSearchTopic }) {
+export default function ExamsTab({
+  yearFilter,
+  setYearFilter,
+  moedFilter,
+  setMoedFilter,
+  setTab,
+  setSearchTopic,
+}) {
   const years = useMemo(
     () => [...new Set(EXAMS.map((e) => e.year))].sort(),
     [],
@@ -24,30 +31,54 @@ export default function ExamsTab({ yearFilter, setYearFilter, moedFilter, setMoe
   return (
     <div>
       {/* Filter bar */}
-      <div style={{ ...card, display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-        <select value={yearFilter} onChange={(e) => setYearFilter(e.target.value)} style={inp}>
+      <div
+        style={{
+          ...card,
+          display: "flex",
+          gap: 12,
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        <select
+          value={yearFilter}
+          onChange={(e) => setYearFilter(e.target.value)}
+          style={inp}
+        >
           <option value="">כל השנים</option>
           {years.map((y) => (
-            <option key={y} value={y}>{y}</option>
+            <option key={y} value={y}>
+              {y}
+            </option>
           ))}
         </select>
-        <select value={moedFilter} onChange={(e) => setMoedFilter(e.target.value)} style={inp}>
+        <select
+          value={moedFilter}
+          onChange={(e) => setMoedFilter(e.target.value)}
+          style={inp}
+        >
           <option value="">כל המועדים</option>
           <option value="א">מועד א</option>
           <option value="ב">מועד ב</option>
         </select>
-        <span style={{
-          fontSize: 13,
-          fontWeight: 700,
-          background: "#1a1a1a",
-          color: "#f4f1ea",
-          padding: "4px 10px",
-        }}>
-          {filteredExams.length} מבחנים · {filteredExams.reduce((s, e) => s + e.questions.length, 0)} שאלות
+        <span
+          style={{
+            fontSize: 13,
+            fontWeight: 700,
+            background: "#1a1a1a",
+            color: "#f4f1ea",
+            padding: "4px 10px",
+          }}
+        >
+          {filteredExams.length} מבחנים ·{" "}
+          {filteredExams.reduce((s, e) => s + e.questions.length, 0)} שאלות
         </span>
         {hasActiveFilters && (
           <button
-            onClick={() => { setYearFilter(""); setMoedFilter(""); }}
+            onClick={() => {
+              setYearFilter("");
+              setMoedFilter("");
+            }}
             style={{
               fontSize: 13,
               background: "transparent",
@@ -63,20 +94,40 @@ export default function ExamsTab({ yearFilter, setYearFilter, moedFilter, setMoe
       </div>
 
       {/* Exam cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 18 }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+          gap: 18,
+        }}
+      >
         {filteredExams.map((exam) => (
           <div
             key={exam.code}
             style={{
               ...card,
-              border: exam.year === 2026 ? "2px solid #c1440e" : "1px solid #1a1a1a",
+              border:
+                exam.year === 2026 ? "2px solid #c1440e" : "1px solid #1a1a1a",
               background: exam.year === 2026 ? "#fef8f3" : "white",
               boxShadow: "3px 3px 0 #1a1a1a",
             }}
           >
-            <div style={{ marginBottom: 10, paddingBottom: 8, borderBottom: "1px solid #d4cfbf" }}>
+            <div
+              style={{
+                marginBottom: 10,
+                paddingBottom: 8,
+                borderBottom: "1px solid #d4cfbf",
+              }}
+            >
               <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                <div style={{ fontFamily: "Frank Ruhl Libre, Georgia, serif", fontWeight: 900, fontSize: 26, lineHeight: 1 }}>
+                <div
+                  style={{
+                    fontFamily: "Frank Ruhl Libre, Georgia, serif",
+                    fontWeight: 900,
+                    fontSize: 26,
+                    lineHeight: 1,
+                  }}
+                >
                   {exam.year}
                 </div>
                 <div style={{ fontWeight: 700, fontSize: 15 }}>
@@ -105,21 +156,34 @@ export default function ExamsTab({ yearFilter, setYearFilter, moedFilter, setMoe
                     opacity: excluded ? 0.45 : 1,
                   }}
                 >
-                  <div style={{
-                    fontFamily: "Frank Ruhl Libre, Georgia, serif",
-                    fontWeight: 900,
-                    fontSize: 16,
-                    color: "#c1440e",
-                    textAlign: "center",
-                  }}>
+                  <div
+                    style={{
+                      fontFamily: "Frank Ruhl Libre, Georgia, serif",
+                      fontWeight: 900,
+                      fontSize: 16,
+                      color: "#c1440e",
+                      textAlign: "center",
+                    }}
+                  >
                     {questionNumber}
                   </div>
                   <div>
-                    <div style={{ display: "flex", gap: 3, flexWrap: "wrap", alignItems: "center", marginBottom: 2 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 3,
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                        marginBottom: 2,
+                      }}
+                    >
                       <Chip kind={q.chapter}>פרק {q.chapter}</Chip>
                       <Chip kind={typeToKind(q.type)}>{q.type}</Chip>
                       <span
-                        onClick={() => { setTab("search"); setSearchTopic(q.topic); }}
+                        onClick={() => {
+                          setTab("search");
+                          setSearchTopic(q.topic);
+                        }}
                         style={{
                           fontSize: 11,
                           fontWeight: 600,
@@ -136,7 +200,13 @@ export default function ExamsTab({ yearFilter, setYearFilter, moedFilter, setMoe
                         {TOPIC_HE[q.topic] || q.topic}
                       </span>
                     </div>
-                    <div style={{ fontSize: 12, lineHeight: 1.4, color: "#4a4740" }}>
+                    <div
+                      style={{
+                        fontSize: 12,
+                        lineHeight: 1.4,
+                        color: "#4a4740",
+                      }}
+                    >
                       <MathText>{q.summary}</MathText>
                     </div>
                   </div>
