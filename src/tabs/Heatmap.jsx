@@ -1,25 +1,26 @@
 import { useMemo } from "react";
-import { card, COLORS_UI } from "../styles";
+import { card, COLORS_UI, blendHex, darkenHex } from "../styles";
 import { CardTitle, ExcludedTag, excludedRowStyle } from "../components";
 import { EXAMS, TOPIC_HE, isExcluded } from "../data";
 
-function heatColor(count) {
-  if (count === 0) return "#ece7dc";
-  if (count === 1) return "#fde9d9";
-  if (count === 2) return "#f5c39a";
-  if (count === 3) return "#ec965a";
-  if (count === 4) return COLORS_UI.primary;
-  return "#8a2a06";
-}
-
-const LEGEND = [
-  { bg: "#ece7dc", label: "0" },
-  { bg: "#fde9d9", label: "1" },
-  { bg: "#f5c39a", label: "2" },
-  { bg: "#ec965a", label: "3" },
-  { bg: COLORS_UI.primary, label: "4" },
-  { bg: "#8a2a06", label: "5+" },
+// Derived from COLORS_UI.primary — adapts automatically when the palette changes
+const HEAT_COLORS = [
+  COLORS_UI.barBg,
+  blendHex("#ffffff", COLORS_UI.primary, 0.2),
+  blendHex("#ffffff", COLORS_UI.primary, 0.45),
+  blendHex("#ffffff", COLORS_UI.primary, 0.7),
+  COLORS_UI.primary,
+  darkenHex(COLORS_UI.primary),
 ];
+
+const LEGEND = HEAT_COLORS.map((bg, i) => ({
+  bg,
+  label: i < HEAT_COLORS.length - 1 ? String(i) : "5+",
+}));
+
+function heatColor(count) {
+  return HEAT_COLORS[Math.min(count, HEAT_COLORS.length - 1)];
+}
 
 export default function Heatmap({ stats, setTab, setSearchTopic }) {
   const sortedTopics = useMemo(
@@ -49,7 +50,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                   textAlign: "right",
                   fontSize: 11,
                   fontWeight: 700,
-                  color: "#4a4740",
+                  color: COLORS_UI.text,
                   minWidth: 200,
                 }}
               >
@@ -63,7 +64,10 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                     transform: "rotate(180deg)",
                     padding: "6px 3px",
                     fontSize: 9,
-                    color: exam.year === latestYear ? COLORS_UI.primary : "#6d6a5e",
+                    color:
+                      exam.year === latestYear
+                        ? COLORS_UI.primary
+                        : COLORS_UI.subdued,
                     fontWeight: exam.year === latestYear ? 800 : 500,
                     minWidth: 34,
                     whiteSpace: "nowrap",
@@ -76,8 +80,8 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                 style={{
                   fontSize: 10,
                   fontWeight: 700,
-                  color: "#f4f1ea",
-                  background: "#1a1a1a",
+                  color: COLORS_UI.bg,
+                  background: COLORS_UI.dark,
                   padding: "4px 8px",
                   textAlign: "center",
                   whiteSpace: "nowrap",
@@ -105,8 +109,8 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                       textAlign: "right",
                       fontSize: 12,
                       fontWeight: 600,
-                      color: excluded ? "#9b9890" : "#1a1a1a",
-                      borderLeft: "2px solid #d4cfbf",
+                      color: excluded ? COLORS_UI.muted : COLORS_UI.dark,
+                      borderLeft: `2px solid ${COLORS_UI.border}`,
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -146,7 +150,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                           border:
                             exam.year === latestYear
                               ? `2px solid ${COLORS_UI.primary}`
-                              : "1px solid #f4f1ea",
+                              : `1px solid ${COLORS_UI.bg}`,
                           minWidth: 32,
                           height: 30,
                         }}
@@ -160,8 +164,8 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                       textAlign: "center",
                       fontWeight: 800,
                       fontSize: 12,
-                      background: "#1a1a1a",
-                      color: "#f4f1ea",
+                      background: COLORS_UI.dark,
+                      color: COLORS_UI.bg,
                       padding: "3px 10px",
                     }}
                   >
@@ -178,14 +182,14 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
         style={{
           marginTop: 14,
           paddingTop: 12,
-          borderTop: "1px solid #ede9e0",
+          borderTop: `1px solid ${COLORS_UI.rowDivider}`,
           display: "flex",
           gap: 6,
           alignItems: "center",
           flexWrap: "wrap",
         }}
       >
-        <span style={{ fontSize: 11, color: "#6d6a5e", marginLeft: 8 }}>
+        <span style={{ fontSize: 11, color: COLORS_UI.subdued, marginLeft: 8 }}>
           מס׳ שאלות לפי מבחן:
         </span>
         {LEGEND.map(({ bg, label }) => (
@@ -199,10 +203,12 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                 height: 20,
                 background: bg,
                 display: "inline-block",
-                border: "1px solid #d4cfbf",
+                border: `1px solid ${COLORS_UI.border}`,
               }}
             />
-            <span style={{ fontSize: 11, fontWeight: 600, color: "#4a4740" }}>
+            <span
+              style={{ fontSize: 11, fontWeight: 600, color: COLORS_UI.text }}
+            >
               {label}
             </span>
           </span>

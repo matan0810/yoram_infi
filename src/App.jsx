@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useStats } from "./hooks";
-import { c } from "./styles";
+import { c, COLORS_UI } from "./styles";
 import { Header, FormatBanner, TabBar } from "./components";
 import { Overview, Heatmap, ExamsTab, SearchTab, Insights } from "./tabs";
 import { EXAMS, COURSE } from "./data";
@@ -14,7 +14,7 @@ const MAX_YEAR = Math.max(...EXAMS.map((e) => e.year));
 
 export default function App() {
   useEffect(() => {
-    document.title = `ארכיון מבחנים — ${COURSE.name} · ${COURSE.number}`;
+    document.title = `מדד שאלות - ${COURSE.name} · ${COURSE.number}`;
   }, []);
 
   const [tab, setTab] = useState("overview");
@@ -93,13 +93,13 @@ export default function App() {
         style={{
           marginTop: 28,
           paddingTop: 14,
-          borderTop: "1px solid #d4cfbf",
+          borderTop: `1px solid ${COLORS_UI.border}`,
           display: "flex",
           justifyContent: "space-between",
           flexWrap: "wrap",
           gap: 8,
           fontSize: 12,
-          color: "#4a4740",
+          color: COLORS_UI.text,
         }}
       >
         <span>

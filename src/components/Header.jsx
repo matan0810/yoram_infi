@@ -1,21 +1,21 @@
 import { EXAMS, COURSE } from "../data";
-import { COLORS_UI } from "../styles";
+import { COLORS_UI, FONTS } from "../styles";
 
 export default function Header() {
   return (
     <div
       style={{
-        borderTop: "4px solid #1a1a1a",
-        borderBottom: "1px solid #1a1a1a",
+        borderTop: `4px solid ${COLORS_UI.dark}`,
+        borderBottom: `1px solid ${COLORS_UI.dark}`,
         paddingBottom: 20,
         marginBottom: 20,
       }}
     >
       <div
         style={{
-          fontFamily: "Heebo, system-ui, sans-serif",
+          fontFamily: FONTS.sans,
           fontSize: 12,
-          color: "#9b9890",
+          color: COLORS_UI.muted,
           marginBottom: 6,
         }}
       >
@@ -23,14 +23,15 @@ export default function Header() {
       </div>
       <div
         style={{
-          fontFamily: "Heebo, system-ui, sans-serif",
+          fontFamily: FONTS.sans,
           fontWeight: 800,
           fontSize: 38,
           lineHeight: 1,
           letterSpacing: "-0.03em",
         }}
       >
-        מדד שאלות <span style={{ color: COLORS_UI.primary }}>{COURSE.shortName}</span>
+        מדד שאלות{" "}
+        <span style={{ color: COLORS_UI.primary }}>{COURSE.shortName}</span>
       </div>
       <div
         style={{
@@ -38,7 +39,7 @@ export default function Header() {
           gap: 24,
           marginTop: 14,
           paddingTop: 12,
-          borderTop: "1px dashed #d4cfbf",
+          borderTop: `1px dashed ${COLORS_UI.border}`,
           flexWrap: "wrap",
         }}
       >
@@ -57,7 +58,7 @@ export default function Header() {
           <div key={l}>
             <div
               style={{
-                fontFamily: "Frank Ruhl Libre, Georgia, serif",
+                fontFamily: FONTS.serif,
                 fontWeight: 900,
                 fontSize: 26,
               }}
@@ -66,9 +67,9 @@ export default function Header() {
             </div>
             <div
               style={{
-                fontFamily: "Heebo, system-ui, sans-serif",
+                fontFamily: FONTS.sans,
                 fontSize: 12,
-                color: "#4a4740",
+                color: COLORS_UI.text,
               }}
             >
               {l}

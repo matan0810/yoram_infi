@@ -1,7 +1,15 @@
 import { useMemo } from "react";
 import { card, COLORS_UI } from "../styles";
 import { CardTitle, Badge, MathText } from "../components";
-import { EXAMS, TOPIC_HE, EXCLUDED_TOPICS, TRAPS, TREND_FROM_YEAR } from "../data";
+import {
+  EXAMS,
+  TOPIC_HE,
+  EXCLUDED_TOPICS,
+  TRAPS,
+  TREND_FROM_YEAR,
+} from "../data";
+
+const MAX_YEAR = Math.max(...EXAMS.map((e) => e.year));
 
 function InsightRow({ children, onClick }) {
   return (
@@ -9,12 +17,12 @@ function InsightRow({ children, onClick }) {
       onClick={onClick}
       style={{
         padding: "11px 0",
-        borderBottom: "1px solid #ede9e0",
+        borderBottom: `1px solid ${COLORS_UI.rowDivider}`,
         lineHeight: 1.5,
         cursor: onClick ? "pointer" : "default",
       }}
       onMouseEnter={(e) => {
-        if (onClick) e.currentTarget.style.background = "#fef4ee";
+        if (onClick) e.currentTarget.style.background = COLORS_UI.hoverBg;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.background = "transparent";
@@ -49,13 +57,12 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
           lastSeen[q.topic] = exam.year;
       });
     });
-    const maxYear = Math.max(...EXAMS.map((e) => e.year));
     return Object.entries(totalCount)
       .filter(
         ([key, count]) =>
           !EXCLUDED_TOPICS.has(key) &&
           count >= 3 &&
-          maxYear - (lastSeen[key] || 0) >= 3,
+          MAX_YEAR - (lastSeen[key] || 0) >= 3,
       )
       .sort((a, b) => lastSeen[a[0]] - lastSeen[b[0]])
       .slice(0, 6)
@@ -106,11 +113,21 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
                 <Badge>{count}</Badge>
                 <div>
                   <div
-                    style={{ fontWeight: 700, fontSize: 14, color: COLORS_UI.primary }}
+                    style={{
+                      fontWeight: 700,
+                      fontSize: 14,
+                      color: COLORS_UI.primary,
+                    }}
                   >
                     {TOPIC_HE[key]}
                   </div>
-                  <div style={{ fontSize: 12, color: "#9b9890", marginTop: 1 }}>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: COLORS_UI.muted,
+                      marginTop: 1,
+                    }}
+                  >
                     {examCount}/{EXAMS.length} מבחנים ·{" "}
                     {Math.round((examCount / EXAMS.length) * 100)}%
                   </div>
@@ -139,7 +156,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
             >
               <MathText>{trap.t}</MathText>
             </div>
-            <div style={{ fontSize: 12, color: "#9b9890" }}>
+            <div style={{ fontSize: 12, color: COLORS_UI.muted }}>
               <MathText>{trap.n}</MathText>
             </div>
           </InsightRow>
@@ -149,7 +166,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
       <div style={card}>
         <CardTitle
           emoji="📈"
-          title={`טרנד ${TREND_FROM_YEAR}–${Math.max(...EXAMS.map((e) => e.year))}`}
+          title={`טרנד ${TREND_FROM_YEAR}–${MAX_YEAR}`}
           sub="לחץ על נושא לחיפוש שאלות"
         />
         {recentTrend.entries.map(([key, count]) => (
@@ -160,7 +177,9 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
                 <div style={{ fontWeight: 700, fontSize: 14 }}>
                   {TOPIC_HE[key]}
                 </div>
-                <div style={{ fontSize: 12, color: "#9b9890", marginTop: 1 }}>
+                <div
+                  style={{ fontSize: 12, color: COLORS_UI.muted, marginTop: 1 }}
+                >
                   {Math.round((count / recentTrend.total) * 100)}% מהשאלות
                 </div>
               </div>
@@ -176,7 +195,13 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
           sub="לחץ על נושא לחיפוש שאלות"
         />
         {overdueTopics.length === 0 ? (
-          <div style={{ color: "#9b9890", fontSize: 13, fontStyle: "italic" }}>
+          <div
+            style={{
+              color: COLORS_UI.muted,
+              fontSize: 13,
+              fontStyle: "italic",
+            }}
+          >
             אין נושאים כאלה
           </div>
         ) : (
@@ -190,9 +215,14 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
                   <div style={{ fontWeight: 700, fontSize: 14 }}>
                     {TOPIC_HE[topic] || topic}
                   </div>
-                  <div style={{ fontSize: 12, color: "#9b9890", marginTop: 1 }}>
-                    נראה לאחרונה {last} · {new Date().getFullYear() - last} שנים
-                    ללא הופעה
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: COLORS_UI.muted,
+                      marginTop: 1,
+                    }}
+                  >
+                    נראה לאחרונה {last} · {MAX_YEAR - last} שנים ללא הופעה
                   </div>
                 </div>
               </div>
@@ -218,7 +248,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
                 <div
                   style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
                 >
-                  <Badge bg="#ece7dc" color="#4a4740">
+                  <Badge bg={COLORS_UI.barBg} color={COLORS_UI.text}>
                     {count}
                   </Badge>
                   <div>
@@ -226,7 +256,11 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
                       {TOPIC_HE[key]}
                     </div>
                     <div
-                      style={{ fontSize: 12, color: "#9b9890", marginTop: 1 }}
+                      style={{
+                        fontSize: 12,
+                        color: COLORS_UI.muted,
+                        marginTop: 1,
+                      }}
                     >
                       ב-{examCount} מבחנים בלבד
                     </div>

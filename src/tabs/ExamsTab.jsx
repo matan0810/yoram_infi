@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
-import { card, inp, COLORS_UI } from "../styles";
+import { card, inp, COLORS_UI, FONTS, clearBtn, countBadge } from "../styles";
 import { EXAMS, TOPIC_HE, isExcluded } from "../data";
 
 export default function ExamsTab({
@@ -63,15 +63,7 @@ export default function ExamsTab({
           <option value="א">מועד א</option>
           <option value="ב">מועד ב</option>
         </select>
-        <span
-          style={{
-            fontSize: 13,
-            fontWeight: 700,
-            background: "#1a1a1a",
-            color: "#f4f1ea",
-            padding: "4px 10px",
-          }}
-        >
+        <span style={countBadge}>
           {filteredExams.length} מבחנים ·{" "}
           {filteredExams.reduce((s, e) => s + e.questions.length, 0)} שאלות
         </span>
@@ -81,14 +73,7 @@ export default function ExamsTab({
               setYearFilter("");
               setMoedFilter("");
             }}
-            style={{
-              fontSize: 13,
-              background: "transparent",
-              border: "1px solid #d4cfbf",
-              padding: "5px 12px",
-              cursor: "pointer",
-              color: "#4a4740",
-            }}
+            style={clearBtn}
           >
             נקה סינון
           </button>
@@ -103,120 +88,130 @@ export default function ExamsTab({
           gap: 18,
         }}
       >
-        {filteredExams.map((exam) => (
-          <div
-            key={exam.code}
-            style={{
-              ...card,
-              border:
-                exam.year === latestYear ? `2px solid ${COLORS_UI.primary}` : "1px solid #1a1a1a",
-              background: exam.year === latestYear ? "#fef8f3" : "white",
-              boxShadow: "3px 3px 0 #1a1a1a",
-            }}
-          >
+        {filteredExams.map((exam) => {
+          const isLatest = exam.year === latestYear;
+          return (
             <div
+              key={exam.code}
               style={{
-                marginBottom: 10,
-                paddingBottom: 8,
-                borderBottom: "1px solid #d4cfbf",
+                ...card,
+                border: isLatest
+                  ? `2px solid ${COLORS_UI.primary}`
+                  : `1px solid ${COLORS_UI.dark}`,
+                background: isLatest ? COLORS_UI.latestBg : "white",
+                boxShadow: `3px 3px 0 ${COLORS_UI.dark}`,
               }}
             >
-              <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+              <div
+                style={{
+                  marginBottom: 10,
+                  paddingBottom: 8,
+                  borderBottom: `1px solid ${COLORS_UI.border}`,
+                }}
+              >
                 <div
-                  style={{
-                    fontFamily: "Frank Ruhl Libre, Georgia, serif",
-                    fontWeight: 900,
-                    fontSize: 26,
-                    lineHeight: 1,
-                  }}
-                >
-                  {exam.year}
-                </div>
-                <div style={{ fontWeight: 700, fontSize: 15 }}>
-                  מועד {exam.moed}
-                </div>
-                {exam.year === latestYear && <Chip kind="hot">המבחן שלך!</Chip>}
-              </div>
-              <div style={{ fontSize: 11, color: "#9b9890", marginTop: 3 }}>
-                מבנה {exam.chapter_structure} · {exam.questions.length} שאלות
-              </div>
-            </div>
-
-            {exam.questions.map((q) => {
-              const excluded = isExcluded(q.topic);
-              const questionNumber = q.id.replace(/^[א-ת]/, "");
-              return (
-                <div
-                  key={q.id}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "28px 1fr",
-                    gap: 8,
-                    padding: "6px 0",
-                    borderBottom: "1px solid #ede9e0",
-                    alignItems: "baseline",
-                    opacity: excluded ? 0.45 : 1,
-                  }}
+                  style={{ display: "flex", alignItems: "baseline", gap: 10 }}
                 >
                   <div
                     style={{
-                      fontFamily: "Frank Ruhl Libre, Georgia, serif",
+                      fontFamily: FONTS.serif,
                       fontWeight: 900,
-                      fontSize: 16,
-                      color: COLORS_UI.primary,
-                      textAlign: "center",
+                      fontSize: 26,
+                      lineHeight: 1,
                     }}
                   >
-                    {questionNumber}
+                    {exam.year}
                   </div>
-                  <div>
+                  <div style={{ fontWeight: 700, fontSize: 15 }}>
+                    מועד {exam.moed}
+                  </div>
+                  {isLatest && <Chip kind="hot">המבחן שלך!</Chip>}
+                </div>
+                <div
+                  style={{ fontSize: 11, color: COLORS_UI.muted, marginTop: 3 }}
+                >
+                  מבנה {exam.chapter_structure} · {exam.questions.length} שאלות
+                </div>
+              </div>
+
+              {exam.questions.map((q) => {
+                const excluded = isExcluded(q.topic);
+                const questionNumber = q.id.replace(/^[א-ת]/, "");
+                return (
+                  <div
+                    key={q.id}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "28px 1fr",
+                      gap: 8,
+                      padding: "6px 0",
+                      borderBottom: `1px solid ${COLORS_UI.rowDivider}`,
+                      alignItems: "baseline",
+                      opacity: excluded ? 0.45 : 1,
+                    }}
+                  >
                     <div
                       style={{
-                        display: "flex",
-                        gap: 3,
-                        flexWrap: "wrap",
-                        alignItems: "center",
-                        marginBottom: 2,
+                        fontFamily: FONTS.serif,
+                        fontWeight: 900,
+                        fontSize: 16,
+                        color: COLORS_UI.primary,
+                        textAlign: "center",
                       }}
                     >
-                      <Chip kind={q.chapter}>פרק {q.chapter}</Chip>
-                      <Chip kind={typeToKind(q.type)}>{q.type}</Chip>
-                      <span
-                        onClick={() => {
-                          setTab("search");
-                          setSearchTopic(q.topic);
-                        }}
+                      {questionNumber}
+                    </div>
+                    <div>
+                      <div
                         style={{
-                          fontSize: 11,
-                          fontWeight: 600,
-                          color: excluded ? "#9b9890" : COLORS_UI.secondary,
-                          border: `1px dashed ${excluded ? "#b0aca4" : COLORS_UI.secondary}`,
-                          padding: "1px 6px",
-                          cursor: "pointer",
-                          display: "inline-flex",
-                          alignItems: "center",
+                          display: "flex",
                           gap: 3,
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                          marginBottom: 2,
                         }}
                       >
-                        {excluded && <ExcludedTag />}
-                        {TOPIC_HE[q.topic] || q.topic}
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        lineHeight: 1.4,
-                        color: "#4a4740",
-                      }}
-                    >
-                      <MathText>{q.summary}</MathText>
+                        <Chip kind={q.chapter}>פרק {q.chapter}</Chip>
+                        <Chip kind={typeToKind(q.type)}>{q.type}</Chip>
+                        <span
+                          onClick={() => {
+                            setTab("search");
+                            setSearchTopic(q.topic);
+                          }}
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 600,
+                            color: excluded
+                              ? COLORS_UI.muted
+                              : COLORS_UI.secondary,
+                            border: `1px dashed ${excluded ? COLORS_UI.border : COLORS_UI.secondary}`,
+                            padding: "1px 6px",
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 3,
+                          }}
+                        >
+                          {excluded && <ExcludedTag />}
+                          {TOPIC_HE[q.topic] || q.topic}
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          lineHeight: 1.4,
+                          color: COLORS_UI.text,
+                        }}
+                      >
+                        <MathText>{q.summary}</MathText>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        ))}
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

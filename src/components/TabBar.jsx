@@ -14,7 +14,7 @@ export default function TabBar({ tab, setTab }) {
       style={{
         display: "flex",
         gap: 2,
-        borderBottom: "2px solid #1a1a1a",
+        borderBottom: `2px solid ${COLORS_UI.dark}`,
         marginBottom: 20,
         flexWrap: "wrap",
       }}
@@ -28,12 +28,14 @@ export default function TabBar({ tab, setTab }) {
             fontFamily: "inherit",
             fontWeight: 700,
             fontSize: 13,
-            background: tab === t.id ? "#ece7dc" : "transparent",
+            background: tab === t.id ? COLORS_UI.barBg : "transparent",
             border: "none",
             cursor: "pointer",
-            color: tab === t.id ? COLORS_UI.primary : "#6d6a5e",
+            color: tab === t.id ? COLORS_UI.primary : COLORS_UI.subdued,
             borderBottom:
-              tab === t.id ? `3px solid ${COLORS_UI.primary}` : "3px solid transparent",
+              tab === t.id
+                ? `3px solid ${COLORS_UI.primary}`
+                : "3px solid transparent",
             marginBottom: -2,
           }}
         >

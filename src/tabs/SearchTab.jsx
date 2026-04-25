@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
-import { card, inp, COLORS_UI } from "../styles";
+import { card, inp, COLORS_UI, FONTS, clearBtn, countBadge } from "../styles";
 import { EXAMS, TOPIC_HE, isExcluded, CHAPTERS } from "../data";
 
 export default function SearchTab({
@@ -141,17 +141,7 @@ export default function SearchTab({
           <option value="א">מועד א</option>
           <option value="ב">מועד ב</option>
         </select>
-        <span
-          style={{
-            fontSize: 13,
-            fontWeight: 700,
-            background: "#1a1a1a",
-            color: "#f4f1ea",
-            padding: "4px 10px",
-          }}
-        >
-          {results.length} תוצאות
-        </span>
+        <span style={countBadge}>{results.length} תוצאות</span>
         {hasActiveFilters && (
           <button
             onClick={() => {
@@ -162,14 +152,7 @@ export default function SearchTab({
               setYear("");
               setMoed("");
             }}
-            style={{
-              fontSize: 13,
-              background: "transparent",
-              border: "1px solid #d4cfbf",
-              padding: "5px 12px",
-              cursor: "pointer",
-              color: "#4a4740",
-            }}
+            style={clearBtn}
           >
             נקה סינון
           </button>
@@ -181,9 +164,9 @@ export default function SearchTab({
           style={{
             textAlign: "center",
             padding: 40,
-            color: "#6d6a5e",
+            color: COLORS_UI.subdued,
             fontStyle: "italic",
-            fontFamily: "Frank Ruhl Libre, Georgia, serif",
+            fontFamily: FONTS.serif,
           }}
         >
           לא נמצאו שאלות
@@ -196,7 +179,7 @@ export default function SearchTab({
             key={i}
             style={{
               background: "white",
-              border: "1px solid #d4cfbf",
+              border: `1px solid ${COLORS_UI.border}`,
               padding: 12,
               display: "grid",
               gridTemplateColumns: "110px 80px 1fr",
@@ -207,12 +190,16 @@ export default function SearchTab({
           >
             <div style={{ lineHeight: 1.5 }}>
               <div style={{ fontWeight: 700, fontSize: 14 }}>{exam.year}</div>
-              <div style={{ fontSize: 12, color: "#4a4740" }}>
+              <div style={{ fontSize: 12, color: COLORS_UI.text }}>
                 מועד {exam.moed}
               </div>
               <div style={{ marginTop: 6 }}>
                 <div
-                  style={{ fontSize: 10, color: "#9b9890", marginBottom: 1 }}
+                  style={{
+                    fontSize: 10,
+                    color: COLORS_UI.muted,
+                    marginBottom: 1,
+                  }}
                 >
                   שאלה
                 </div>
@@ -221,7 +208,7 @@ export default function SearchTab({
                     fontSize: 22,
                     fontWeight: 900,
                     color: COLORS_UI.primary,
-                    fontFamily: "Frank Ruhl Libre, Georgia, serif",
+                    fontFamily: FONTS.serif,
                     lineHeight: 1,
                   }}
                 >
@@ -239,7 +226,7 @@ export default function SearchTab({
                 style={{
                   fontSize: 12,
                   color: isExcluded(question.topic)
-                    ? "#9b9890"
+                    ? COLORS_UI.muted
                     : COLORS_UI.secondary,
                   marginBottom: 4,
                   fontWeight: 600,

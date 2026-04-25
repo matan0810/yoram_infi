@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import { Bar, CardTitle, ExcludedTag, excludedRowStyle } from "../components";
-import { card } from "../styles";
+import { card, COLORS_UI } from "../styles";
 import { EXAMS, TOPIC_HE, COLORS, isExcluded, CHAPTERS } from "../data";
+
+const EXCLUDED_LABEL = COLORS_UI.muted;
 
 export default function Overview({
   stats,
@@ -47,7 +49,11 @@ export default function Overview({
                 <span>
                   {TOPIC_HE[topicKey] || topicKey}
                   <span
-                    style={{ fontSize: 11, color: "#9b9890", marginRight: 8 }}
+                    style={{
+                      fontSize: 11,
+                      color: COLORS_UI.muted,
+                      marginRight: 8,
+                    }}
                   >
                     {examCount}/{EXAMS.length} מבחנים
                   </span>
@@ -68,10 +74,10 @@ export default function Overview({
           <>
             <div
               style={{
-                borderTop: "1px dashed #d4cfbf",
+                borderTop: `1px dashed ${COLORS_UI.border}`,
                 margin: "12px 0 6px",
                 fontSize: 11,
-                color: "#b0aca4",
+                color: EXCLUDED_LABEL,
               }}
             >
               לא בתכנית הנוכחית
@@ -87,7 +93,7 @@ export default function Overview({
                   }
                   val={count}
                   max={maxTopicCount}
-                  color="#b0aca4"
+                  color={EXCLUDED_LABEL}
                   pct={Math.round((count / stats.total) * 100)}
                 />
               </div>

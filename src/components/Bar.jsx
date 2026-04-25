@@ -1,14 +1,16 @@
+import { COLORS_UI, FONTS } from "../styles";
+
 export default function Bar({ label, val, max, color, pct, onClick }) {
   return (
     <div
       onClick={onClick}
       style={{
         padding: "10px 0",
-        borderBottom: "1px solid #ede9e0",
+        borderBottom: `1px solid ${COLORS_UI.rowDivider}`,
         cursor: onClick ? "pointer" : "default",
       }}
       onMouseEnter={(e) => {
-        if (onClick) e.currentTarget.style.background = "#fef4ee";
+        if (onClick) e.currentTarget.style.background = COLORS_UI.hoverBg;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.background = "transparent";
@@ -24,10 +26,10 @@ export default function Bar({ label, val, max, color, pct, onClick }) {
       >
         <div
           style={{
-            fontFamily: "Heebo, system-ui, sans-serif",
+            fontFamily: FONTS.sans,
             fontWeight: 700,
             fontSize: 13,
-            color: "#1a1a1a",
+            color: COLORS_UI.dark,
           }}
         >
           {label}
@@ -42,11 +44,11 @@ export default function Bar({ label, val, max, color, pct, onClick }) {
         >
           <span
             style={{
-              fontFamily: "Heebo, system-ui, sans-serif",
+              fontFamily: FONTS.sans,
               fontWeight: 800,
               fontSize: 13,
-              background: "#1a1a1a",
-              color: "#f4f1ea",
+              background: COLORS_UI.dark,
+              color: COLORS_UI.bg,
               padding: "2px 9px",
               display: "inline-block",
             }}
@@ -55,9 +57,9 @@ export default function Bar({ label, val, max, color, pct, onClick }) {
           </span>
           <span
             style={{
-              fontFamily: "Heebo, system-ui, sans-serif",
+              fontFamily: FONTS.sans,
               fontSize: 11,
-              color: "#9b9890",
+              color: COLORS_UI.muted,
               minWidth: 30,
               textAlign: "start",
             }}
@@ -66,7 +68,7 @@ export default function Bar({ label, val, max, color, pct, onClick }) {
           </span>
         </div>
       </div>
-      <div style={{ background: "#ece7dc", height: 5 }}>
+      <div style={{ background: COLORS_UI.barBg, height: 5 }}>
         <div
           style={{
             background: color,
