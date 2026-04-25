@@ -16,6 +16,8 @@ export default function ExamsTab({
     [],
   );
 
+  const latestYear = useMemo(() => Math.max(...EXAMS.map((e) => e.year)), []);
+
   const filteredExams = useMemo(
     () =>
       EXAMS.filter((exam) => {
@@ -107,8 +109,8 @@ export default function ExamsTab({
             style={{
               ...card,
               border:
-                exam.year === 2026 ? `2px solid ${COLORS_UI.primary}` : "1px solid #1a1a1a",
-              background: exam.year === 2026 ? "#fef8f3" : "white",
+                exam.year === latestYear ? `2px solid ${COLORS_UI.primary}` : "1px solid #1a1a1a",
+              background: exam.year === latestYear ? "#fef8f3" : "white",
               boxShadow: "3px 3px 0 #1a1a1a",
             }}
           >
@@ -133,7 +135,7 @@ export default function ExamsTab({
                 <div style={{ fontWeight: 700, fontSize: 15 }}>
                   מועד {exam.moed}
                 </div>
-                {exam.year === 2026 && <Chip kind="hot">המבחן שלך!</Chip>}
+                {exam.year === latestYear && <Chip kind="hot">המבחן שלך!</Chip>}
               </div>
               <div style={{ fontSize: 11, color: "#9b9890", marginTop: 3 }}>
                 מבנה {exam.chapter_structure} · {exam.questions.length} שאלות

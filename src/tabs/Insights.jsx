@@ -1,30 +1,7 @@
 import { useMemo } from "react";
 import { card, COLORS_UI } from "../styles";
 import { CardTitle, Badge, MathText } from "../components";
-import { EXAMS, TOPIC_HE, EXCLUDED_TOPICS } from "../data";
-
-const TRAPS = [
-  {
-    t: '$f_n \\to f$ במ"ש $\\Rightarrow$ $f$ רציפה',
-    n: "חזר 5 פעמים כולל 2026 — חובה מוחלטת בפרק א׳",
-  },
-  {
-    t: "$\\int x^\\alpha \\sin/\\cos(x^\\beta)\\,dx$",
-    n: "$\\alpha > -|\\beta| - 1$ מתכנס — לדעת בעל פה",
-  },
-  {
-    t: "$\\limsup \\leq M \\Rightarrow \\exists N\\,\\forall n>N\\; a_n \\leq M$",
-    n: "2018, 2019, 2021, 2026 — אותה שאלה",
-  },
-  {
-    t: "פונקציית רימן $f(p/q)=1/q$",
-    n: "2017, 2018, 2022, 2026 — תמיד אינטגרבילית",
-  },
-  {
-    t: "$\\sum(n+1)a_{n+1}x^n$, $\\sum a_n R^n$ עם $R>0$",
-    n: "2018, 2021, 2022, 2023, 2026 — כמעט זהה",
-  },
-];
+import { EXAMS, TOPIC_HE, EXCLUDED_TOPICS, TRAPS, TREND_FROM_YEAR } from "../data";
 
 function InsightRow({ children, onClick }) {
   return (
@@ -88,7 +65,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
   const recentTrend = useMemo(() => {
     const counts = {};
     let total = 0;
-    EXAMS.filter((e) => e.year >= 2021).forEach((exam) =>
+    EXAMS.filter((e) => e.year >= TREND_FROM_YEAR).forEach((exam) =>
       exam.questions.forEach((q) => {
         if (EXCLUDED_TOPICS.has(q.topic)) return;
         counts[q.topic] = (counts[q.topic] || 0) + 1;
@@ -172,7 +149,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
       <div style={card}>
         <CardTitle
           emoji="📈"
-          title="טרנד 2021–2026"
+          title={`טרנד ${TREND_FROM_YEAR}–${Math.max(...EXAMS.map((e) => e.year))}`}
           sub="לחץ על נושא לחיפוש שאלות"
         />
         {recentTrend.entries.map(([key, count]) => (

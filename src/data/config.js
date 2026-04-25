@@ -14,6 +14,31 @@ export const CHAPTERS = [
 
 export const EXCLUDED_TOPICS = new Set(["multivariable"]);
 
+export const TREND_FROM_YEAR = 2021;
+
+export const TRAPS = [
+  {
+    t: '$f_n \\to f$ במ"ש $\\Rightarrow$ $f$ רציפה',
+    n: "חזר 5 פעמים כולל 2026 — חובה מוחלטת בפרק א׳",
+  },
+  {
+    t: "$\\int x^\\alpha \\sin/\\cos(x^\\beta)\\,dx$",
+    n: "$\\alpha > -|\\beta| - 1$ מתכנס — לדעת בעל פה",
+  },
+  {
+    t: "$\\limsup \\leq M \\Rightarrow \\exists N\\,\\forall n>N\\; a_n \\leq M$",
+    n: "2018, 2019, 2021, 2026 — אותה שאלה",
+  },
+  {
+    t: "פונקציית רימן $f(p/q)=1/q$",
+    n: "2017, 2018, 2022, 2026 — תמיד אינטגרבילית",
+  },
+  {
+    t: "$\\sum(n+1)a_{n+1}x^n$, $\\sum a_n R^n$ עם $R>0$",
+    n: "2018, 2021, 2022, 2023, 2026 — כמעט זהה",
+  },
+];
+
 export const EXAM_FORMAT = {
   latestSession: "מועד א׳ תשפ״ו",
   latestDate:    "02.02.26",

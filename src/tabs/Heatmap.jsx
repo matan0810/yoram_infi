@@ -27,12 +27,14 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
     [stats],
   );
 
+  const latestYear = useMemo(() => Math.max(...EXAMS.map((e) => e.year)), []);
+
   return (
     <div style={card}>
       <CardTitle
         emoji="🗺️"
         title="מפת חום — נושאים × מבחנים"
-        sub="כהה יותר = יותר שאלות · לחץ על תא לחיפוש · עמודת 2026 מסומנת"
+        sub={`כהה יותר = יותר שאלות · לחץ על תא לחיפוש · עמודת ${latestYear} מסומנת`}
       />
 
       <div style={{ overflowX: "auto" }}>
@@ -61,8 +63,8 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                     transform: "rotate(180deg)",
                     padding: "6px 3px",
                     fontSize: 9,
-                    color: exam.year === 2026 ? COLORS_UI.primary : "#6d6a5e",
-                    fontWeight: exam.year === 2026 ? 800 : 500,
+                    color: exam.year === latestYear ? COLORS_UI.primary : "#6d6a5e",
+                    fontWeight: exam.year === latestYear ? 800 : 500,
                     minWidth: 34,
                     whiteSpace: "nowrap",
                   }}
@@ -142,7 +144,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                           cursor:
                             count > 0 && !excluded ? "pointer" : "default",
                           border:
-                            exam.year === 2026
+                            exam.year === latestYear
                               ? `2px solid ${COLORS_UI.primary}`
                               : "1px solid #f4f1ea",
                           minWidth: 32,
