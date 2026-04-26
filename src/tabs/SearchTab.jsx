@@ -15,6 +15,8 @@ export default function SearchTab({
   setYear,
   moed,
   setMoed,
+  lecturer,
+  setLecturer,
   exams,
   topicHe,
   isExcluded,
@@ -42,6 +44,18 @@ export default function SearchTab({
     [exams],
   );
 
+  const UNKNOWN_LECTURER = "לא ידוע";
+
+  const lecturers = useMemo(
+    () =>
+      [...new Set(exams.map((e) => e.lecturer ?? UNKNOWN_LECTURER))].sort((a, b) => {
+        if (a === UNKNOWN_LECTURER) return 1;
+        if (b === UNKNOWN_LECTURER) return -1;
+        return a.localeCompare(b);
+      }),
+    [exams],
+  );
+
   const types = useMemo(
     () =>
       [...new Set(exams.flatMap((e) => e.questions.map((q) => q.type)))].sort(),
@@ -54,6 +68,7 @@ export default function SearchTab({
     exams.forEach((exam) => {
       if (year && String(exam.year) !== year) return;
       if (moed && exam.moed !== moed) return;
+      if (lecturer && (exam.lecturer ?? UNKNOWN_LECTURER) !== lecturer) return;
       exam.questions.forEach((q) => {
         if (topic && q.topic !== topic) return;
         if (chapter && q.chapter !== chapter) return;
@@ -69,9 +84,9 @@ export default function SearchTab({
       });
     });
     return matches;
-  }, [exams, query, topic, chapter, type, year, moed, topicHe]);
+  }, [exams, query, topic, chapter, type, year, moed, lecturer, topicHe]);
 
-  const hasActiveFilters = query || topic || chapter || type || year || moed;
+  const hasActiveFilters = query || topic || chapter || type || year || moed || lecturer;
 
   return (
     <div>
@@ -148,6 +163,20 @@ export default function SearchTab({
           <option value="א">מועד א</option>
           <option value="ב">מועד ב</option>
         </select>
+        {lecturers.length > 1 && (
+          <select
+            value={lecturer}
+            onChange={(e) => setLecturer(e.target.value)}
+            style={inp}
+          >
+            <option value="">כל המרצים</option>
+            {lecturers.map((l) => (
+              <option key={l} value={l}>
+                {l}
+              </option>
+            ))}
+          </select>
+        )}
         <span style={countBadge}>{results.length} תוצאות</span>
         {hasActiveFilters && (
           <button
@@ -158,6 +187,7 @@ export default function SearchTab({
               setType("");
               setYear("");
               setMoed("");
+              setLecturer("");
             }}
             style={clearBtn}
           >
@@ -199,6 +229,9 @@ export default function SearchTab({
               <div style={{ fontWeight: 700, fontSize: 14 }}>{exam.year}</div>
               <div style={{ fontSize: 12, color: COLORS_UI.text }}>
                 מועד {exam.moed}
+              </div>
+              <div style={{ fontSize: 11, color: COLORS_UI.muted, marginTop: 2 }}>
+                {exam.lecturer ?? UNKNOWN_LECTURER}
               </div>
               <div style={{ marginTop: 6 }}>
                 <div

@@ -33,6 +33,7 @@ export default function CourseApp() {
   // ExamsTab filters
   const [examYear, setExamYear] = useState("");
   const [examMoed, setExamMoed] = useState("");
+  const [examLecturer, setExamLecturer] = useState("");
 
   // SearchTab filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,6 +42,7 @@ export default function CourseApp() {
   const [searchType, setSearchType] = useState("");
   const [searchYear, setSearchYear] = useState("");
   const [searchMoed, setSearchMoed] = useState("");
+  const [searchLecturer, setSearchLecturer] = useState("");
 
   const stats = useStats(EXAMS);
 
@@ -82,6 +84,8 @@ export default function CourseApp() {
           setYearFilter={setExamYear}
           moedFilter={examMoed}
           setMoedFilter={setExamMoed}
+          lecturerFilter={examLecturer}
+          setLecturerFilter={setExamLecturer}
           setTab={setTab}
           setSearchTopic={setSearchTopic}
           exams={EXAMS}
@@ -104,6 +108,8 @@ export default function CourseApp() {
           setYear={setSearchYear}
           moed={searchMoed}
           setMoed={setSearchMoed}
+          lecturer={searchLecturer}
+          setLecturer={setSearchLecturer}
           exams={EXAMS}
           topicHe={TOPIC_HE}
           isExcluded={isExcluded}

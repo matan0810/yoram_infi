@@ -7,6 +7,8 @@ export default function ExamsTab({
   setYearFilter,
   moedFilter,
   setMoedFilter,
+  lecturerFilter,
+  setLecturerFilter,
   setTab,
   setSearchTopic,
   exams,
@@ -22,6 +24,18 @@ export default function ExamsTab({
     [exams],
   );
 
+  const UNKNOWN_LECTURER = "לא ידוע";
+
+  const lecturers = useMemo(
+    () =>
+      [...new Set(exams.map((e) => e.lecturer ?? UNKNOWN_LECTURER))].sort((a, b) => {
+        if (a === UNKNOWN_LECTURER) return 1;
+        if (b === UNKNOWN_LECTURER) return -1;
+        return a.localeCompare(b);
+      }),
+    [exams],
+  );
+
   const latestYear = useMemo(() => Math.max(...exams.map((e) => e.year)), [exams]);
 
   const filteredExams = useMemo(
@@ -29,12 +43,13 @@ export default function ExamsTab({
       exams.filter((exam) => {
         if (yearFilter && String(exam.year) !== yearFilter) return false;
         if (moedFilter && exam.moed !== moedFilter) return false;
+        if (lecturerFilter && (exam.lecturer ?? UNKNOWN_LECTURER) !== lecturerFilter) return false;
         return true;
       }),
-    [exams, yearFilter, moedFilter],
+    [exams, yearFilter, moedFilter, lecturerFilter],
   );
 
-  const hasActiveFilters = yearFilter || moedFilter;
+  const hasActiveFilters = yearFilter || moedFilter || lecturerFilter;
 
   return (
     <div>
@@ -69,6 +84,20 @@ export default function ExamsTab({
           <option value="א">מועד א</option>
           <option value="ב">מועד ב</option>
         </select>
+        {lecturers.length > 1 && (
+          <select
+            value={lecturerFilter}
+            onChange={(e) => setLecturerFilter(e.target.value)}
+            style={inp}
+          >
+            <option value="">כל המרצים</option>
+            {lecturers.map((l) => (
+              <option key={l} value={l}>
+                {l}
+              </option>
+            ))}
+          </select>
+        )}
         <span style={countBadge}>
           {filteredExams.length} מבחנים ·{" "}
           {filteredExams.reduce((s, e) => s + e.questions.length, 0)} שאלות
@@ -78,6 +107,7 @@ export default function ExamsTab({
             onClick={() => {
               setYearFilter("");
               setMoedFilter("");
+              setLecturerFilter("");
             }}
             style={clearBtn}
           >
@@ -137,6 +167,7 @@ export default function ExamsTab({
                   style={{ fontSize: 11, color: COLORS_UI.muted, marginTop: 3 }}
                 >
                   מבנה {exam.chapter_structure} · {exam.questions.length} שאלות
+                  {` · ${exam.lecturer ?? UNKNOWN_LECTURER}`}
                 </div>
               </div>
 

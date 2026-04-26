@@ -7,6 +7,7 @@ export const EXAMS = [
     year: 2010,
     moed: "א",
     date: "07.07.10",
+    lecturer: "פרופ׳ אלכס גורביץ׳",
     chapter_structure: "40/20/40",
     questions: [
       {
@@ -79,6 +80,7 @@ export const EXAMS = [
     year: 2010,
     moed: "ב",
     date: "2010",
+    lecturer: "פרופ׳ אלכס גורביץ׳",
     chapter_structure: "40/20/40",
     questions: [
       {
