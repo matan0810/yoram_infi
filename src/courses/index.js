@@ -13,6 +13,21 @@ import {
 } from "./infi2/topics";
 import { EXAMS as infi2Exams } from "./infi2/exams";
 
+import {
+  COURSE as algebra2Course,
+  CHAPTERS as algebra2Chapters,
+  EXCLUDED_TOPICS as algebra2ExcludedTopics,
+  TREND_FROM_YEAR as algebra2TrendFromYear,
+  TRAPS as algebra2Traps,
+  EXAM_FORMAT as algebra2ExamFormat,
+} from "./algebra2/config";
+import {
+  TOPIC_HE as algebra2TopicHe,
+  COLORS as algebra2Colors,
+  isExcluded as algebra2IsExcluded,
+} from "./algebra2/topics";
+import { EXAMS as algebra2Exams } from "./algebra2/exams";
+
 export const COURSE_REGISTRY = {
   infi2: {
     id: "infi2",
@@ -27,6 +42,19 @@ export const COURSE_REGISTRY = {
     isExcluded: infi2IsExcluded,
     EXAMS: infi2Exams,
   },
+  algebra2: {
+    id: "algebra2",
+    COURSE: algebra2Course,
+    CHAPTERS: algebra2Chapters,
+    EXCLUDED_TOPICS: algebra2ExcludedTopics,
+    TREND_FROM_YEAR: algebra2TrendFromYear,
+    TRAPS: algebra2Traps,
+    EXAM_FORMAT: algebra2ExamFormat,
+    TOPIC_HE: algebra2TopicHe,
+    COLORS: algebra2Colors,
+    isExcluded: algebra2IsExcluded,
+    EXAMS: algebra2Exams,
+  },
 };
 
-export const COURSE_LIST = [COURSE_REGISTRY.infi2];
+export const COURSE_LIST = [COURSE_REGISTRY.infi2, COURSE_REGISTRY.algebra2];
