@@ -5,7 +5,7 @@ export default function FormatBanner({ chapters, examFormat, colorsUI }) {
   const chapterByKey = Object.fromEntries(chapters.map((ch) => [ch.key, ch]));
 
   const badgeStyles = {
-    accent: { background: COLORS_UI.hoverBg, color: accent },
+    accent: { background: `${accent}15`, color: accent },
     neutral: { background: COLORS_UI.bg, color: COLORS_UI.text },
   };
 
@@ -14,7 +14,7 @@ export default function FormatBanner({ chapters, examFormat, colorsUI }) {
       ...card,
       borderColor: accent,
       borderWidth: 2,
-      background: COLORS_UI.hoverBg,
+      background: `${accent}15`,
       marginBottom: 20,
     },
     header: { display: "flex", alignItems: "center", gap: 12, marginBottom: 14 },

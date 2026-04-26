@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { card, COLORS_UI } from "../styles";
 import { CardTitle, Badge, MathText } from "../components";
 
-function InsightRow({ children, onClick }) {
+function InsightRow({ children, onClick, hoverBg }) {
   return (
     <div
       onClick={onClick}
@@ -13,7 +13,7 @@ function InsightRow({ children, onClick }) {
         cursor: onClick ? "pointer" : "default",
       }}
       onMouseEnter={(e) => {
-        if (onClick) e.currentTarget.style.background = COLORS_UI.hoverBg;
+        if (onClick) e.currentTarget.style.background = hoverBg ?? COLORS_UI.hoverBg;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.background = "transparent";
@@ -110,7 +110,7 @@ export default function Insights({
             (exam) => stats.examTopics[exam.code][key],
           ).length;
           return (
-            <InsightRow key={key} onClick={() => nav(key)}>
+            <InsightRow key={key} onClick={() => nav(key)} hoverBg={`${pri}12`}>
               <div
                 style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
               >
@@ -174,7 +174,7 @@ export default function Insights({
           sub="לחץ על נושא לחיפוש שאלות"
         />
         {recentTrend.entries.map(([key, count]) => (
-          <InsightRow key={key} onClick={() => nav(key)}>
+          <InsightRow key={key} onClick={() => nav(key)} hoverBg={`${pri}12`}>
             <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
               <Badge>{count}</Badge>
               <div>
@@ -210,7 +210,7 @@ export default function Insights({
           </div>
         ) : (
           overdueTopics.map(({ topic, count, last }) => (
-            <InsightRow key={topic} onClick={() => nav(topic)}>
+            <InsightRow key={topic} onClick={() => nav(topic)} hoverBg={`${pri}12`}>
               <div
                 style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
               >
@@ -248,7 +248,7 @@ export default function Insights({
               (exam) => stats.examTopics[exam.code][key],
             ).length;
             return (
-              <InsightRow key={key} onClick={() => nav(key)}>
+              <InsightRow key={key} onClick={() => nav(key)} hoverBg={`${pri}12`}>
                 <div
                   style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
                 >

@@ -1,26 +1,65 @@
+import { useNavigate } from "react-router-dom";
 import { COLORS_UI, FONTS } from "../styles";
 
 export default function Header({ course, exams, colorsUI }) {
   const pri = colorsUI?.primary ?? COLORS_UI.primary;
+  const navigate = useNavigate();
 
   return (
     <div
       style={{
         borderTop: `4px solid ${COLORS_UI.dark}`,
         borderBottom: `1px solid ${COLORS_UI.dark}`,
+        paddingTop: 6,
         paddingBottom: 20,
         marginBottom: 20,
       }}
     >
       <div
         style={{
-          fontFamily: FONTS.sans,
-          fontSize: 12,
-          color: COLORS_UI.muted,
-          marginBottom: 6,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 10,
         }}
       >
-        {course.teacher} · {course.name} · קורס {course.number}
+        <div
+          style={{
+            fontFamily: FONTS.sans,
+            fontSize: 12,
+            color: COLORS_UI.muted,
+          }}
+        >
+          {course.teacher} · {course.name} · קורס {course.number}
+        </div>
+        <button
+          onClick={() => navigate("/")}
+          style={{
+            background: `${pri}18`,
+            border: `1px solid ${pri}55`,
+            borderRadius: 3,
+            cursor: "pointer",
+            fontFamily: FONTS.sans,
+            fontSize: 12,
+            fontWeight: 600,
+            color: pri,
+            padding: "4px 14px",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            transition: "background 0.15s, border-color 0.15s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = `${pri}28`;
+            e.currentTarget.style.borderColor = `${pri}99`;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = `${pri}18`;
+            e.currentTarget.style.borderColor = `${pri}55`;
+          }}
+        >
+          ← כל הקורסים
+        </button>
       </div>
       <div
         style={{

@@ -10,7 +10,7 @@ export default function Bar({ label, val, max, color, pct, onClick }) {
         cursor: onClick ? "pointer" : "default",
       }}
       onMouseEnter={(e) => {
-        if (onClick) e.currentTarget.style.background = COLORS_UI.hoverBg;
+        if (onClick) e.currentTarget.style.background = `${color}15`;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.background = "transparent";

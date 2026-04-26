@@ -104,7 +104,7 @@ export default function ExamsTab({
                 border: isLatest
                   ? `2px solid ${pri}`
                   : `1px solid ${COLORS_UI.dark}`,
-                background: isLatest ? COLORS_UI.latestBg : "white",
+                background: isLatest ? `${pri}10` : "white",
                 boxShadow: `3px 3px 0 ${COLORS_UI.dark}`,
               }}
             >

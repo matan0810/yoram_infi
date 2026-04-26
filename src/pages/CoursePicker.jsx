@@ -1,9 +1,16 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { COURSE_LIST } from "../courses/index";
 import { COLORS_UI, FONTS, card } from "../styles";
 
 export default function CoursePicker() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "מדד שאלות";
+  }, []);
+
+  const university = COURSE_LIST[0]?.COURSE?.university;
 
   return (
     <div
@@ -12,35 +19,79 @@ export default function CoursePicker() {
         minHeight: "100vh",
         fontFamily: FONTS.sans,
         direction: "rtl",
-        padding: 40,
+        padding: "40px 40px 60px",
       }}
     >
+      {/* Hero */}
       <div
         style={{
           borderTop: `4px solid ${COLORS_UI.dark}`,
+          paddingTop: 18,
+          paddingBottom: 16,
+          marginBottom: 24,
           borderBottom: `1px solid ${COLORS_UI.dark}`,
-          paddingBottom: 20,
-          marginBottom: 32,
         }}
       >
-        <div style={{ fontSize: 12, color: COLORS_UI.muted, marginBottom: 6 }}>
-          {COURSE_LIST[0]?.COURSE?.university}
-        </div>
         <div
           style={{
             fontWeight: 800,
             fontSize: 38,
             lineHeight: 1,
             letterSpacing: "-0.03em",
+            marginBottom: 6,
           }}
         >
           מדד שאלות
         </div>
-        <div style={{ fontSize: 14, color: COLORS_UI.subdued, marginTop: 8 }}>
-          בחר קורס לצפייה בסטטיסטיקות ומבחנים
+        <div
+          style={{
+            fontSize: 13,
+            color: COLORS_UI.subdued,
+          }}
+        >
+          ניתוח מבחנים, נושאים ומגמות — בחר קורס כדי להתחיל
+        </div>
+
+        {/* Stats bar */}
+        <div
+          style={{
+            display: "flex",
+            gap: 24,
+            marginTop: 14,
+            paddingTop: 12,
+            borderTop: `1px dashed ${COLORS_UI.border}`,
+          }}
+        >
+          {[
+            [COURSE_LIST.length, "קורסים"],
+            [COURSE_LIST.reduce((s, c) => s + c.EXAMS.length, 0), "מבחנים"],
+            [
+              COURSE_LIST.reduce(
+                (s, c) =>
+                  s + c.EXAMS.reduce((ss, e) => ss + e.questions.length, 0),
+                0,
+              ),
+              "שאלות",
+            ],
+          ].map(([n, l]) => (
+            <div key={l}>
+              <div
+                style={{
+                  fontFamily: FONTS.serif,
+                  fontWeight: 900,
+                  fontSize: 26,
+                  color: COLORS_UI.dark,
+                }}
+              >
+                {n}
+              </div>
+              <div style={{ fontSize: 11, color: COLORS_UI.text }}>{l}</div>
+            </div>
+          ))}
         </div>
       </div>
 
+      {/* Course grid */}
       <div
         style={{
           display: "grid",
@@ -56,18 +107,21 @@ export default function CoursePicker() {
               ...card,
               textAlign: "right",
               cursor: "pointer",
-              border: `2px solid ${course.CHAPTERS[0].color}`,
+              border: `1px solid ${COLORS_UI.border}`,
               borderTop: `4px solid ${course.CHAPTERS[0].color}`,
               background: "white",
               fontFamily: FONTS.sans,
-              transition: "box-shadow 0.15s",
+              boxShadow: `2px 2px 0 ${COLORS_UI.dark}`,
+              transition: "box-shadow 0.15s, transform 0.15s",
             }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.boxShadow = `4px 4px 0 ${COLORS_UI.dark}`)
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.boxShadow = `2px 2px 0 ${COLORS_UI.dark}`)
-            }
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = `4px 4px 0 ${COLORS_UI.dark}`;
+              e.currentTarget.style.transform = "translate(-1px, -1px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = `2px 2px 0 ${COLORS_UI.dark}`;
+              e.currentTarget.style.transform = "translate(0, 0)";
+            }}
           >
             <div
               style={{
