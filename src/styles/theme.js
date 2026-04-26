@@ -1,13 +1,13 @@
-import { CHAPTERS } from "../data/config";
-
 export const FONTS = {
   sans: "Heebo, system-ui, sans-serif",
   serif: "Frank Ruhl Libre, Georgia, serif",
 };
 
+// Static UI chrome — does not change between courses.
+// Per-course colors (primary, secondary, chapter) are provided by CourseContext.
 export const COLORS_UI = {
-  primary: CHAPTERS[0].color,
-  secondary: CHAPTERS[1].color,
+  primary: "#c1440e",
+  secondary: "#2b4162",
   dark: "#1a1a1a",
   bg: "#f4f1ea",
   border: "#d4cfbf",
@@ -18,7 +18,7 @@ export const COLORS_UI = {
   rowDivider: "#ede9e0",
   hoverBg: "#fef4ee",
   latestBg: "#fef8f3",
-  chapter: Object.fromEntries(CHAPTERS.map((ch) => [ch.key, ch.color])),
+  chapter: { "א": "#c1440e", "ב": "#2b4162", "ג": "#3a5a40" },
 };
 
 export const c = {

@@ -1,7 +1,8 @@
-import { EXAMS, COURSE } from "../data";
 import { COLORS_UI, FONTS } from "../styles";
 
-export default function Header() {
+export default function Header({ course, exams, colorsUI }) {
+  const pri = colorsUI?.primary ?? COLORS_UI.primary;
+
   return (
     <div
       style={{
@@ -19,7 +20,7 @@ export default function Header() {
           marginBottom: 6,
         }}
       >
-        {COURSE.teacher} · {COURSE.name} · קורס {COURSE.number}
+        {course.teacher} · {course.name} · קורס {course.number}
       </div>
       <div
         style={{
@@ -31,7 +32,7 @@ export default function Header() {
         }}
       >
         מדד שאלות{" "}
-        <span style={{ color: COLORS_UI.primary }}>{COURSE.shortName}</span>
+        <span style={{ color: pri }}>{course.shortName}</span>
       </div>
       <div
         style={{
@@ -44,14 +45,14 @@ export default function Header() {
         }}
       >
         {[
-          [EXAMS.length, "מבחנים"],
-          [EXAMS.reduce((s, e) => s + e.questions.length, 0), "שאלות"],
+          [exams.length, "מבחנים"],
+          [exams.reduce((s, e) => s + e.questions.length, 0), "שאלות"],
           [
-            new Set(EXAMS.flatMap((e) => e.questions.map((q) => q.topic))).size,
+            new Set(exams.flatMap((e) => e.questions.map((q) => q.topic))).size,
             "נושאים",
           ],
           [
-            `${Math.min(...EXAMS.map((e) => e.year))}–${Math.max(...EXAMS.map((e) => e.year))}`,
+            `${Math.min(...exams.map((e) => e.year))}–${Math.max(...exams.map((e) => e.year))}`,
             "שנים",
           ],
         ].map(([n, l]) => (

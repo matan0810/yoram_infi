@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
 import { card, inp, COLORS_UI, FONTS, clearBtn, countBadge } from "../styles";
-import { EXAMS, TOPIC_HE, isExcluded } from "../data";
 
 export default function ExamsTab({
   yearFilter,
@@ -10,22 +9,29 @@ export default function ExamsTab({
   setMoedFilter,
   setTab,
   setSearchTopic,
+  exams,
+  topicHe,
+  isExcluded,
+  colorsUI,
 }) {
+  const pri = colorsUI?.primary ?? COLORS_UI.primary;
+  const sec = colorsUI?.secondary ?? COLORS_UI.secondary;
+
   const years = useMemo(
-    () => [...new Set(EXAMS.map((e) => e.year))].sort(),
-    [],
+    () => [...new Set(exams.map((e) => e.year))].sort(),
+    [exams],
   );
 
-  const latestYear = useMemo(() => Math.max(...EXAMS.map((e) => e.year)), []);
+  const latestYear = useMemo(() => Math.max(...exams.map((e) => e.year)), [exams]);
 
   const filteredExams = useMemo(
     () =>
-      EXAMS.filter((exam) => {
+      exams.filter((exam) => {
         if (yearFilter && String(exam.year) !== yearFilter) return false;
         if (moedFilter && exam.moed !== moedFilter) return false;
         return true;
       }),
-    [yearFilter, moedFilter],
+    [exams, yearFilter, moedFilter],
   );
 
   const hasActiveFilters = yearFilter || moedFilter;
@@ -96,7 +102,7 @@ export default function ExamsTab({
               style={{
                 ...card,
                 border: isLatest
-                  ? `2px solid ${COLORS_UI.primary}`
+                  ? `2px solid ${pri}`
                   : `1px solid ${COLORS_UI.dark}`,
                 background: isLatest ? COLORS_UI.latestBg : "white",
                 boxShadow: `3px 3px 0 ${COLORS_UI.dark}`,
@@ -155,7 +161,7 @@ export default function ExamsTab({
                         fontFamily: FONTS.serif,
                         fontWeight: 900,
                         fontSize: 16,
-                        color: COLORS_UI.primary,
+                        color: pri,
                         textAlign: "center",
                       }}
                     >
@@ -183,8 +189,8 @@ export default function ExamsTab({
                             fontWeight: 600,
                             color: excluded
                               ? COLORS_UI.muted
-                              : COLORS_UI.secondary,
-                            border: `1px dashed ${excluded ? COLORS_UI.border : COLORS_UI.secondary}`,
+                              : sec,
+                            border: `1px dashed ${excluded ? COLORS_UI.border : sec}`,
                             padding: "1px 6px",
                             cursor: "pointer",
                             display: "inline-flex",
@@ -193,7 +199,7 @@ export default function ExamsTab({
                           }}
                         >
                           {excluded && <ExcludedTag />}
-                          {TOPIC_HE[q.topic] || q.topic}
+                          {topicHe[q.topic] || q.topic}
                         </span>
                       </div>
                       <div

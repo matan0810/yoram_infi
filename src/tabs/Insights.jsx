@@ -1,15 +1,6 @@
 import { useMemo } from "react";
 import { card, COLORS_UI } from "../styles";
 import { CardTitle, Badge, MathText } from "../components";
-import {
-  EXAMS,
-  TOPIC_HE,
-  EXCLUDED_TOPICS,
-  TRAPS,
-  TREND_FROM_YEAR,
-} from "../data";
-
-const MAX_YEAR = Math.max(...EXAMS.map((e) => e.year));
 
 function InsightRow({ children, onClick }) {
   return (
@@ -33,7 +24,20 @@ function InsightRow({ children, onClick }) {
   );
 }
 
-export default function Insights({ stats, setTab, setSearchTopic }) {
+export default function Insights({
+  stats,
+  setTab,
+  setSearchTopic,
+  exams,
+  topicHe,
+  excludedTopics,
+  traps,
+  trendFromYear,
+  colorsUI,
+}) {
+  const pri = colorsUI?.primary ?? COLORS_UI.primary;
+  const maxYear = useMemo(() => Math.max(...exams.map((e) => e.year)), [exams]);
+
   const nav = (key) => {
     setTab("search");
     setSearchTopic(key);
@@ -42,15 +46,15 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
   const sortedTopics = useMemo(
     () =>
       Object.entries(stats.topicCounts)
-        .filter(([key]) => !EXCLUDED_TOPICS.has(key))
+        .filter(([key]) => !excludedTopics.has(key))
         .sort((a, b) => b[1] - a[1]),
-    [stats],
+    [stats, excludedTopics],
   );
 
   const overdueTopics = useMemo(() => {
     const lastSeen = {};
     const totalCount = {};
-    EXAMS.forEach((exam) => {
+    exams.forEach((exam) => {
       exam.questions.forEach((q) => {
         totalCount[q.topic] = (totalCount[q.topic] || 0) + 1;
         if (!lastSeen[q.topic] || exam.year > lastSeen[q.topic])
@@ -60,21 +64,21 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
     return Object.entries(totalCount)
       .filter(
         ([key, count]) =>
-          !EXCLUDED_TOPICS.has(key) &&
+          !excludedTopics.has(key) &&
           count >= 3 &&
-          MAX_YEAR - (lastSeen[key] || 0) >= 3,
+          maxYear - (lastSeen[key] || 0) >= 3,
       )
       .sort((a, b) => lastSeen[a[0]] - lastSeen[b[0]])
       .slice(0, 6)
       .map(([key, count]) => ({ topic: key, count, last: lastSeen[key] }));
-  }, []);
+  }, [exams, excludedTopics, maxYear]);
 
   const recentTrend = useMemo(() => {
     const counts = {};
     let total = 0;
-    EXAMS.filter((e) => e.year >= TREND_FROM_YEAR).forEach((exam) =>
+    exams.filter((e) => e.year >= trendFromYear).forEach((exam) =>
       exam.questions.forEach((q) => {
-        if (EXCLUDED_TOPICS.has(q.topic)) return;
+        if (excludedTopics.has(q.topic)) return;
         counts[q.topic] = (counts[q.topic] || 0) + 1;
         total++;
       }),
@@ -85,7 +89,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
         .slice(0, 6),
       total,
     };
-  }, []);
+  }, [exams, trendFromYear, excludedTopics]);
 
   return (
     <div
@@ -102,7 +106,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
           sub="לחץ על נושא לחיפוש שאלות"
         />
         {sortedTopics.slice(0, 5).map(([key, count]) => {
-          const examCount = EXAMS.filter(
+          const examCount = exams.filter(
             (exam) => stats.examTopics[exam.code][key],
           ).length;
           return (
@@ -116,10 +120,10 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
                     style={{
                       fontWeight: 700,
                       fontSize: 14,
-                      color: COLORS_UI.primary,
+                      color: pri,
                     }}
                   >
-                    {TOPIC_HE[key]}
+                    {topicHe[key]}
                   </div>
                   <div
                     style={{
@@ -128,8 +132,8 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
                       marginTop: 1,
                     }}
                   >
-                    {examCount}/{EXAMS.length} מבחנים ·{" "}
-                    {Math.round((examCount / EXAMS.length) * 100)}%
+                    {examCount}/{exams.length} מבחנים ·{" "}
+                    {Math.round((examCount / exams.length) * 100)}%
                   </div>
                 </div>
               </div>
@@ -144,13 +148,13 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
           title="מלכודות חוזרות"
           sub="שאלות כמעט זהות שחזרו מספר פעמים"
         />
-        {TRAPS.map((trap, i) => (
+        {traps.map((trap, i) => (
           <InsightRow key={i}>
             <div
               style={{
                 fontWeight: 700,
                 fontSize: 14,
-                color: COLORS_UI.primary,
+                color: pri,
                 marginBottom: 4,
               }}
             >
@@ -166,7 +170,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
       <div style={card}>
         <CardTitle
           emoji="📈"
-          title={`טרנד ${TREND_FROM_YEAR}–${MAX_YEAR}`}
+          title={`טרנד ${trendFromYear}–${maxYear}`}
           sub="לחץ על נושא לחיפוש שאלות"
         />
         {recentTrend.entries.map(([key, count]) => (
@@ -175,7 +179,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
               <Badge>{count}</Badge>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 14 }}>
-                  {TOPIC_HE[key]}
+                  {topicHe[key]}
                 </div>
                 <div
                   style={{ fontSize: 12, color: COLORS_UI.muted, marginTop: 1 }}
@@ -210,10 +214,10 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
               <div
                 style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
               >
-                <Badge bg={COLORS_UI.primary}>{count}×</Badge>
+                <Badge bg={pri}>{count}×</Badge>
                 <div>
                   <div style={{ fontWeight: 700, fontSize: 14 }}>
-                    {TOPIC_HE[topic] || topic}
+                    {topicHe[topic] || topic}
                   </div>
                   <div
                     style={{
@@ -222,7 +226,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
                       marginTop: 1,
                     }}
                   >
-                    נראה לאחרונה {last} · {MAX_YEAR - last} שנים ללא הופעה
+                    נראה לאחרונה {last} · {maxYear - last} שנים ללא הופעה
                   </div>
                 </div>
               </div>
@@ -240,7 +244,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
         {sortedTopics
           .filter(([, count]) => count <= 3)
           .map(([key, count]) => {
-            const examCount = EXAMS.filter(
+            const examCount = exams.filter(
               (exam) => stats.examTopics[exam.code][key],
             ).length;
             return (
@@ -253,7 +257,7 @@ export default function Insights({ stats, setTab, setSearchTopic }) {
                   </Badge>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 14 }}>
-                      {TOPIC_HE[key]}
+                      {topicHe[key]}
                     </div>
                     <div
                       style={{
