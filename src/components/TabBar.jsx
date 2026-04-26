@@ -1,3 +1,4 @@
+import { useCourse } from "../context/CourseContext";
 import { COLORS_UI } from "../styles";
 
 const TABS = [
@@ -9,6 +10,8 @@ const TABS = [
 ];
 
 export default function TabBar({ tab, setTab }) {
+  const { colorsUI } = useCourse();
+
   return (
     <div
       style={{
@@ -31,10 +34,10 @@ export default function TabBar({ tab, setTab }) {
             background: tab === t.id ? COLORS_UI.barBg : "transparent",
             border: "none",
             cursor: "pointer",
-            color: tab === t.id ? COLORS_UI.primary : COLORS_UI.subdued,
+            color: tab === t.id ? colorsUI.primary : COLORS_UI.subdued,
             borderBottom:
               tab === t.id
-                ? `3px solid ${COLORS_UI.primary}`
+                ? `3px solid ${colorsUI.primary}`
                 : "3px solid transparent",
             marginBottom: -2,
           }}

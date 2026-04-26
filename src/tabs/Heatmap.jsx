@@ -1,34 +1,34 @@
 import { useMemo } from "react";
 import { card, COLORS_UI, blendHex, darkenHex } from "../styles";
 import { CardTitle, ExcludedTag, excludedRowStyle } from "../components";
-import { EXAMS, TOPIC_HE, isExcluded } from "../data";
 
-// Derived from COLORS_UI.primary — adapts automatically when the palette changes
-const HEAT_COLORS = [
-  COLORS_UI.barBg,
-  blendHex("#ffffff", COLORS_UI.primary, 0.2),
-  blendHex("#ffffff", COLORS_UI.primary, 0.45),
-  blendHex("#ffffff", COLORS_UI.primary, 0.7),
-  COLORS_UI.primary,
-  darkenHex(COLORS_UI.primary),
-];
+export default function Heatmap({ stats, setTab, setSearchTopic, exams, topicHe, isExcluded, colorsUI }) {
+  const pri = colorsUI?.primary ?? COLORS_UI.primary;
 
-const LEGEND = HEAT_COLORS.map((bg, i) => ({
-  bg,
-  label: i < HEAT_COLORS.length - 1 ? String(i) : "5+",
-}));
+  const heatColors = useMemo(() => [
+    COLORS_UI.barBg,
+    blendHex("#ffffff", pri, 0.2),
+    blendHex("#ffffff", pri, 0.45),
+    blendHex("#ffffff", pri, 0.7),
+    pri,
+    darkenHex(pri),
+  ], [pri]);
 
-function heatColor(count) {
-  return HEAT_COLORS[Math.min(count, HEAT_COLORS.length - 1)];
-}
+  const legend = heatColors.map((bg, i) => ({
+    bg,
+    label: i < heatColors.length - 1 ? String(i) : "5+",
+  }));
 
-export default function Heatmap({ stats, setTab, setSearchTopic }) {
+  function heatColor(count) {
+    return heatColors[Math.min(count, heatColors.length - 1)];
+  }
+
   const sortedTopics = useMemo(
     () => Object.entries(stats.topicCounts).sort((a, b) => b[1] - a[1]),
     [stats],
   );
 
-  const latestYear = useMemo(() => Math.max(...EXAMS.map((e) => e.year)), []);
+  const latestYear = useMemo(() => Math.max(...exams.map((e) => e.year)), [exams]);
 
   return (
     <div style={card}>
@@ -56,7 +56,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
               >
                 נושא
               </th>
-              {EXAMS.map((exam) => (
+              {exams.map((exam) => (
                 <th
                   key={exam.code}
                   style={{
@@ -66,7 +66,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                     fontSize: 9,
                     color:
                       exam.year === latestYear
-                        ? COLORS_UI.primary
+                        ? pri
                         : COLORS_UI.subdued,
                     fontWeight: exam.year === latestYear ? 800 : 500,
                     minWidth: 34,
@@ -115,9 +115,9 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                     }}
                   >
                     {excluded && <ExcludedTag />}
-                    {TOPIC_HE[topicKey] || topicKey}
+                    {topicHe[topicKey] || topicKey}
                   </td>
-                  {EXAMS.map((exam) => {
+                  {exams.map((exam) => {
                     const count = stats.examTopics[exam.code][topicKey] || 0;
                     return (
                       <td
@@ -130,7 +130,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                         }}
                         title={
                           count
-                            ? `${TOPIC_HE[topicKey]} · ${exam.year} מועד ${exam.moed} · ${count} שאלות`
+                            ? `${topicHe[topicKey]} · ${exam.year} מועד ${exam.moed} · ${count} שאלות`
                             : ""
                         }
                         style={{
@@ -139,7 +139,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                             count > 2
                               ? "white"
                               : count > 0
-                                ? COLORS_UI.primary
+                                ? pri
                                 : "transparent",
                           textAlign: "center",
                           fontWeight: 800,
@@ -149,7 +149,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
                             count > 0 && !excluded ? "pointer" : "default",
                           border:
                             exam.year === latestYear
-                              ? `2px solid ${COLORS_UI.primary}`
+                              ? `2px solid ${pri}`
                               : `1px solid ${COLORS_UI.bg}`,
                           minWidth: 32,
                           height: 30,
@@ -192,7 +192,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic }) {
         <span style={{ fontSize: 11, color: COLORS_UI.subdued, marginLeft: 8 }}>
           מס׳ שאלות לפי מבחן:
         </span>
-        {LEGEND.map(({ bg, label }) => (
+        {legend.map(({ bg, label }) => (
           <span
             key={bg}
             style={{ display: "flex", alignItems: "center", gap: 4 }}

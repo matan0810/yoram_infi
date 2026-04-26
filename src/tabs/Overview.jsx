@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Bar, CardTitle, ExcludedTag, excludedRowStyle } from "../components";
 import { card, COLORS_UI } from "../styles";
-import { EXAMS, TOPIC_HE, COLORS, isExcluded, CHAPTERS } from "../data";
 
 const EXCLUDED_LABEL = COLORS_UI.muted;
 
@@ -11,14 +10,22 @@ export default function Overview({
   setSearchTopic,
   setSearchChapter,
   setSearchType,
+  exams,
+  topicHe,
+  colors,
+  isExcluded,
+  chapters,
+  colorsUI,
 }) {
+  const pri = colorsUI?.primary ?? COLORS_UI.primary;
+
   const { active, excluded } = useMemo(() => {
     const all = Object.entries(stats.topicCounts).sort((a, b) => b[1] - a[1]);
     return {
       active: all.filter(([key]) => !isExcluded(key)),
       excluded: all.filter(([key]) => isExcluded(key)),
     };
-  }, [stats]);
+  }, [stats, isExcluded]);
 
   const maxTopicCount = active[0]?.[1] || 1;
   const maxChapterCount = Math.max(...Object.values(stats.chapterCounts));
@@ -39,7 +46,7 @@ export default function Overview({
           sub="לחץ על נושא לחיפוש שאלות"
         />
         {active.map(([topicKey, count], i) => {
-          const examCount = EXAMS.filter(
+          const examCount = exams.filter(
             (exam) => stats.examTopics[exam.code][topicKey],
           ).length;
           return (
@@ -47,7 +54,7 @@ export default function Overview({
               key={topicKey}
               label={
                 <span>
-                  {TOPIC_HE[topicKey] || topicKey}
+                  {topicHe[topicKey] || topicKey}
                   <span
                     style={{
                       fontSize: 11,
@@ -55,13 +62,13 @@ export default function Overview({
                       marginRight: 8,
                     }}
                   >
-                    {examCount}/{EXAMS.length} מבחנים
+                    {examCount}/{exams.length} מבחנים
                   </span>
                 </span>
               }
               val={count}
               max={maxTopicCount}
-              color={COLORS[i % COLORS.length]}
+              color={colors[i % colors.length]}
               pct={Math.round((count / stats.total) * 100)}
               onClick={() => {
                 setTab("search");
@@ -88,7 +95,7 @@ export default function Overview({
                   label={
                     <span>
                       <ExcludedTag />
-                      {TOPIC_HE[topicKey] || topicKey}
+                      {topicHe[topicKey] || topicKey}
                     </span>
                   }
                   val={count}
@@ -105,7 +112,7 @@ export default function Overview({
       <div>
         <div style={card}>
           <CardTitle emoji="📚" title="פרקים" sub="לחץ על פרק לחיפוש שאלות" />
-          {CHAPTERS.map(({ key, label, color }) => (
+          {chapters.map(({ key, label, color }) => (
             <Bar
               key={key}
               label={label}
@@ -137,7 +144,7 @@ export default function Overview({
                 label={type}
                 val={count}
                 max={maxTypeCount}
-                color={COLORS[i % COLORS.length]}
+                color={colors[i % colors.length]}
                 pct={Math.round((count / stats.total) * 100)}
                 onClick={() => {
                   setTab("search");

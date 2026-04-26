@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
 import { card, inp, COLORS_UI, FONTS, clearBtn, countBadge } from "../styles";
-import { EXAMS, TOPIC_HE, isExcluded, CHAPTERS } from "../data";
 
 export default function SearchTab({
   query,
@@ -16,35 +15,43 @@ export default function SearchTab({
   setYear,
   moed,
   setMoed,
+  exams,
+  topicHe,
+  isExcluded,
+  chapters,
+  colorsUI,
 }) {
+  const pri = colorsUI?.primary ?? COLORS_UI.primary;
+  const sec = colorsUI?.secondary ?? COLORS_UI.secondary;
+
   const topicsByFrequency = useMemo(
     () =>
       Object.entries(
-        EXAMS.reduce((acc, exam) => {
+        exams.reduce((acc, exam) => {
           exam.questions.forEach((q) => {
             acc[q.topic] = (acc[q.topic] || 0) + 1;
           });
           return acc;
         }, {}),
       ).sort((a, b) => b[1] - a[1]),
-    [],
+    [exams],
   );
 
   const years = useMemo(
-    () => [...new Set(EXAMS.map((e) => e.year))].sort(),
-    [],
+    () => [...new Set(exams.map((e) => e.year))].sort(),
+    [exams],
   );
 
   const types = useMemo(
     () =>
-      [...new Set(EXAMS.flatMap((e) => e.questions.map((q) => q.type)))].sort(),
-    [],
+      [...new Set(exams.flatMap((e) => e.questions.map((q) => q.type)))].sort(),
+    [exams],
   );
 
   const results = useMemo(() => {
     const queryLower = query.toLowerCase();
     const matches = [];
-    EXAMS.forEach((exam) => {
+    exams.forEach((exam) => {
       if (year && String(exam.year) !== year) return;
       if (moed && exam.moed !== moed) return;
       exam.questions.forEach((q) => {
@@ -53,7 +60,7 @@ export default function SearchTab({
         if (type && q.type !== type) return;
         if (
           queryLower &&
-          !(q.summary + TOPIC_HE[q.topic] + exam.code)
+          !(q.summary + topicHe[q.topic] + exam.code)
             .toLowerCase()
             .includes(queryLower)
         )
@@ -62,7 +69,7 @@ export default function SearchTab({
       });
     });
     return matches;
-  }, [query, topic, chapter, type, year, moed]);
+  }, [exams, query, topic, chapter, type, year, moed, topicHe]);
 
   const hasActiveFilters = query || topic || chapter || type || year || moed;
 
@@ -92,7 +99,7 @@ export default function SearchTab({
           <option value="">כל הנושאים</option>
           {topicsByFrequency.map(([key]) => (
             <option key={key} value={key}>
-              {TOPIC_HE[key] || key}
+              {topicHe[key] || key}
             </option>
           ))}
         </select>
@@ -102,7 +109,7 @@ export default function SearchTab({
           style={inp}
         >
           <option value="">כל הפרקים</option>
-          {CHAPTERS.map(({ key, label }) => (
+          {chapters.map(({ key, label }) => (
             <option key={key} value={key}>
               {label}
             </option>
@@ -207,7 +214,7 @@ export default function SearchTab({
                   style={{
                     fontSize: 22,
                     fontWeight: 900,
-                    color: COLORS_UI.primary,
+                    color: pri,
                     fontFamily: FONTS.serif,
                     lineHeight: 1,
                   }}
@@ -227,7 +234,7 @@ export default function SearchTab({
                   fontSize: 12,
                   color: isExcluded(question.topic)
                     ? COLORS_UI.muted
-                    : COLORS_UI.secondary,
+                    : sec,
                   marginBottom: 4,
                   fontWeight: 600,
                   cursor: "pointer",
@@ -239,7 +246,7 @@ export default function SearchTab({
                 }}
               >
                 {isExcluded(question.topic) && <ExcludedTag />}
-                {TOPIC_HE[question.topic] || question.topic}
+                {topicHe[question.topic] || question.topic}
               </div>
               <div style={{ lineHeight: 1.5, fontSize: 13 }}>
                 <MathText>{question.summary}</MathText>
