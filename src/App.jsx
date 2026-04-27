@@ -1,4 +1,10 @@
-import { HashRouter, Routes, Route, useParams, Navigate } from "react-router-dom";
+import {
+  HashRouter,
+  Routes,
+  Route,
+  useParams,
+  Navigate,
+} from "react-router-dom";
 import { CourseProvider } from "./context/CourseContext";
 import { COURSE_REGISTRY } from "./courses/index";
 import CoursePicker from "./pages/CoursePicker";
@@ -26,3 +32,15 @@ export default function App() {
     </HashRouter>
   );
 }
+
+// TODO: - Add a 404 page for invalid routes
+// - Add question order by moed and number
+// - fix test template to be accureate
+// - fix algebra data (clause on it)
+// - add a way to mark questions as done and show progress (by localStorage?)
+// - add a way to reset progress
+// - add a way to show only answerded/unanswered questions
+// - improve UI to be accurate and clean
+// - (maybe add a dark mode?)
+// - add readme with instructions on how to use the app and how to add new courses
+// - improve readability of code (maybe split into multiple files?) and avoid repetition
