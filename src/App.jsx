@@ -33,7 +33,8 @@ export default function App() {
   );
 }
 
-// TODO: - Add a 404 page for invalid routes
+// TODO:
+// - Add a 404 page for invalid routes
 // - Add question order by moed and number
 // - fix test template to be accureate
 // - fix algebra data (clause on it)
@@ -48,3 +49,4 @@ export default function App() {
 // - add search results by question text and answer text
 // - fix layout of question cards to be more responsive and clean
 // - fix of entier app to be more responsive and work well on mobile devices
+// - add disclaimer that this app is for personal use only and check potential copyright issues
