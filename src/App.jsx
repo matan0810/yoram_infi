@@ -44,3 +44,7 @@ export default function App() {
 // - (maybe add a dark mode?)
 // - add readme with instructions on how to use the app and how to add new courses
 // - improve readability of code (maybe split into multiple files?) and avoid repetition
+// - add search results to be with routes
+// - add search results by question text and answer text
+// - fix layout of question cards to be more responsive and clean
+// - fix of entier app to be more responsive and work well on mobile devices
