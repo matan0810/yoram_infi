@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Bar, CardTitle, ExcludedTag, excludedRowStyle } from "../components";
+import { useMemo, useState } from "react";
+import { Bar, CardTitle, ExcludedTag, excludedRowStyle, useTypeHelpers } from "../components";
 import { card, COLORS_UI } from "../styles";
 
 const EXCLUDED_LABEL = COLORS_UI.muted;
@@ -18,6 +18,10 @@ export default function Overview({
   colorsUI,
 }) {
   const pri = colorsUI?.primary ?? COLORS_UI.primary;
+  const { typeToLabel } = useTypeHelpers();
+  const [showAllTopics, setShowAllTopics] = useState(false);
+  const [showExcluded, setShowExcluded] = useState(false);
+  const TOPICS_INITIAL = 14;
 
   const { active, excluded } = useMemo(() => {
     const all = Object.entries(stats.topicCounts).sort((a, b) => b[1] - a[1]);
@@ -45,7 +49,7 @@ export default function Overview({
           title="דירוג נושאים"
           sub="לחץ על נושא לחיפוש שאלות"
         />
-        {active.map(([topicKey, count], i) => {
+        {(showAllTopics ? active : active.slice(0, TOPICS_INITIAL)).map(([topicKey, count], i) => {
           const examCount = exams.filter(
             (exam) => stats.examTopics[exam.code][topicKey],
           ).length;
@@ -77,19 +81,47 @@ export default function Overview({
             />
           );
         })}
+        {active.length > TOPICS_INITIAL && (
+          <button
+            onClick={() => setShowAllTopics((v) => !v)}
+            style={{
+              marginTop: 10,
+              background: showAllTopics ? `${pri}18` : "white",
+              border: `1.5px solid ${pri}`,
+              color: pri,
+              cursor: "pointer",
+              fontSize: 12,
+              fontWeight: 700,
+              padding: "6px 0",
+              width: "100%",
+              letterSpacing: "0.02em",
+            }}
+          >
+            {showAllTopics
+              ? "▲ הצג פחות"
+              : `▼ הראה עוד — ${active.length - TOPICS_INITIAL} נושאים נוספים`}
+          </button>
+        )}
         {excluded.length > 0 && (
           <>
-            <div
+            <button
+              onClick={() => setShowExcluded((v) => !v)}
               style={{
-                borderTop: `1px dashed ${COLORS_UI.border}`,
-                margin: "12px 0 6px",
+                marginTop: 10,
+                background: "none",
+                border: `1px dashed ${COLORS_UI.border}`,
+                color: COLORS_UI.muted,
+                cursor: "pointer",
                 fontSize: 11,
-                color: EXCLUDED_LABEL,
+                padding: "5px 0",
+                width: "100%",
               }}
             >
-              לא בתכנית הנוכחית
-            </div>
-            {excluded.map(([topicKey, count]) => (
+              {showExcluded
+                ? `▲ הסתר נושאים שלא בחומר (${excluded.length})`
+                : `▼ נושאים שלא בחומר (${excluded.length})`}
+            </button>
+            {showExcluded && excluded.map(([topicKey, count]) => (
               <div key={topicKey} style={excludedRowStyle}>
                 <Bar
                   label={
@@ -141,7 +173,7 @@ export default function Overview({
             .map(([type, count], i) => (
               <Bar
                 key={type}
-                label={type}
+                label={typeToLabel(type)}
                 val={count}
                 max={maxTypeCount}
                 color={colors[i % colors.length]}

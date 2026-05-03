@@ -1,65 +1,120 @@
+// ─────────────────────────────────────────────────────────────────────
+//  src/data/config.js
+//  Course-level metadata: course identity, chapter mapping,
+//  excluded topics, traps, latest exam format.
+// ─────────────────────────────────────────────────────────────────────
+
 export const COURSE = {
-  teacher:    "פרופ' אלכס גורביץ' ועוד",
-  name:       "אלגברה לינארית 2",
-  shortName:  "אלגברה לינארית 2",
-  number:     "80135",
+  teacher: 'ד"ר שי אברה (תשפ"ה–תשפ"ו), אלכס גורביץ\' (קיץ תשפ"ד)',
+  name: "אלגברה לינארית 2",
+  shortName: "אלגברה 2",
+  number: "80135",
   university: "האוניברסיטה העברית בירושלים",
 };
 
+// Three chapters mirror the four chapters of the syllabus in the project files:
+// chapters 1–2 (פולינומים + ערכים עצמיים) are taught and tested together,
+// chapter 3 (ז'ורדן) is its own block,
+// chapters 4–5 (מ\"מ פנימית + אופרטורים) are tested together.
 export const CHAPTERS = [
-  { key: "א", label: "פרק א — פולינומים, ערכים עצמיים ולכסינות", color: "#2b4162", chipBg: "#e8eef6" },
-  { key: "ב", label: "פרק ב — אופרטורים נילפוטנטיים וצורת ז'ורדן",  color: "#c1440e", chipBg: "#fef1e6" },
-  { key: "ג", label: "פרק ג — מרחבי מכפלה פנימית ואופרטורים",       color: "#3a5a40", chipBg: "#eaf0e6" },
+  {
+    key: "א",
+    label: 'פרק א — פולינומים, ע"ע, לכסינות (פרקים 1+2)',
+    color: "#2b4162",
+    chipBg: "#e8eef6",
+  },
+  {
+    key: "ב",
+    label: "פרק ב — אופרטורים נילפוטנטיים וצורת ז'ורדן (פרק 3)",
+    color: "#c1440e",
+    chipBg: "#fef1e6",
+  },
+  {
+    key: "ג",
+    label: "פרק ג — מכפלה פנימית ואופרטורים (פרקים 4+5)",
+    color: "#3a5a40",
+    chipBg: "#eaf0e6",
+  },
 ];
 
+// Topics that appear in old exams but are no longer in the current syllabus.
+// Excluded from trend graphs but still recorded in the data.
 export const EXCLUDED_TOPICS = new Set([
-  "bilinear_form",
-  "dual_space",
-  "volume_function",
-  "sylvester_inertia",
+  "bilinear_form", // תבנית בילינארית – הוסר מהסילבוס
+  "dual_space", // מרחב דואלי / פונקציונלים – הוסר
+  "volume_function", // פונקציית נפח – הוסר
+  "sylvester_inertia", // משפט ההתמדה של סילבסטר / סיגנטורה – הוסר
+  "quadratic_form", // תבנית ריבועית – הוסר/הוקטן
+  "field_char", // שדה במציין שונה מ-2 – שולי
 ]);
 
-export const TREND_FROM_YEAR = 2017;
+export const TREND_FROM_YEAR = 2016;
 
 export const TRAPS = [
   {
-    t: "הוכחת קיום ערך עצמי: $\\lambda$ ע\"ע של $T$ אם ורק אם $\\ker(\\lambda I - T)\\neq\\{0\\}$",
-    n: "נשאלה בדיוק בצורה זו כשאלת חלק א' בשני מבחני לדוגמא של תשפ\"ו; הופיעה גם ב-2023, 2021 ועוד – יש לדעת את ההוכחה בעל פה",
+    t: "שאלת חובה: $\\min_{e_1}(A)$, בסיס ז'ורדן, ותת-מרחב מקסימלי שצמצום $A$ אליו לכסין",
+    n: "שאלת חובה (16 נק') בכל מבחני סמסטר א' מ-2022 ואילך (תשפ\"ב חורף, תשפ\"ג חורף); הסעיף השלישי בעיקר טריקי",
   },
   {
-    t: "$W$ תת-מרחב $T$-אינווריאנטי, $T$ צמוד לעצמו $\\Rightarrow$ גם $W^\\perp$ אינווריאנטי",
-    n: "נשאלה כשאלת חלק א' במבחן לדוגמא תשפ\"ו; הופיעה גם ב-2023, 2021, 2019, 2015 – הטיעון עובר דרך ההגדרה של $T^*=T$",
+    t: "פירוק $V=\\ker P(f)\\oplus\\ker Q(f)$ כאשר $\\gcd(P,Q)=1$ ו-$P(f)Q(f)=0$",
+    n: "הופיעה ב-2019 קיץ, 2022 חורף, 2023, 2023 חורף ב'; הוכחה דרך זהות בזו ($up+vq=1$); אדפטציה של משפט הפירוק הראשוני",
   },
   {
-    t: "הוכחת אי-שוויון קושי-שוורץ ויישומים: $\\sum\\sqrt{x_i+x_{i+1}}\\leq\\sqrt{2n\\sum x_i}$",
-    n: "שאלת חישוב/הוכחה המשתמשת בקושי-שוורץ הופיעה ב-2026, 2025, 2024, 2023, 2022, 2021, 2019 – הנוסחה $\\langle u,v\\rangle^2\\leq\\|u\\|^2\\|v\\|^2$ היא הכלי",
+    t: '$\\lambda$ ע"ע של $T$ ↔ $\\ker(\\lambda I-T)\\neq\\{0\\}$',
+    n: "שאלת חלק א' במבחן לדוגמא תשפ\"ו (20 נק'); וריאציות הופיעו ב-2014 ב' (q7), 2019 ב', 2011, 2010; הוכחה דו-כיוונית",
   },
   {
-    t: "קשר בין פולינום מינימלי לאופייני: $m_T\\mid p_T$ ו-$p_T\\mid (m_T)^k$",
-    n: "הוכחת הכלה אחת הופיעה ב-2026, 2025, 2024, 2023; לבלבל את הכיוונים – לדעת גם מה-Cayley-Hamilton נותן",
+    t: "$T$ צמוד לעצמו, $W$ $T$-אינווריאנטי ⟹ $W^\\perp$ אינווריאנטי",
+    n: 'מבחן לדוגמא תשפ"ו, תשפ"ה, חורף 2018; ב-תשע"ה זו הייתה Q1 חובה (16 נק\'); ההוכחה דרך $T^*=T$',
   },
   {
-    t: "וקטורים עצמיים של ערכים עצמיים שונים הם בת\"ל",
-    n: "הופיע ב-2021, 2019, 2018, 2017, 2016, 2015, 2014 – הוכחה באינדוקציה על מספר הוקטורים; קל להפריך בצורה שגויה",
+    t: "$\\sqrt{x_1+x_2}+\\ldots\\leq\\sqrt{2n\\sum x_i}$ ווריאציות דרך קושי-שוורץ",
+    n: "קיץ 2024 (גרסה מקורית), חורף 2025 ($1/(ab)+...\\geq 16/(a+b+c+d)^2$), 2026 ב' ($f(x)=(\\sum\\sqrt{kx_k})^2/\\sum x_k^2\\leq 15$); הכלי: $|\\langle u,v\\rangle|\\leq\\|u\\|\\cdot\\|v\\|$",
   },
   {
-    t: "הרכב $P(f)Q(f)=0$ עם $\\gcd(P,Q)=1$ $\\Rightarrow$ $V=\\ker P(f)\\oplus\\ker Q(f)$",
-    n: "הופיע ב-2023A, 2023B, 2022, 2019 – זהו מקרה פרטי של משפט הפירוק הראשוני; יש לדעת את ה-Bezout להוכחה",
+    t: "$T$ אופרטור אורתוגונלי ⟺ $\\|Tv\\|=\\|v\\|$ לכל $v$",
+    n: 'קיץ 2024 כ-Q1 חובה (ממפה ו"י לו"י ⟹ אורתוגונלי); תשפ"ו ב\' (גרסת אי-זוגי + $\\det=1$); קיץ 2018, חורף 2020',
+  },
+  {
+    t: "$T$ נורמלי ⟺ קיים בסיס אורתונורמלי שמלכסן את $T$ (מעל $\\mathbb{C}$)",
+    n: "הופיעה כשאלת הוכחה ב-2010 א', 2010 ב', 2011 א', 2011 ב'; כיום מתועדפת כ-spectral_theorem ולא מבוקשת ישירות",
   },
 ];
 
+// Maps question type keys → { label: Hebrew display string, kind: style variant }
+// kind values: "proof" | "ts" | "calc" | "mixed"
+export const QUESTION_TYPES = {
+  proof_theorem:    { label: "הוכחת משפט",   kind: "proof" },
+  proof_short:      { label: "הוכחה",         kind: "proof" },
+  compute:          { label: "חישוב",          kind: "calc"  },
+  true_false:       { label: "אמת/שקר",       kind: "ts"    },
+  counterexample:   { label: "הוכח/הפרך",     kind: "ts"    },
+  definition_apply: { label: "הגדרה ויישום",  kind: "calc"  },
+  mixed:            { label: "מעורב",          kind: "mixed" },
+};
+
+// EXAM_FORMAT reflects the most recent published exam (תשפ"ה מועד ב', 19.3.25)
+// taught by ד"ר שי אברה. Format: 5 questions, answer 4 of 5, 25 pts each, 3 hours.
 export const EXAM_FORMAT = {
-  latestSession: "מבחן לדוגמא תשפ\"ו",
-  latestDate:    "2026",
+  latestSession: "תשפ\"ה מועד ב'",
+  latestDate: "19.03.25",
   chapters: [
-    { key: "א", points: 34, description: "פולינומים, ערכים עצמיים, לכסינות" },
-    { key: "ב", points: 28, description: "נילפוטנטיים, צורת ז'ורדן" },
-    { key: "ג", points: 38, description: "מכפלה פנימית, אורתוגונליות, אופרטורים", warning: "מהווה כ-40% מהנקודות – דרושה שליטה מלאה" },
+    {
+      key: "א",
+      points: 35,
+      description: "פולינום אופייני, פירוק, $A$ דומה ל-$A^t$, ערך עצמי יחיד",
+    },
+    { key: "ב", points: 15, description: "צורת ז'ורדן (כ-Q4 בלבד)" },
+    {
+      key: "ג",
+      points: 50,
+      description: "אורתוגונליות, קושי-שוורץ, היטל, צמוד לעצמו",
+    },
   ],
   badges: [
-    { label: "9 שאלות, ענו על 7",  variant: "accent" },
-    { label: "מקסימום 100 נקודות",  variant: "accent" },
-    { label: "ללא חומר עזר",        variant: "neutral" },
-    { label: "3 שעות",             variant: "neutral" },
+    { label: "5 שאלות, ענו על 4", variant: "accent" },
+    { label: "מקסימום 100 נקודות", variant: "accent" },
+    { label: "ללא חומר עזר", variant: "neutral" },
+    { label: "3 שעות", variant: "neutral" },
   ],
 };

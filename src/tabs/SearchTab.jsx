@@ -1,6 +1,12 @@
-import { useMemo } from "react";
-import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
+import { useTypeHelpers } from "../components";
+import { useSearchData } from "../hooks";
 import { card, inp, COLORS_UI, FONTS, clearBtn, countBadge } from "../styles";
+import SearchResultCard from "./SearchResultCard";
+
+const MOED_OPTIONS = [
+  { value: "א", label: "מועד א" },
+  { value: "ב", label: "מועד ב" },
+];
 
 export default function SearchTab({
   query,
@@ -23,70 +29,24 @@ export default function SearchTab({
   chapters,
   colorsUI,
 }) {
-  const pri = colorsUI?.primary ?? COLORS_UI.primary;
-  const sec = colorsUI?.secondary ?? COLORS_UI.secondary;
-
-  const topicsByFrequency = useMemo(
-    () =>
-      Object.entries(
-        exams.reduce((acc, exam) => {
-          exam.questions.forEach((q) => {
-            acc[q.topic] = (acc[q.topic] || 0) + 1;
-          });
-          return acc;
-        }, {}),
-      ).sort((a, b) => b[1] - a[1]),
-    [exams],
+  const { typeToLabel } = useTypeHelpers();
+  const filters = { query, topic, chapter, type, year, moed, lecturer };
+  const { topicsByFrequency, years, lecturers, types, results } = useSearchData(
+    exams,
+    filters,
+    topicHe,
   );
+  const hasActiveFilters = Object.values(filters).some(Boolean);
 
-  const years = useMemo(
-    () => [...new Set(exams.map((e) => e.year))].sort(),
-    [exams],
-  );
-
-  const UNKNOWN_LECTURER = "לא ידוע";
-
-  const lecturers = useMemo(
-    () =>
-      [...new Set(exams.map((e) => e.lecturer ?? UNKNOWN_LECTURER))].sort((a, b) => {
-        if (a === UNKNOWN_LECTURER) return 1;
-        if (b === UNKNOWN_LECTURER) return -1;
-        return a.localeCompare(b);
-      }),
-    [exams],
-  );
-
-  const types = useMemo(
-    () =>
-      [...new Set(exams.flatMap((e) => e.questions.map((q) => q.type)))].sort(),
-    [exams],
-  );
-
-  const results = useMemo(() => {
-    const queryLower = query.toLowerCase();
-    const matches = [];
-    exams.forEach((exam) => {
-      if (year && String(exam.year) !== year) return;
-      if (moed && exam.moed !== moed) return;
-      if (lecturer && (exam.lecturer ?? UNKNOWN_LECTURER) !== lecturer) return;
-      exam.questions.forEach((q) => {
-        if (topic && q.topic !== topic) return;
-        if (chapter && q.chapter !== chapter) return;
-        if (type && q.type !== type) return;
-        if (
-          queryLower &&
-          !(q.summary + topicHe[q.topic] + exam.code)
-            .toLowerCase()
-            .includes(queryLower)
-        )
-          return;
-        matches.push({ exam, question: q });
-      });
-    });
-    return matches;
-  }, [exams, query, topic, chapter, type, year, moed, lecturer, topicHe]);
-
-  const hasActiveFilters = query || topic || chapter || type || year || moed || lecturer;
+  const clearFilters = () => {
+    setQuery("");
+    setTopic("");
+    setChapter("");
+    setType("");
+    setYear("");
+    setMoed("");
+    setLecturer("");
+  };
 
   return (
     <div>
@@ -138,7 +98,7 @@ export default function SearchTab({
           <option value="">כל הסוגים</option>
           {types.map((t) => (
             <option key={t} value={t}>
-              {t}
+              {typeToLabel(t)}
             </option>
           ))}
         </select>
@@ -160,8 +120,11 @@ export default function SearchTab({
           style={inp}
         >
           <option value="">כל המועדים</option>
-          <option value="א">מועד א</option>
-          <option value="ב">מועד ב</option>
+          {MOED_OPTIONS.map(({ value, label }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
         </select>
         {lecturers.length > 1 && (
           <select
@@ -179,18 +142,7 @@ export default function SearchTab({
         )}
         <span style={countBadge}>{results.length} תוצאות</span>
         {hasActiveFilters && (
-          <button
-            onClick={() => {
-              setQuery("");
-              setTopic("");
-              setChapter("");
-              setType("");
-              setYear("");
-              setMoed("");
-              setLecturer("");
-            }}
-            style={clearBtn}
-          >
+          <button onClick={clearFilters} style={clearBtn}>
             נקה סינון
           </button>
         )}
@@ -212,80 +164,15 @@ export default function SearchTab({
 
       <div style={{ display: "grid", gap: 8 }}>
         {results.map(({ exam, question }, i) => (
-          <div
+          <SearchResultCard
             key={i}
-            style={{
-              background: "white",
-              border: `1px solid ${COLORS_UI.border}`,
-              padding: 12,
-              display: "grid",
-              gridTemplateColumns: "110px 80px 1fr",
-              gap: 12,
-              alignItems: "start",
-              fontSize: 13,
-            }}
-          >
-            <div style={{ lineHeight: 1.5 }}>
-              <div style={{ fontWeight: 700, fontSize: 14 }}>{exam.year}</div>
-              <div style={{ fontSize: 12, color: COLORS_UI.text }}>
-                מועד {exam.moed}
-              </div>
-              <div style={{ fontSize: 11, color: COLORS_UI.muted, marginTop: 2 }}>
-                {exam.lecturer ?? UNKNOWN_LECTURER}
-              </div>
-              <div style={{ marginTop: 6 }}>
-                <div
-                  style={{
-                    fontSize: 10,
-                    color: COLORS_UI.muted,
-                    marginBottom: 1,
-                  }}
-                >
-                  שאלה
-                </div>
-                <div
-                  style={{
-                    fontSize: 22,
-                    fontWeight: 900,
-                    color: pri,
-                    fontFamily: FONTS.serif,
-                    lineHeight: 1,
-                  }}
-                >
-                  {question.id.replace(/^[א-ת]/, "")}
-                </div>
-              </div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <Chip kind={question.chapter}>פרק {question.chapter}</Chip>
-              <Chip kind={typeToKind(question.type)}>{question.type}</Chip>
-            </div>
-            <div>
-              <div
-                onClick={() => setTopic(question.topic)}
-                style={{
-                  fontSize: 12,
-                  color: isExcluded(question.topic)
-                    ? COLORS_UI.muted
-                    : sec,
-                  marginBottom: 4,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  flexWrap: "wrap",
-                }}
-              >
-                {isExcluded(question.topic) && <ExcludedTag />}
-                {topicHe[question.topic] || question.topic}
-              </div>
-              <div style={{ lineHeight: 1.5, fontSize: 13 }}>
-                <MathText>{question.summary}</MathText>
-              </div>
-            </div>
-          </div>
+            exam={exam}
+            question={question}
+            topicHe={topicHe}
+            isExcluded={isExcluded}
+            setTopic={setTopic}
+            colorsUI={colorsUI}
+          />
         ))}
       </div>
     </div>

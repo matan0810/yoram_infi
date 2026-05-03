@@ -1,6 +1,17 @@
 import { useMemo } from "react";
-import { Chip, typeToKind, ExcludedTag, MathText } from "../components";
+import { Chip, useTypeHelpers, ExcludedTag, MathText } from "../components";
 import { card, inp, COLORS_UI, FONTS, clearBtn, countBadge } from "../styles";
+import {
+  UNKNOWN_LECTURER,
+  examMatchesLecturer,
+  examLecturerLabel,
+  buildLecturersList,
+} from "../utils/exam";
+
+const MOED_OPTIONS = [
+  { value: "א", label: "מועד א" },
+  { value: "ב", label: "מועד ב" },
+];
 
 export default function ExamsTab({
   yearFilter,
@@ -16,6 +27,7 @@ export default function ExamsTab({
   isExcluded,
   colorsUI,
 }) {
+  const { typeToLabel, typeToKind } = useTypeHelpers();
   const pri = colorsUI?.primary ?? COLORS_UI.primary;
   const sec = colorsUI?.secondary ?? COLORS_UI.secondary;
 
@@ -24,28 +36,18 @@ export default function ExamsTab({
     [exams],
   );
 
-  const UNKNOWN_LECTURER = "לא ידוע";
-
-  const lecturers = useMemo(
-    () =>
-      [...new Set(exams.map((e) => e.lecturer ?? UNKNOWN_LECTURER))].sort((a, b) => {
-        if (a === UNKNOWN_LECTURER) return 1;
-        if (b === UNKNOWN_LECTURER) return -1;
-        return a.localeCompare(b);
-      }),
-    [exams],
-  );
+  const lecturers = useMemo(() => buildLecturersList(exams), [exams]);
 
   const latestYear = useMemo(() => Math.max(...exams.map((e) => e.year)), [exams]);
 
   const filteredExams = useMemo(
     () =>
-      exams.filter((exam) => {
-        if (yearFilter && String(exam.year) !== yearFilter) return false;
-        if (moedFilter && exam.moed !== moedFilter) return false;
-        if (lecturerFilter && (exam.lecturer ?? UNKNOWN_LECTURER) !== lecturerFilter) return false;
-        return true;
-      }),
+      exams.filter(
+        (exam) =>
+          (!yearFilter || String(exam.year) === yearFilter) &&
+          (!moedFilter || exam.moed === moedFilter) &&
+          (!lecturerFilter || examMatchesLecturer(exam, lecturerFilter)),
+      ),
     [exams, yearFilter, moedFilter, lecturerFilter],
   );
 
@@ -81,8 +83,9 @@ export default function ExamsTab({
           style={inp}
         >
           <option value="">כל המועדים</option>
-          <option value="א">מועד א</option>
-          <option value="ב">מועד ב</option>
+          {MOED_OPTIONS.map(({ value, label }) => (
+            <option key={value} value={value}>{label}</option>
+          ))}
         </select>
         {lecturers.length > 1 && (
           <select
@@ -167,7 +170,7 @@ export default function ExamsTab({
                   style={{ fontSize: 11, color: COLORS_UI.muted, marginTop: 3 }}
                 >
                   מבנה {exam.chapter_structure} · {exam.questions.length} שאלות
-                  {` · ${exam.lecturer ?? UNKNOWN_LECTURER}`}
+                  {` · ${examLecturerLabel(exam)}`}
                 </div>
               </div>
 
@@ -209,7 +212,7 @@ export default function ExamsTab({
                         }}
                       >
                         <Chip kind={q.chapter}>פרק {q.chapter}</Chip>
-                        <Chip kind={typeToKind(q.type)}>{q.type}</Chip>
+                        <Chip kind={typeToKind(q.type)}>{typeToLabel(q.type)}</Chip>
                         <span
                           onClick={() => {
                             setTab("search");

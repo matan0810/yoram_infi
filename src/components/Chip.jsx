@@ -15,11 +15,13 @@ const STATIC_TYPE_COLORS = {
   calc: { background: "#5a3a6b", color: "white", border: "1px solid #5a3a6b" },
 };
 
-export function typeToKind(type) {
-  if (type === "הוכחה") return "proof";
-  if (type === "אמת/שקר") return "ts";
-  if (type === "חישוב") return "calc";
-  return "mixed";
+// Returns { typeToLabel, typeToKind } functions bound to the current course's type config.
+export function useTypeHelpers() {
+  const { QUESTION_TYPES } = useCourse();
+  return {
+    typeToLabel: (type) => QUESTION_TYPES?.[type]?.label ?? type,
+    typeToKind:  (type) => QUESTION_TYPES?.[type]?.kind  ?? "mixed",
+  };
 }
 
 export default function Chip({ children, kind }) {

@@ -39,6 +39,16 @@ export const TRAPS = [
   },
 ];
 
+// Maps question type keys → { label: Hebrew display string, kind: style variant }
+// kind values: "proof" | "ts" | "calc" | "mixed"
+export const QUESTION_TYPES = {
+  "הוכחה":        { label: "הוכחה",        kind: "proof" },
+  "חישוב":        { label: "חישוב",         kind: "calc"  },
+  "מעורב":        { label: "מעורב",         kind: "mixed" },
+  "אמת/שקר":     { label: "אמת/שקר",       kind: "ts"    },
+  "חישוב+הוכחה": { label: "חישוב+הוכחה",   kind: "calc"  },
+};
+
 export const EXAM_FORMAT = {
   latestSession: "מועד א׳ תשפ״ו",
   latestDate:    "02.02.26",

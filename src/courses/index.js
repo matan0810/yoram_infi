@@ -5,6 +5,7 @@ import {
   TREND_FROM_YEAR as infi2TrendFromYear,
   TRAPS as infi2Traps,
   EXAM_FORMAT as infi2ExamFormat,
+  QUESTION_TYPES as infi2QuestionTypes,
 } from "./infi2/config";
 import {
   TOPIC_HE as infi2TopicHe,
@@ -20,6 +21,7 @@ import {
   TREND_FROM_YEAR as algebra2TrendFromYear,
   TRAPS as algebra2Traps,
   EXAM_FORMAT as algebra2ExamFormat,
+  QUESTION_TYPES as algebra2QuestionTypes,
 } from "./algebra2/config";
 import {
   TOPIC_HE as algebra2TopicHe,
@@ -37,6 +39,7 @@ export const COURSE_REGISTRY = {
     TREND_FROM_YEAR: infi2TrendFromYear,
     TRAPS: infi2Traps,
     EXAM_FORMAT: infi2ExamFormat,
+    QUESTION_TYPES: infi2QuestionTypes,
     TOPIC_HE: infi2TopicHe,
     COLORS: infi2Colors,
     isExcluded: infi2IsExcluded,
@@ -50,6 +53,7 @@ export const COURSE_REGISTRY = {
     TREND_FROM_YEAR: algebra2TrendFromYear,
     TRAPS: algebra2Traps,
     EXAM_FORMAT: algebra2ExamFormat,
+    QUESTION_TYPES: algebra2QuestionTypes,
     TOPIC_HE: algebra2TopicHe,
     COLORS: algebra2Colors,
     isExcluded: algebra2IsExcluded,

@@ -6,7 +6,10 @@
       "Bash(npm install *)",
       "Bash(npm list *)",
       "Bash(python3 -c ' *)",
-      "Read(//c/Users/Matan/Downloads/**)"
+      "Read(//c/Users/Matan/Downloads/**)",
+      "Bash(grep -v \"//.*code:\")",
+      "Bash(node --input-type=module)",
+      "Bash(node --input-type=module --experimental-vm-modules)"
     ]
   }
 }
