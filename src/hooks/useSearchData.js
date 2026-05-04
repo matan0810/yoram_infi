@@ -1,8 +1,24 @@
 import { useMemo } from "react";
-import { UNKNOWN_LECTURER, examMatchesLecturer, buildLecturersList } from "../utils/exam";
+import {
+  UNKNOWN_LECTURER,
+  examMatchesLecturer,
+  buildLecturersList,
+} from "../utils/exam";
 
-export function useSearchData(exams, filters, topicHe) {
-  const { query, topic, chapter, type, year, moed, lecturer } = filters;
+// isDone and hasLabel are stable refs (see useProgress/useLabels).
+// doneVersion / labelsVersion are integer counters that increment on every
+// change — they trigger recomputation without creating new function references.
+export function useSearchData(
+  exams,
+  filters,
+  topicHe,
+  isDone,
+  doneVersion,
+  hasLabel,
+  labelsVersion,
+) {
+  const { query, topic, chapter, type, year, moed, lecturer, progressFilter } =
+    filters;
 
   const topicsByFrequency = useMemo(
     () =>
@@ -38,23 +54,54 @@ export function useSearchData(exams, filters, topicHe) {
       (!moed || exam.moed === moed) &&
       (!lecturer || examMatchesLecturer(exam, lecturer));
 
-    const questionMatches = (q, exam) =>
-      (!topic || q.topic === topic) &&
-      (!chapter || q.chapter === chapter) &&
-      (!type || q.type === type) &&
-      (!queryLower ||
-        (q.summary + topicHe[q.topic] + exam.code)
+    const questionMatches = (q, exam) => {
+      if (topic && q.topic !== topic) return false;
+      if (chapter && q.chapter !== chapter) return false;
+      if (type && q.type !== type) return false;
+      if (
+        queryLower &&
+        !(q.summary + (topicHe[q.topic] ?? "") + exam.code)
           .toLowerCase()
-          .includes(queryLower));
+          .includes(queryLower)
+      )
+        return false;
+      const qKey = `${exam.code}__${q.id}`;
+      if (progressFilter === "done" && !isDone?.(qKey)) return false;
+      if (progressFilter === "undone" && isDone?.(qKey)) return false;
+      if (progressFilter === "hard" && !hasLabel?.(qKey, "hard")) return false;
+      if (progressFilter === "later" && !hasLabel?.(qKey, "later")) return false;
+      return true;
+    };
+
+    const MOED_ORDER = { א: 0, ב: 1, ג: 2, sample: 3 };
 
     return exams
       .filter(examMatches)
+      .sort((a, b) =>
+        b.year !== a.year
+          ? b.year - a.year
+          : (MOED_ORDER[a.moed] ?? 9) - (MOED_ORDER[b.moed] ?? 9),
+      )
       .flatMap((exam) =>
         exam.questions
           .filter((q) => questionMatches(q, exam))
+          .sort((a, b) => (a.number ?? 0) - (b.number ?? 0))
           .map((question) => ({ exam, question })),
       );
-  }, [exams, query, topic, chapter, type, year, moed, lecturer, topicHe]);
+  }, [
+    exams,
+    query,
+    topic,
+    chapter,
+    type,
+    year,
+    moed,
+    lecturer,
+    topicHe,
+    progressFilter,
+    doneVersion,
+    labelsVersion,
+  ]);
 
   return { topicsByFrequency, years, lecturers, types, results };
 }

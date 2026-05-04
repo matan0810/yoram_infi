@@ -34,18 +34,7 @@ export default function App() {
 }
 
 // TODO:
-// - Add question order by moed and number
-// - fix test template to be accureate
-// - fix algebra data (clause on it)
-// - add a way to mark questions as done and show progress (by localStorage?)
-// - add a way to reset progress
-// - add a way to show only answerded/unanswered questions
-// - improve UI to be accurate and clean
-// - (maybe add a dark mode?)
+// - fix algebra data (verify remaining unverified exams against PDFs)
+// - add a dark mode
 // - add readme with instructions on how to use the app and how to add new courses
-// - improve readability of code (maybe split into multiple files?) and avoid repetition
-// - add search results to be with routes
-// - add search results by question text and answer text
-// - fix layout of question cards to be more responsive and clean
-// - fix of entier app to be more responsive and work well on mobile devices
-// - add disclaimer that this app is for personal use only and check potential copyright issues
+// - move disclaimer to "2010–2026 · v2.0" line

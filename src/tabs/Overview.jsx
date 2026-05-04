@@ -1,12 +1,151 @@
 import { useMemo, useState } from "react";
 import { Bar, CardTitle, ExcludedTag, excludedRowStyle, useTypeHelpers } from "../components";
-import { card, COLORS_UI } from "../styles";
+import { card, COLORS_UI, FONTS } from "../styles";
 
 const EXCLUDED_LABEL = COLORS_UI.muted;
+const TOPICS_INITIAL = 14;
+const TOPICS_INCREMENT = 7;
+
+function ShowMoreControls({ active, visibleCount, setVisibleCount, pri }) {
+  const remaining = active.length - visibleCount;
+  const showingAll = visibleCount >= active.length;
+
+  return (
+    <div style={{ marginTop: 14 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: showingAll ? 0 : 8,
+        }}
+      >
+        <span style={{ fontSize: 11, color: COLORS_UI.muted, fontWeight: 600 }}>
+          {Math.min(visibleCount, active.length)}/{active.length} נושאים
+        </span>
+        {visibleCount > TOPICS_INITIAL && (
+          <button
+            onClick={() => setVisibleCount(TOPICS_INITIAL)}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: COLORS_UI.muted,
+              cursor: "pointer",
+              fontSize: 11,
+              padding: "2px 6px",
+              fontFamily: FONTS.sans,
+              textDecoration: "underline",
+              textDecorationStyle: "dotted",
+            }}
+          >
+            ▲ צמצם
+          </button>
+        )}
+      </div>
+
+      {!showingAll && (
+        <button
+          onClick={() =>
+            setVisibleCount((v) => Math.min(v + TOPICS_INCREMENT, active.length))
+          }
+          style={{
+            width: "100%",
+            background: "transparent",
+            border: `1px solid ${COLORS_UI.border}`,
+            color: COLORS_UI.subdued,
+            cursor: "pointer",
+            fontSize: 12,
+            padding: "7px 14px",
+            fontFamily: FONTS.sans,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            transition: "background 0.12s, color 0.12s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = COLORS_UI.barBg;
+            e.currentTarget.style.color = COLORS_UI.text;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = COLORS_UI.subdued;
+          }}
+        >
+          <span>▼ עוד {Math.min(remaining, TOPICS_INCREMENT)} נושאים</span>
+          {remaining > TOPICS_INCREMENT && (
+            <span style={{ fontSize: 11, opacity: 0.6 }}>נותרו {remaining}</span>
+          )}
+        </button>
+      )}
+    </div>
+  );
+}
+
+function ExcludedSection({ excluded, showExcluded, setShowExcluded, maxTopicCount, stats, topicHe }) {
+  return (
+    <>
+      <button
+        onClick={() => setShowExcluded((v) => !v)}
+        style={{
+          marginTop: 8,
+          width: "100%",
+          background: showExcluded ? COLORS_UI.barBg : "white",
+          border: `1px solid ${COLORS_UI.border}`,
+          borderStyle: "dashed",
+          color: COLORS_UI.subdued,
+          cursor: "pointer",
+          fontSize: 11,
+          fontWeight: 700,
+          padding: "7px 12px",
+          fontFamily: FONTS.sans,
+          letterSpacing: "0.01em",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = COLORS_UI.barBg;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = showExcluded ? COLORS_UI.barBg : "white";
+        }}
+      >
+        <span>{showExcluded ? "▲ הסתר נושאים שלא בחומר" : "▼ נושאים שלא בחומר"}</span>
+        <span
+          style={{
+            background: COLORS_UI.border,
+            color: COLORS_UI.text,
+            fontSize: 10,
+            fontWeight: 800,
+            padding: "2px 7px",
+          }}
+        >
+          {excluded.length}
+        </span>
+      </button>
+      {showExcluded &&
+        excluded.map(([topicKey, count]) => (
+          <div key={topicKey} style={excludedRowStyle}>
+            <Bar
+              label={
+                <span>
+                  <ExcludedTag />
+                  {topicHe[topicKey] || topicKey}
+                </span>
+              }
+              val={count}
+              max={maxTopicCount}
+              color={EXCLUDED_LABEL}
+              pct={Math.round((count / stats.total) * 100)}
+            />
+          </div>
+        ))}
+    </>
+  );
+}
 
 export default function Overview({
   stats,
-  setTab,
   setSearchTopic,
   setSearchChapter,
   setSearchType,
@@ -19,9 +158,8 @@ export default function Overview({
 }) {
   const pri = colorsUI?.primary ?? COLORS_UI.primary;
   const { typeToLabel } = useTypeHelpers();
-  const [showAllTopics, setShowAllTopics] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(TOPICS_INITIAL);
   const [showExcluded, setShowExcluded] = useState(false);
-  const TOPICS_INITIAL = 14;
 
   const { active, excluded } = useMemo(() => {
     const all = Object.entries(stats.topicCounts).sort((a, b) => b[1] - a[1]);
@@ -49,7 +187,7 @@ export default function Overview({
           title="דירוג נושאים"
           sub="לחץ על נושא לחיפוש שאלות"
         />
-        {(showAllTopics ? active : active.slice(0, TOPICS_INITIAL)).map(([topicKey, count], i) => {
+        {active.slice(0, visibleCount).map(([topicKey, count], i) => {
           const examCount = exams.filter(
             (exam) => stats.examTopics[exam.code][topicKey],
           ).length;
@@ -74,70 +212,27 @@ export default function Overview({
               max={maxTopicCount}
               color={colors[i % colors.length]}
               pct={Math.round((count / stats.total) * 100)}
-              onClick={() => {
-                setTab("search");
-                setSearchTopic(topicKey);
-              }}
+              onClick={() => setSearchTopic(topicKey)}
             />
           );
         })}
         {active.length > TOPICS_INITIAL && (
-          <button
-            onClick={() => setShowAllTopics((v) => !v)}
-            style={{
-              marginTop: 10,
-              background: showAllTopics ? `${pri}18` : "white",
-              border: `1.5px solid ${pri}`,
-              color: pri,
-              cursor: "pointer",
-              fontSize: 12,
-              fontWeight: 700,
-              padding: "6px 0",
-              width: "100%",
-              letterSpacing: "0.02em",
-            }}
-          >
-            {showAllTopics
-              ? "▲ הצג פחות"
-              : `▼ הראה עוד — ${active.length - TOPICS_INITIAL} נושאים נוספים`}
-          </button>
+          <ShowMoreControls
+            active={active}
+            visibleCount={visibleCount}
+            setVisibleCount={setVisibleCount}
+            pri={pri}
+          />
         )}
         {excluded.length > 0 && (
-          <>
-            <button
-              onClick={() => setShowExcluded((v) => !v)}
-              style={{
-                marginTop: 10,
-                background: "none",
-                border: `1px dashed ${COLORS_UI.border}`,
-                color: COLORS_UI.muted,
-                cursor: "pointer",
-                fontSize: 11,
-                padding: "5px 0",
-                width: "100%",
-              }}
-            >
-              {showExcluded
-                ? `▲ הסתר נושאים שלא בחומר (${excluded.length})`
-                : `▼ נושאים שלא בחומר (${excluded.length})`}
-            </button>
-            {showExcluded && excluded.map(([topicKey, count]) => (
-              <div key={topicKey} style={excludedRowStyle}>
-                <Bar
-                  label={
-                    <span>
-                      <ExcludedTag />
-                      {topicHe[topicKey] || topicKey}
-                    </span>
-                  }
-                  val={count}
-                  max={maxTopicCount}
-                  color={EXCLUDED_LABEL}
-                  pct={Math.round((count / stats.total) * 100)}
-                />
-              </div>
-            ))}
-          </>
+          <ExcludedSection
+            excluded={excluded}
+            showExcluded={showExcluded}
+            setShowExcluded={setShowExcluded}
+            maxTopicCount={maxTopicCount}
+            stats={stats}
+            topicHe={topicHe}
+          />
         )}
       </div>
 
@@ -154,10 +249,7 @@ export default function Overview({
               pct={Math.round(
                 ((stats.chapterCounts[key] || 0) / stats.total) * 100,
               )}
-              onClick={() => {
-                setTab("search");
-                setSearchChapter(key);
-              }}
+              onClick={() => setSearchChapter(key)}
             />
           ))}
         </div>
@@ -178,10 +270,7 @@ export default function Overview({
                 max={maxTypeCount}
                 color={colors[i % colors.length]}
                 pct={Math.round((count / stats.total) * 100)}
-                onClick={() => {
-                  setTab("search");
-                  setSearchType(type);
-                }}
+                onClick={() => setSearchType(type)}
               />
             ))}
         </div>

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { card, COLORS_UI, blendHex, darkenHex } from "../styles";
 import { CardTitle, ExcludedTag, excludedRowStyle } from "../components";
 
-export default function Heatmap({ stats, setTab, setSearchTopic, exams, topicHe, isExcluded, colorsUI }) {
+export default function Heatmap({ stats, setSearchTopic, exams, topicHe, isExcluded, colorsUI }) {
   const pri = colorsUI?.primary ?? COLORS_UI.primary;
 
   const heatColors = useMemo(() => [
@@ -23,10 +23,14 @@ export default function Heatmap({ stats, setTab, setSearchTopic, exams, topicHe,
     return heatColors[Math.min(count, heatColors.length - 1)];
   }
 
-  const sortedTopics = useMemo(
-    () => Object.entries(stats.topicCounts).sort((a, b) => b[1] - a[1]),
-    [stats],
-  );
+  // Active topics first (sorted by frequency), excluded topics at the bottom
+  const sortedTopics = useMemo(() => {
+    const all = Object.entries(stats.topicCounts).sort((a, b) => b[1] - a[1]);
+    return [
+      ...all.filter(([key]) => !isExcluded(key)),
+      ...all.filter(([key]) => isExcluded(key)),
+    ];
+  }, [stats, isExcluded]);
 
   const latestYear = useMemo(() => Math.max(...exams.map((e) => e.year)), [exams]);
 
@@ -123,10 +127,7 @@ export default function Heatmap({ stats, setTab, setSearchTopic, exams, topicHe,
                       <td
                         key={exam.code}
                         onClick={() => {
-                          if (count > 0 && !excluded) {
-                            setTab("search");
-                            setSearchTopic(topicKey);
-                          }
+                          if (count > 0 && !excluded) setSearchTopic(topicKey);
                         }}
                         title={
                           count

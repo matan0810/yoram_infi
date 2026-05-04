@@ -1,12 +1,12 @@
 import { useMemo } from "react";
-import { Chip, useTypeHelpers, ExcludedTag, MathText } from "../components";
+import { Chip, useTypeHelpers, ExcludedTag, MathText, StudyControls } from "../components";
 import { card, inp, COLORS_UI, FONTS, clearBtn, countBadge } from "../styles";
 import {
-  UNKNOWN_LECTURER,
   examMatchesLecturer,
   examLecturerLabel,
   buildLecturersList,
 } from "../utils/exam";
+import { LABEL_DEFS } from "../hooks/useLabels";
 
 const MOED_OPTIONS = [
   { value: "א", label: "מועד א" },
@@ -20,12 +20,16 @@ export default function ExamsTab({
   setMoedFilter,
   lecturerFilter,
   setLecturerFilter,
-  setTab,
   setSearchTopic,
   exams,
   topicHe,
   isExcluded,
   colorsUI,
+  studyMode,
+  isDone,
+  toggleDone,
+  hasLabel,
+  toggleLabel,
 }) {
   const { typeToLabel, typeToKind } = useTypeHelpers();
   const pri = colorsUI?.primary ?? COLORS_UI.primary;
@@ -84,7 +88,9 @@ export default function ExamsTab({
         >
           <option value="">כל המועדים</option>
           {MOED_OPTIONS.map(({ value, label }) => (
-            <option key={value} value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
         {lecturers.length > 1 && (
@@ -174,33 +180,47 @@ export default function ExamsTab({
                 </div>
               </div>
 
-              {exam.questions.map((q) => {
+              {(exam.questions[0]?.number != null
+                  ? [...exam.questions].sort((a, b) => (a.number ?? 0) - (b.number ?? 0))
+                  : exam.questions
+                ).map((q) => {
                 const excluded = isExcluded(q.topic);
-                const questionNumber = q.id.replace(/^[א-ת]/, "");
+                const questionNumber = q.id.replace(/^[^\d]+/, "");
+                const questionKey = `${exam.code}__${q.id}`;
+                const done = isDone?.(questionKey) ?? false;
+                const activeLabels = LABEL_DEFS.filter(
+                  (def) => hasLabel?.(questionKey, def.key),
+                );
+
                 return (
                   <div
                     key={q.id}
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "28px 1fr",
+                      gridTemplateColumns: studyMode ? "28px 1fr auto" : "28px 1fr",
                       gap: 8,
                       padding: "6px 0",
                       borderBottom: `1px solid ${COLORS_UI.rowDivider}`,
-                      alignItems: "baseline",
+                      alignItems: "start",
                       opacity: excluded ? 0.45 : 1,
+                      background: done ? "#f6fdf4" : "transparent",
                     }}
                   >
+                    {/* Question number */}
                     <div
                       style={{
                         fontFamily: FONTS.serif,
                         fontWeight: 900,
                         fontSize: 16,
-                        color: pri,
+                        color: done ? "#3a7a3a" : pri,
                         textAlign: "center",
+                        paddingTop: 2,
                       }}
                     >
                       {questionNumber}
                     </div>
+
+                    {/* Content */}
                     <div>
                       <div
                         style={{
@@ -214,16 +234,11 @@ export default function ExamsTab({
                         <Chip kind={q.chapter}>פרק {q.chapter}</Chip>
                         <Chip kind={typeToKind(q.type)}>{typeToLabel(q.type)}</Chip>
                         <span
-                          onClick={() => {
-                            setTab("search");
-                            setSearchTopic(q.topic);
-                          }}
+                          onClick={() => setSearchTopic(q.topic)}
                           style={{
                             fontSize: 11,
                             fontWeight: 600,
-                            color: excluded
-                              ? COLORS_UI.muted
-                              : sec,
+                            color: excluded ? COLORS_UI.muted : sec,
                             border: `1px dashed ${excluded ? COLORS_UI.border : sec}`,
                             padding: "1px 6px",
                             cursor: "pointer",
@@ -245,7 +260,37 @@ export default function ExamsTab({
                       >
                         <MathText>{q.summary}</MathText>
                       </div>
+                      {activeLabels.length > 0 && (
+                        <div style={{ marginTop: 3, display: "flex", gap: 3, flexWrap: "wrap" }}>
+                          {activeLabels.map((def) => (
+                            <span
+                              key={def.key}
+                              style={{
+                                fontSize: 9,
+                                padding: "0 5px",
+                                background: def.bg,
+                                color: def.color,
+                                border: `1px solid ${def.color}55`,
+                                fontWeight: 700,
+                              }}
+                            >
+                              {def.icon} {def.label}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
+
+                    {/* Study controls */}
+                    {studyMode && (
+                      <StudyControls
+                        done={done}
+                        questionKey={questionKey}
+                        toggleDone={toggleDone}
+                        hasLabel={hasLabel}
+                        toggleLabel={toggleLabel}
+                      />
+                    )}
                   </div>
                 );
               })}

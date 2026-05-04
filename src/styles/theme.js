@@ -27,6 +27,8 @@ export const c = {
   fontFamily: FONTS.sans,
   direction: "rtl",
   padding: 20,
+  maxWidth: "100vw",
+  overflowX: "hidden",
 };
 
 export const card = {

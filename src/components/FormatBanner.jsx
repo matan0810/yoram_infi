@@ -102,7 +102,12 @@ export default function FormatBanner({ chapters, examFormat, colorsUI }) {
         <div style={s.label}>תבנית רשמית</div>
         <div style={s.session}>
           {examFormat.latestSession}
-          <span style={s.date}>{examFormat.latestDate}</span>
+          {examFormat.latestDate && <span style={s.date}>{examFormat.latestDate}</span>}
+          {examFormat.lecturer && (
+            <span style={{ ...s.date, marginRight: 10, fontWeight: 600 }}>
+              {examFormat.lecturer}
+            </span>
+          )}
         </div>
       </div>
       <div style={s.grid}>

@@ -1,9 +1,65 @@
-import { useState, useEffect } from "react";
-import { useStats } from "../hooks";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useStats, useProgress, useLabels } from "../hooks";
 import { c, COLORS_UI } from "../styles";
 import { Header, FormatBanner, TabBar } from "../components";
 import { Overview, Heatmap, ExamsTab, SearchTab, Insights } from "../tabs";
 import { useCourse } from "../context/CourseContext";
+import { examMatchesLecturer, buildLecturersList } from "../utils/exam";
+
+function ScrollProgress({ color }) {
+  const [pct, setPct] = useState(0);
+  useEffect(() => {
+    const update = () => {
+      const el = document.documentElement;
+      const max = el.scrollHeight - el.clientHeight;
+      setPct(max > 0 ? (el.scrollTop / max) * 100 : 0);
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        right: 0,
+        left: 0,
+        height: 3,
+        zIndex: 1000,
+        pointerEvents: "none",
+      }}
+    >
+      <div
+        style={{
+          height: "100%",
+          width: `${pct}%`,
+          background: color,
+          opacity: 0.65,
+          transition: "width 0.08s linear",
+        }}
+      />
+    </div>
+  );
+}
+
+function useParam(params, setParams, key) {
+  const value = params.get(key) ?? "";
+  const setValue = useCallback(
+    (v) =>
+      setParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          if (v) next.set(key, v);
+          else next.delete(key);
+          return next;
+        },
+        { replace: true },
+      ),
+    [setParams, key],
+  );
+  return [value, setValue];
+}
 
 export default function CourseApp() {
   const {
@@ -20,46 +76,159 @@ export default function CourseApp() {
     colorsUI,
   } = useCourse();
 
-  const totalQuestions = EXAMS.reduce((s, e) => s + e.questions.length, 0);
-  const minYear = Math.min(...EXAMS.map((e) => e.year));
-  const maxYear = Math.max(...EXAMS.map((e) => e.year));
+  const courseId = COURSE.number;
+
+  const {
+    isDone,
+    toggleDone,
+    resetProgress,
+    doneCount,
+    doneVersion,
+    studyMode,
+    toggleStudyMode,
+  } = useProgress(courseId);
+
+  const { hasLabel, toggleLabel, labelsVersion } = useLabels(courseId);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [tab, setTab] = useParam(searchParams, setSearchParams, "tab");
+  const activeTab = tab || "overview";
+  const setActiveTab = useCallback(
+    (v) => setTab(v === "overview" ? "" : v),
+    [setTab],
+  );
+
+  // Global lecturer mode
+  const [activeLecturer, setActiveLecturer] = useParam(
+    searchParams,
+    setSearchParams,
+    "activeLecturer",
+  );
+
+  // ExamsTab filters
+  const [examYear, setExamYear] = useParam(searchParams, setSearchParams, "examYear");
+  const [examMoed, setExamMoed] = useParam(searchParams, setSearchParams, "examMoed");
+  const [examLecturer, setExamLecturer] = useParam(searchParams, setSearchParams, "examLecturer");
+
+  // SearchTab filters
+  const [searchQuery, setSearchQuery] = useParam(searchParams, setSearchParams, "q");
+  const [searchTopic, setSearchTopic] = useParam(searchParams, setSearchParams, "topic");
+  const [searchChapter, setSearchChapter] = useParam(searchParams, setSearchParams, "chapter");
+  const [searchType, setSearchType] = useParam(searchParams, setSearchParams, "type");
+  const [searchYear, setSearchYear] = useParam(searchParams, setSearchParams, "year");
+  const [searchMoed, setSearchMoed] = useParam(searchParams, setSearchParams, "moed");
+  const [searchLecturer, setSearchLecturer] = useParam(searchParams, setSearchParams, "lecturer");
+  const [searchProgressFilter, setSearchProgressFilter] = useParam(
+    searchParams,
+    setSearchParams,
+    "progress",
+  );
+
+  // When activeLecturer is set, all tabs see only that lecturer's exams
+  const displayExams = useMemo(
+    () =>
+      activeLecturer
+        ? EXAMS.filter((e) => examMatchesLecturer(e, activeLecturer))
+        : EXAMS,
+    [EXAMS, activeLecturer],
+  );
+
+  const lecturers = useMemo(() => buildLecturersList(EXAMS), [EXAMS]);
+
+  const totalQuestions = displayExams.reduce((s, e) => s + e.questions.length, 0);
+  const minYear = displayExams.length ? Math.min(...displayExams.map((e) => e.year)) : 0;
+  const maxYear = displayExams.length ? Math.max(...displayExams.map((e) => e.year)) : 0;
 
   useEffect(() => {
     document.title = `מדד שאלות - ${COURSE.name} · ${COURSE.number}`;
   }, [COURSE]);
 
-  const [tab, setTab] = useState("overview");
+  const stats = useStats(displayExams);
 
-  // ExamsTab filters
-  const [examYear, setExamYear] = useState("");
-  const [examMoed, setExamMoed] = useState("");
-  const [examLecturer, setExamLecturer] = useState("");
+  // Atomic navigation: sets tab=search + one filter in a single setSearchParams call.
+  // Calling setSearchParams twice in one event loses the first update (React Router batches
+  // with the original prev, not the updated one), so we must do both in one call.
+  const goToSearch = useCallback(
+    (filterKey, filterValue) => {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.set("tab", "search");
+          if (filterValue) next.set(filterKey, filterValue);
+          else next.delete(filterKey);
+          return next;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
 
-  // SearchTab filters
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchTopic, setSearchTopic] = useState("");
-  const [searchChapter, setSearchChapter] = useState("");
-  const [searchType, setSearchType] = useState("");
-  const [searchYear, setSearchYear] = useState("");
-  const [searchMoed, setSearchMoed] = useState("");
-  const [searchLecturer, setSearchLecturer] = useState("");
+  const goToTopic   = useCallback((v) => goToSearch("topic",   v), [goToSearch]);
+  const goToChapter = useCallback((v) => goToSearch("chapter", v), [goToSearch]);
+  const goToType    = useCallback((v) => goToSearch("type",    v), [goToSearch]);
 
-  const stats = useStats(EXAMS);
+  // Atomic clear for all search filters — same reason as goToSearch
+  const clearSearchFilters = useCallback(() => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      ["q", "topic", "chapter", "type", "year", "moed", "lecturer", "progress"].forEach(
+        (k) => next.delete(k),
+      );
+      return next;
+    }, { replace: true });
+  }, [setSearchParams]);
+
+  // Derive format banner info from the actual latest exam (not hardcoded config)
+  const latestExam = useMemo(() => {
+    if (!EXAMS.length) return null;
+    return [...EXAMS].sort((a, b) =>
+      b.year !== a.year ? b.year - a.year : b.moed > a.moed ? 1 : -1,
+    )[0];
+  }, [EXAMS]);
+
+  const derivedExamFormat = useMemo(() => {
+    if (!EXAM_FORMAT || !latestExam) return EXAM_FORMAT;
+    return {
+      ...EXAM_FORMAT,
+      latestSession: `${latestExam.year} מועד ${latestExam.moed}`,
+      latestDate: latestExam.date ?? "",
+      lecturer: latestExam.lecturers?.[0] ?? "",
+    };
+  }, [EXAM_FORMAT, latestExam]);
+
+  // Progress + label callbacks — only wired through when study mode is on
+  const studyProps = studyMode
+    ? { isDone, toggleDone, hasLabel, toggleLabel }
+    : {};
 
   return (
     <div style={c}>
-      <Header course={COURSE} exams={EXAMS} colorsUI={colorsUI} />
-      <FormatBanner chapters={CHAPTERS} examFormat={EXAM_FORMAT} colorsUI={colorsUI} />
-      <TabBar tab={tab} setTab={setTab} />
+      <ScrollProgress color={colorsUI.primary} />
+      <Header
+        course={COURSE}
+        exams={displayExams}
+        colorsUI={colorsUI}
+        doneCount={doneCount}
+        totalQuestions={totalQuestions}
+        resetProgress={resetProgress}
+        studyMode={studyMode}
+        toggleStudyMode={toggleStudyMode}
+        activeLecturer={activeLecturer}
+        setActiveLecturer={setActiveLecturer}
+        lecturers={lecturers}
+      />
+      <FormatBanner chapters={CHAPTERS} examFormat={derivedExamFormat} colorsUI={colorsUI} />
+      <TabBar tab={activeTab} setTab={setActiveTab} />
 
-      {tab === "overview" && (
+      {activeTab === "overview" && (
         <Overview
           stats={stats}
-          setTab={setTab}
-          setSearchTopic={setSearchTopic}
-          setSearchChapter={setSearchChapter}
-          setSearchType={setSearchType}
-          exams={EXAMS}
+          setSearchTopic={goToTopic}
+          setSearchChapter={goToChapter}
+          setSearchType={goToType}
+          exams={displayExams}
           topicHe={TOPIC_HE}
           colors={COLORS}
           isExcluded={isExcluded}
@@ -67,18 +236,17 @@ export default function CourseApp() {
           colorsUI={colorsUI}
         />
       )}
-      {tab === "heatmap" && (
+      {activeTab === "heatmap" && (
         <Heatmap
           stats={stats}
-          setTab={setTab}
-          setSearchTopic={setSearchTopic}
-          exams={EXAMS}
+          setSearchTopic={goToTopic}
+          exams={displayExams}
           topicHe={TOPIC_HE}
           isExcluded={isExcluded}
           colorsUI={colorsUI}
         />
       )}
-      {tab === "exams" && (
+      {activeTab === "exams" && (
         <ExamsTab
           yearFilter={examYear}
           setYearFilter={setExamYear}
@@ -86,15 +254,16 @@ export default function CourseApp() {
           setMoedFilter={setExamMoed}
           lecturerFilter={examLecturer}
           setLecturerFilter={setExamLecturer}
-          setTab={setTab}
-          setSearchTopic={setSearchTopic}
-          exams={EXAMS}
+          setSearchTopic={goToTopic}
+          exams={displayExams}
           topicHe={TOPIC_HE}
           isExcluded={isExcluded}
           colorsUI={colorsUI}
+          studyMode={studyMode}
+          {...studyProps}
         />
       )}
-      {tab === "search" && (
+      {activeTab === "search" && (
         <SearchTab
           query={searchQuery}
           setQuery={setSearchQuery}
@@ -110,19 +279,25 @@ export default function CourseApp() {
           setMoed={setSearchMoed}
           lecturer={searchLecturer}
           setLecturer={setSearchLecturer}
-          exams={EXAMS}
+          exams={displayExams}
           topicHe={TOPIC_HE}
           isExcluded={isExcluded}
           chapters={CHAPTERS}
           colorsUI={colorsUI}
+          studyMode={studyMode}
+          progressFilter={searchProgressFilter}
+          setProgressFilter={setSearchProgressFilter}
+          clearAll={clearSearchFilters}
+          doneVersion={doneVersion}
+          labelsVersion={labelsVersion}
+          {...studyProps}
         />
       )}
-      {tab === "insights" && (
+      {activeTab === "insights" && (
         <Insights
           stats={stats}
-          setTab={setTab}
-          setSearchTopic={setSearchTopic}
-          exams={EXAMS}
+          setSearchTopic={goToTopic}
+          exams={displayExams}
           topicHe={TOPIC_HE}
           excludedTopics={EXCLUDED_TOPICS}
           traps={TRAPS}
@@ -136,20 +311,19 @@ export default function CourseApp() {
           marginTop: 28,
           paddingTop: 14,
           borderTop: `1px solid ${COLORS_UI.border}`,
+          fontSize: 11,
+          color: COLORS_UI.muted,
           display: "flex",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 8,
-          fontSize: 12,
-          color: COLORS_UI.text,
+          alignItems: "center",
         }}
       >
-        <span>
-          סיווג ידני · {EXAMS.length} מבחנים · {totalQuestions} שאלות
+        <span style={{ flex: 1 }}>
+          סיווג ידני · {displayExams.length} מבחנים · {totalQuestions} שאלות · {minYear}–{maxYear}
         </span>
-        <span>
-          {minYear}–{maxYear} · v2.0
+        <span style={{ flex: 2, textAlign: "center" }}>
+          האפליקציה מיועדת לשימוש אישי בלבד לצורכי לימוד.
         </span>
+        <span style={{ flex: 1, textAlign: "end" }}>v2.0</span>
       </div>
     </div>
   );

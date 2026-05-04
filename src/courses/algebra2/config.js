@@ -93,26 +93,27 @@ export const QUESTION_TYPES = {
   mixed:            { label: "מעורב",          kind: "mixed" },
 };
 
-// EXAM_FORMAT reflects the most recent published exam (תשפ"ה מועד ב', 19.3.25)
-// taught by ד"ר שי אברה. Format: 5 questions, answer 4 of 5, 25 pts each, 3 hours.
+// EXAM_FORMAT reflects the most recent published exam (תשפ"ו מועד ב', 19.3.26)
+// taught by פרופ' אלכס גורביץ'. Format: 10 questions, answer 7, ~14.3 pts each, 3 hours.
+// Sample exam (2026): 2 mandatory (20pts) + choose 5 from 7 optional (12pts each) = 100pts.
 export const EXAM_FORMAT = {
-  latestSession: "תשפ\"ה מועד ב'",
-  latestDate: "19.03.25",
+  latestSession: "תשפ\"ו מועד ב'",
+  latestDate: "19.03.26",
   chapters: [
     {
       key: "א",
-      points: 35,
-      description: "פולינום אופייני, פירוק, $A$ דומה ל-$A^t$, ערך עצמי יחיד",
+      points: 40,
+      description: "פולינום אופייני, קיילי-המילטון, לכסינות, ע\"ע ומ\"ע",
     },
-    { key: "ב", points: 15, description: "צורת ז'ורדן (כ-Q4 בלבד)" },
+    { key: "ב", points: 15, description: "צורת ז'ורדן, אופרטורים נילפוטנטיים" },
     {
       key: "ג",
-      points: 50,
-      description: "אורתוגונליות, קושי-שוורץ, היטל, צמוד לעצמו",
+      points: 45,
+      description: "מכפלה פנימית, אורתוגונליות, קושי-שוורץ, היטל, צמוד לעצמו, אורתוגונלי",
     },
   ],
   badges: [
-    { label: "5 שאלות, ענו על 4", variant: "accent" },
+    { label: "10 שאלות, ענו על 7", variant: "accent" },
     { label: "מקסימום 100 נקודות", variant: "accent" },
     { label: "ללא חומר עזר", variant: "neutral" },
     { label: "3 שעות", variant: "neutral" },

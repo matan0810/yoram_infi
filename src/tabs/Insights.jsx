@@ -26,7 +26,6 @@ function InsightRow({ children, onClick, hoverBg }) {
 
 export default function Insights({
   stats,
-  setTab,
   setSearchTopic,
   exams,
   topicHe,
@@ -38,10 +37,7 @@ export default function Insights({
   const pri = colorsUI?.primary ?? COLORS_UI.primary;
   const maxYear = useMemo(() => Math.max(...exams.map((e) => e.year)), [exams]);
 
-  const nav = (key) => {
-    setTab("search");
-    setSearchTopic(key);
-  };
+  const nav = (key) => setSearchTopic(key);
 
   const sortedTopics = useMemo(
     () =>
