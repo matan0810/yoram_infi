@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Bar, CardTitle, ExcludedTag, excludedRowStyle, useTypeHelpers } from "../components";
-import { card, COLORS_UI, FONTS } from "../styles";
+import { COLORS_UI, FONTS } from "../styles";
 
 const EXCLUDED_LABEL = COLORS_UI.muted;
 const TOPICS_INITIAL = 14;
@@ -175,7 +175,7 @@ export default function Overview({
 
   return (
     <div className="auto-grid">
-      <div style={card}>
+      <div className="ui-card">
         <CardTitle
           emoji="📊"
           title="דירוג נושאים"
@@ -231,7 +231,7 @@ export default function Overview({
       </div>
 
       <div>
-        <div style={card}>
+        <div className="ui-card">
           <CardTitle emoji="📚" title="פרקים" sub="לחץ על פרק לחיפוש שאלות" />
           {chapters.map(({ key, label, color }) => (
             <Bar
@@ -248,7 +248,7 @@ export default function Overview({
           ))}
         </div>
 
-        <div style={card}>
+        <div className="ui-card">
           <CardTitle
             emoji="🏷️"
             title="סוג שאלה"

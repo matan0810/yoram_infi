@@ -44,7 +44,7 @@ function SearchResultCard({
       }}
     >
       {/* col 1: exam info */}
-      <div style={{ lineHeight: 1.5 }}>
+      <div className="result-card-meta" style={{ lineHeight: 1.5 }}>
         <div style={{ fontWeight: 700, fontSize: 14 }}>{exam.year}</div>
         <div style={{ fontSize: 12, color: COLORS_UI.text }}>מועד {exam.moed}</div>
         <div style={{ fontSize: 11, color: COLORS_UI.muted, marginTop: 2 }}>
@@ -67,13 +67,13 @@ function SearchResultCard({
       </div>
 
       {/* col 2: chips */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+      <div className="result-card-chips">
         <Chip kind={question.chapter}>פרק {question.chapter}</Chip>
         <Chip kind={typeToKind(question.type)}>{typeToLabel(question.type)}</Chip>
       </div>
 
       {/* col 3: topic + summary + active label chips */}
-      <div>
+      <div className="result-card-topic">
         <div
           onClick={() => setTopic(question.topic)}
           style={{
@@ -118,13 +118,15 @@ function SearchResultCard({
 
       {/* col 4: study controls (study mode only) */}
       {studyMode && (
-        <StudyControls
-          done={done}
-          questionKey={questionKey}
-          toggleDone={toggleDone}
-          hasLabel={hasLabel}
-          toggleLabel={toggleLabel}
-        />
+        <div className="result-card-done">
+          <StudyControls
+            done={done}
+            questionKey={questionKey}
+            toggleDone={toggleDone}
+            hasLabel={hasLabel}
+            toggleLabel={toggleLabel}
+          />
+        </div>
       )}
     </div>
   );

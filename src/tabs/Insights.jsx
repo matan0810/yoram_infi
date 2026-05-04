@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { card, COLORS_UI } from "../styles";
+import { COLORS_UI } from "../styles";
 import { CardTitle, Badge, MathText } from "../components";
 
 function InsightRow({ children, onClick, hoverBg }) {
@@ -89,7 +89,7 @@ export default function Insights({
 
   return (
     <div className="auto-grid">
-      <div style={card}>
+      <div className="ui-card">
         <CardTitle
           emoji="🔥"
           title="חובה ללמוד"
@@ -101,27 +101,13 @@ export default function Insights({
           ).length;
           return (
             <InsightRow key={key} onClick={() => nav(key)} hoverBg={`${pri}12`}>
-              <div
-                style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
-              >
+              <div className="insight-item">
                 <Badge>{count}</Badge>
                 <div>
-                  <div
-                    style={{
-                      fontWeight: 700,
-                      fontSize: 14,
-                      color: pri,
-                    }}
-                  >
+                  <div className="topic-title" style={{ color: pri }}>
                     {topicHe[key]}
                   </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: COLORS_UI.muted,
-                      marginTop: 1,
-                    }}
-                  >
+                  <div className="topic-sub">
                     {examCount}/{exams.length} מבחנים ·{" "}
                     {Math.round((examCount / exams.length) * 100)}%
                   </div>
@@ -132,7 +118,7 @@ export default function Insights({
         })}
       </div>
 
-      <div style={card}>
+      <div className="ui-card">
         <CardTitle
           emoji="⚠️"
           title="מלכודות חוזרות"
@@ -140,24 +126,17 @@ export default function Insights({
         />
         {traps.map((trap, i) => (
           <InsightRow key={i}>
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: 14,
-                color: pri,
-                marginBottom: 4,
-              }}
-            >
+            <div className="topic-title" style={{ color: pri, marginBottom: 4 }}>
               <MathText>{trap.t}</MathText>
             </div>
-            <div style={{ fontSize: 12, color: COLORS_UI.muted }}>
+            <div className="topic-sub" style={{ marginTop: 0 }}>
               <MathText>{trap.n}</MathText>
             </div>
           </InsightRow>
         ))}
       </div>
 
-      <div style={card}>
+      <div className="ui-card">
         <CardTitle
           emoji="📈"
           title={`טרנד ${trendFromYear}–${maxYear}`}
@@ -165,15 +144,11 @@ export default function Insights({
         />
         {recentTrend.entries.map(([key, count]) => (
           <InsightRow key={key} onClick={() => nav(key)} hoverBg={`${pri}12`}>
-            <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            <div className="insight-item">
               <Badge>{count}</Badge>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 14 }}>
-                  {topicHe[key]}
-                </div>
-                <div
-                  style={{ fontSize: 12, color: COLORS_UI.muted, marginTop: 1 }}
-                >
+                <div className="topic-title">{topicHe[key]}</div>
+                <div className="topic-sub">
                   {Math.round((count / recentTrend.total) * 100)}% מהשאלות
                 </div>
               </div>
@@ -182,40 +157,26 @@ export default function Insights({
         ))}
       </div>
 
-      <div style={card}>
+      <div className="ui-card">
         <CardTitle
           emoji="🎯"
           title="צפוי לבוא"
           sub="לחץ על נושא לחיפוש שאלות"
         />
         {overdueTopics.length === 0 ? (
-          <div
-            style={{
-              color: COLORS_UI.muted,
-              fontSize: 13,
-              fontStyle: "italic",
-            }}
-          >
+          <div className="topic-sub" style={{ fontStyle: "italic" }}>
             אין נושאים כאלה
           </div>
         ) : (
           overdueTopics.map(({ topic, count, last }) => (
             <InsightRow key={topic} onClick={() => nav(topic)} hoverBg={`${pri}12`}>
-              <div
-                style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
-              >
+              <div className="insight-item">
                 <Badge bg={pri}>{count}×</Badge>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: 14 }}>
+                  <div className="topic-title">
                     {topicHe[topic] || topic}
                   </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: COLORS_UI.muted,
-                      marginTop: 1,
-                    }}
-                  >
+                  <div className="topic-sub">
                     נראה לאחרונה {last} · {maxYear - last} שנים ללא הופעה
                   </div>
                 </div>
@@ -225,7 +186,7 @@ export default function Insights({
         )}
       </div>
 
-      <div style={card}>
+      <div className="ui-card">
         <CardTitle
           emoji="❄️"
           title="פחות שכיח"
@@ -239,23 +200,13 @@ export default function Insights({
             ).length;
             return (
               <InsightRow key={key} onClick={() => nav(key)} hoverBg={`${pri}12`}>
-                <div
-                  style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
-                >
+                <div className="insight-item">
                   <Badge bg={COLORS_UI.barBg} color={COLORS_UI.text}>
                     {count}
                   </Badge>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: 14 }}>
-                      {topicHe[key]}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: COLORS_UI.muted,
-                        marginTop: 1,
-                      }}
-                    >
+                    <div className="topic-title">{topicHe[key]}</div>
+                    <div className="topic-sub">
                       ב-{examCount} מבחנים בלבד
                     </div>
                   </div>

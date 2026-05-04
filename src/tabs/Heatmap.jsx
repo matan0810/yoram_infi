@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { card, COLORS_UI, blendHex, darkenHex } from "../styles";
+import { COLORS_UI, blendHex, darkenHex } from "../styles";
 import { CardTitle, ExcludedTag, excludedRowStyle } from "../components";
 import { useTheme } from "../context/ThemeContext";
 
@@ -38,7 +38,7 @@ export default function Heatmap({ stats, setSearchTopic, exams, topicHe, isExclu
   const latestYear = useMemo(() => Math.max(...exams.map((e) => e.year)), [exams]);
 
   return (
-    <div style={card}>
+    <div className="ui-card">
       <CardTitle
         emoji="🗺️"
         title="מפת חום — נושאים × מבחנים"

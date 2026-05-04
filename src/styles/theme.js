@@ -26,15 +26,6 @@ export const COLORS_UI = {
   chapter:    { "א": "#c1440e", "ב": "#2b4162", "ג": "#3a5a40" },
 };
 
-// Page-level container — direction + overflow only; body handles color/bg/font
-export const c = {
-  minHeight: "100vh",
-  direction: "rtl",
-  padding: 20,
-  maxWidth: "100vw",
-  overflowX: "hidden",
-};
-
 // Card — for places that spread + override (e.g. ExamsTab, FormatBanner).
 // Use className="ui-card" when no overrides are needed.
 export const card = {
@@ -72,10 +63,3 @@ export const countBadge = {
   padding: "4px 10px",
 };
 
-// ── JS-composable layout utilities ──────────────────────────────────────────
-// Use these when you need to spread into an inline style object alongside
-// dynamic values. For pure layout with no dynamic props, prefer className.
-
-export const flexCenter  = { display: "flex", alignItems: "center" };
-export const flexBetween = { display: "flex", justifyContent: "space-between", alignItems: "center" };
-export const flexCol     = { display: "flex", flexDirection: "column" };

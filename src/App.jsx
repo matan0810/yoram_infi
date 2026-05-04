@@ -34,7 +34,6 @@ export default function App() {
 }
 
 // TODO:
-// - refactor entier style system to be coherent and non repetitive
 // - refactor entire state management to be more efficient
 // - refactor entire codebase to be more readable, maintainable, and componentized
 // - make footer to be on open page and not on course page

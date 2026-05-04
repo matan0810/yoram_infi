@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useStats, useProgress, useLabels } from "../hooks";
-import { c, COLORS_UI } from "../styles";
+import { COLORS_UI } from "../styles";
 import { Header, FormatBanner, TabBar } from "../components";
 import { Overview, Heatmap, ExamsTab, SearchTab, Insights } from "../tabs";
 import { useCourse } from "../context/CourseContext";
@@ -204,7 +204,7 @@ export default function CourseApp() {
     : {};
 
   return (
-    <div style={c}>
+    <div className="course-page">
       <ScrollProgress color={colorsUI.primary} />
       <Header
         course={COURSE}

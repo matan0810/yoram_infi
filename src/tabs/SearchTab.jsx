@@ -1,6 +1,6 @@
 import { useTypeHelpers } from "../components";
 import { useSearchData } from "../hooks";
-import { card, inp, COLORS_UI, FONTS, clearBtn, countBadge } from "../styles";
+import { inp, clearBtn, countBadge } from "../styles";
 import SearchResultCard from "./SearchResultCard";
 
 const MOED_OPTIONS = [
@@ -72,15 +72,7 @@ export default function SearchTab({
 
   return (
     <div>
-      <div
-        style={{
-          ...card,
-          display: "flex",
-          gap: 12,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
+      <div className="ui-card filter-bar">
         <input
           type="text"
           value={query}
@@ -162,20 +154,10 @@ export default function SearchTab({
       </div>
 
       {results.length === 0 && (
-        <div
-          style={{
-            textAlign: "center",
-            padding: 40,
-            color: COLORS_UI.subdued,
-            fontStyle: "italic",
-            fontFamily: FONTS.serif,
-          }}
-        >
-          לא נמצאו שאלות
-        </div>
+        <div className="empty-state">לא נמצאו שאלות</div>
       )}
 
-      <div style={{ display: "grid", gap: 8 }}>
+      <div className="results-grid">
         {results.map(({ exam, question }, i) => (
           <SearchResultCard
             key={i}

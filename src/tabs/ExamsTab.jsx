@@ -60,15 +60,7 @@ export default function ExamsTab({
   return (
     <div>
       {/* Filter bar */}
-      <div
-        style={{
-          ...card,
-          display: "flex",
-          gap: 12,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
+      <div className="ui-card filter-bar">
         <select
           value={yearFilter}
           onChange={(e) => setYearFilter(e.target.value)}
@@ -126,7 +118,7 @@ export default function ExamsTab({
       </div>
 
       {/* Exam cards */}
-      <div className="auto-grid" style={{ gap: 18 }}>
+      <div className="auto-grid">
         {filteredExams.map((exam) => {
           const isLatest = exam.year === latestYear;
           return (
