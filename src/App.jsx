@@ -32,3 +32,15 @@ export default function App() {
     </HashRouter>
   );
 }
+
+// TODO:
+// - refactor entier style system to be coherent and non repetitive
+// - refactor entire state management to be more efficient
+// - refactor entire codebase to be more readable, maintainable, and componentized
+// - make footer to be on open page and not on course page
+// - go over algebra test and make sure all questions are correct and well worded and organized
+// - add the rest of infi tests
+// - add descrete math course
+// - remove all the old code and comments that are no longer relevant
+// - use meaningful variable and function names
+// - add error handling and loading states where necessary
