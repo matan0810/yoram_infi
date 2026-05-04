@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { COLORS_UI } from "../styles";
 import { CardTitle, Badge, MathText } from "../components";
 
@@ -38,6 +38,7 @@ export default function Insights({
   const maxYear = useMemo(() => Math.max(...exams.map((e) => e.year)), [exams]);
 
   const nav = (key) => setSearchTopic(key);
+  const [openTrap, setOpenTrap] = useState(null);
 
   const sortedTopics = useMemo(
     () =>
@@ -125,13 +126,27 @@ export default function Insights({
           sub="שאלות כמעט זהות שחזרו מספר פעמים"
         />
         {traps.map((trap, i) => (
-          <InsightRow key={i}>
-            <div className="topic-title" style={{ color: pri, marginBottom: 4 }}>
-              <MathText>{trap.t}</MathText>
+          <InsightRow key={i} onClick={() => setOpenTrap(openTrap === i ? null : i)} hoverBg={`${pri}0d`}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+              <div className="topic-title" style={{ color: pri, flex: 1 }}>
+                <MathText>{trap.t}</MathText>
+              </div>
+              <span style={{ color: COLORS_UI.muted, fontSize: 12, flexShrink: 0, marginTop: 2 }}>
+                {openTrap === i ? "▲" : "▼"}
+              </span>
             </div>
-            <div className="topic-sub" style={{ marginTop: 0 }}>
-              <MathText>{trap.n}</MathText>
-            </div>
+            {openTrap === i && (
+              <div
+                className="topic-sub"
+                style={{
+                  marginTop: 8,
+                  paddingTop: 8,
+                  borderTop: `1px solid ${COLORS_UI.rowDivider}`,
+                }}
+              >
+                <MathText>{trap.n}</MathText>
+              </div>
+            )}
           </InsightRow>
         ))}
       </div>

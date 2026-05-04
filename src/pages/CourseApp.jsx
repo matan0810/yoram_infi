@@ -244,6 +244,8 @@ export default function CourseApp() {
           topicHe={TOPIC_HE}
           isExcluded={isExcluded}
           colorsUI={colorsUI}
+          trendFromYear={TREND_FROM_YEAR}
+          colors={COLORS}
         />
       )}
       {activeTab === "exams" && (

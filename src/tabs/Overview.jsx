@@ -183,7 +183,7 @@ export default function Overview({
         />
         {active.slice(0, visibleCount).map(([topicKey, count], i) => {
           const examCount = exams.filter(
-            (exam) => stats.examTopics[exam.code][topicKey],
+            (exam) => exam.questions.some((q) => q.topic === topicKey),
           ).length;
           return (
             <Bar
@@ -205,7 +205,7 @@ export default function Overview({
               val={count}
               max={maxTopicCount}
               color={colors[i % colors.length]}
-              pct={Math.round((count / stats.total) * 100)}
+              pct={Math.round((count / (stats.total || 1)) * 100)}
               onClick={() => setSearchTopic(topicKey)}
             />
           );

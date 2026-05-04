@@ -2,8 +2,9 @@ import { useMemo } from "react";
 import { COLORS_UI, blendHex, darkenHex } from "../styles";
 import { CardTitle, ExcludedTag, excludedRowStyle } from "../components";
 import { useTheme } from "../context/ThemeContext";
+import Trends from "./Trends";
 
-export default function Heatmap({ stats, setSearchTopic, exams, topicHe, isExcluded, colorsUI }) {
+export default function Heatmap({ stats, setSearchTopic, exams, topicHe, isExcluded, colorsUI, trendFromYear, colors }) {
   const pri = colorsUI?.primary ?? COLORS_UI.primary;
   const { isDark } = useTheme();
   const heatBase = isDark ? "#1a1816" : "#ffffff";
@@ -38,6 +39,7 @@ export default function Heatmap({ stats, setSearchTopic, exams, topicHe, isExclu
   const latestYear = useMemo(() => Math.max(...exams.map((e) => e.year)), [exams]);
 
   return (
+    <>
     <div className="ui-card">
       <CardTitle
         emoji="🗺️"
@@ -219,5 +221,17 @@ export default function Heatmap({ stats, setSearchTopic, exams, topicHe, isExclu
         ))}
       </div>
     </div>
+
+    {trendFromYear && colors && (
+      <Trends
+        exams={exams}
+        topicHe={topicHe}
+        isExcluded={isExcluded}
+        trendFromYear={trendFromYear}
+        colorsUI={colorsUI}
+        colors={colors}
+      />
+    )}
+  </>
   );
 }
