@@ -12,7 +12,7 @@ const STATIC_TYPE_COLORS = {
     color: COLORS_UI.dark,
     border: "1px solid #d4a017",
   },
-  calc: { background: "#5a3a6b", color: "white", border: "1px solid #5a3a6b" },
+  calc: { background: "#7a5aab", color: "white", border: "1px solid #7a5aab" },
 };
 
 // Returns { typeToLabel, typeToKind } functions bound to the current course's type config.
@@ -28,17 +28,17 @@ export default function Chip({ children, kind }) {
   const { CHAPTERS, colorsUI } = useCourse();
 
   const chapterStyles = Object.fromEntries(
-    CHAPTERS.map((ch) => [
-      ch.key,
-      { background: ch.chipBg, color: ch.color, border: `1px solid ${ch.color}` },
-    ]),
+    CHAPTERS.map((ch) => {
+      const fg = ch.chipColor ?? ch.color;
+      return [ch.key, { background: ch.chipBg, color: fg, border: `1px solid ${fg}66` }];
+    }),
   );
 
   const dynamicTypeColors = {
     mixed: {
-      background: CHAPTERS[1]?.color ?? colorsUI.secondary,
+      background: CHAPTERS[1]?.chipColor ?? CHAPTERS[1]?.color ?? colorsUI.secondary,
       color: "white",
-      border: `1px solid ${CHAPTERS[1]?.color ?? colorsUI.secondary}`,
+      border: `1px solid ${CHAPTERS[1]?.chipColor ?? CHAPTERS[1]?.color ?? colorsUI.secondary}`,
     },
     hot: {
       background: colorsUI.primary,

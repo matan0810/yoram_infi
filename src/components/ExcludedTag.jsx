@@ -1,9 +1,9 @@
 import { FONTS } from "../styles";
 
 const TAG = {
-  bg: "#f0ece4",
-  text: "#7a776e",
-  border: "#c8c3b8",
+  bg: "var(--bar-bg)",
+  text: "var(--muted)",
+  border: "var(--border)",
 };
 
 export default function ExcludedTag() {

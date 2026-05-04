@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { COLORS_UI, FONTS } from "../styles";
+import DarkToggle from "./DarkToggle";
 
 export default function Header({
   course,
@@ -49,14 +50,16 @@ export default function Header({
           {course.name} · קורס {course.number}
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <DarkToggle />
+
           {/* Study mode toggle */}
           <button
             onClick={toggleStudyMode}
             title={studyMode ? "כבה מצב למידה" : "הפעל מצב למידה לסימון שאלות"}
             style={{
-              background: studyMode ? "#e8f4e8" : "transparent",
-              border: `1px solid ${studyMode ? "#3a7a3a" : COLORS_UI.border}`,
-              color: studyMode ? "#3a7a3a" : COLORS_UI.muted,
+              background: studyMode ? COLORS_UI.doneBg : "transparent",
+              border: `1px solid ${studyMode ? COLORS_UI.doneText : COLORS_UI.border}`,
+              color: studyMode ? COLORS_UI.doneText : COLORS_UI.muted,
               cursor: "pointer",
               fontFamily: FONTS.sans,
               fontSize: 11,
@@ -68,10 +71,10 @@ export default function Header({
               transition: "background 0.15s, border-color 0.15s, color 0.15s",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = studyMode ? "#3a7a3a" : COLORS_UI.subdued;
+              e.currentTarget.style.borderColor = studyMode ? COLORS_UI.doneText : COLORS_UI.subdued;
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = studyMode ? "#3a7a3a" : COLORS_UI.border;
+              e.currentTarget.style.borderColor = studyMode ? COLORS_UI.doneText : COLORS_UI.border;
             }}
           >
             {studyMode ? "✓ מצב למידה" : "◎ מצב למידה"}
@@ -158,17 +161,7 @@ export default function Header({
       )}
 
       {/* Stats row */}
-      <div
-        style={{
-          display: "flex",
-          gap: 24,
-          marginTop: 14,
-          paddingTop: 12,
-          borderTop: `1px dashed ${COLORS_UI.border}`,
-          flexWrap: "wrap",
-          alignItems: "flex-end",
-        }}
-      >
+      <div className="stats-row" style={{ alignItems: "flex-end" }}>
         {[
           [exams.length, "מבחנים"],
           [exams.reduce((s, e) => s + e.questions.length, 0), "שאלות"],
@@ -179,12 +172,8 @@ export default function Header({
           [yearRange, "שנים"],
         ].map(([n, l]) => (
           <div key={l}>
-            <div style={{ fontFamily: FONTS.serif, fontWeight: 900, fontSize: 26 }}>
-              {n}
-            </div>
-            <div style={{ fontFamily: FONTS.sans, fontSize: 12, color: COLORS_UI.text }}>
-              {l}
-            </div>
+            <div className="stat-num">{n}</div>
+            <div className="stat-label">{l}</div>
           </div>
         ))}
 
@@ -256,7 +245,7 @@ export default function Header({
                 style={{
                   height: "100%",
                   width: `${progressPct}%`,
-                  background: "#3a7a3a",
+                  background: COLORS_UI.doneText,
                   transition: "width 0.3s ease",
                 }}
               />

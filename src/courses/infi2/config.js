@@ -7,9 +7,9 @@ export const COURSE = {
 };
 
 export const CHAPTERS = [
-  { key: "א", label: "פרק א — הוכחות",       color: "#c1440e", chipBg: "#fef1e6" },
-  { key: "ב", label: "פרק ב — חישוב והוכחה", color: "#2b4162", chipBg: "#e8eef6" },
-  { key: "ג", label: "פרק ג — אמת/שקר",      color: "#3a5a40", chipBg: "#eaf0e6" },
+  { key: "א", label: "פרק א — הוכחות",       color: "#c1440e", chipColor: "#c1440e", chipBg: "#c1440e18" },
+  { key: "ב", label: "פרק ב — חישוב והוכחה", color: "#2b4162", chipColor: "#4a7aab", chipBg: "#2b416218" },
+  { key: "ג", label: "פרק ג — אמת/שקר",      color: "#3a5a40", chipColor: "#5a8a5a", chipBg: "#3a5a4018" },
 ];
 
 export const EXCLUDED_TOPICS = new Set(["multivariable"]);

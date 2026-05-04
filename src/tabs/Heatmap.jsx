@@ -1,18 +1,21 @@
 import { useMemo } from "react";
 import { card, COLORS_UI, blendHex, darkenHex } from "../styles";
 import { CardTitle, ExcludedTag, excludedRowStyle } from "../components";
+import { useTheme } from "../context/ThemeContext";
 
 export default function Heatmap({ stats, setSearchTopic, exams, topicHe, isExcluded, colorsUI }) {
   const pri = colorsUI?.primary ?? COLORS_UI.primary;
+  const { isDark } = useTheme();
+  const heatBase = isDark ? "#1a1816" : "#ffffff";
 
   const heatColors = useMemo(() => [
     COLORS_UI.barBg,
-    blendHex("#ffffff", pri, 0.2),
-    blendHex("#ffffff", pri, 0.45),
-    blendHex("#ffffff", pri, 0.7),
+    blendHex(heatBase, pri, 0.2),
+    blendHex(heatBase, pri, 0.45),
+    blendHex(heatBase, pri, 0.7),
     pri,
     darkenHex(pri),
-  ], [pri]);
+  ], [pri, heatBase]);
 
   const legend = heatColors.map((bg, i) => ({
     bg,

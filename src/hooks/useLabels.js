@@ -1,8 +1,8 @@
 import { useState, useCallback, useRef } from "react";
 
 export const LABEL_DEFS = [
-  { key: "hard",  label: "קשה",   color: "#c1440e", bg: "#fef1e6", icon: "★" },
-  { key: "later", label: "להמשך", color: "#2b4162", bg: "#e8eef6", icon: "◎" },
+  { key: "hard",  label: "קשה",   color: "#c1440e", bg: "#c1440e18", icon: "★" },
+  { key: "later", label: "להמשך", color: "#4a7aab", bg: "#2b416218", icon: "◎" },
 ];
 
 const storageKey = (courseId) => `labels_${courseId}`;

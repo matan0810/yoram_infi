@@ -88,13 +88,7 @@ export default function Insights({
   }, [exams, trendFromYear, excludedTopics]);
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))",
-        gap: 20,
-      }}
-    >
+    <div className="auto-grid">
       <div style={card}>
         <CardTitle
           emoji="🔥"

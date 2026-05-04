@@ -5,42 +5,48 @@ export const FONTS = {
 
 // Static UI chrome — does not change between courses.
 // Per-course colors (primary, secondary, chapter) are provided by CourseContext.
+// Color values are CSS custom properties defined in index.css (light + dark themes).
 export const COLORS_UI = {
-  primary: "#c1440e",
-  secondary: "#2b4162",
-  dark: "#1a1a1a",
-  bg: "#f4f1ea",
-  border: "#d4cfbf",
-  muted: "#9b9890",
-  text: "#4a4740",
-  subdued: "#6d6a5e",
-  barBg: "#ece7dc",
-  rowDivider: "#ede9e0",
-  hoverBg: "#fef4ee",
-  latestBg: "#fef8f3",
-  chapter: { "א": "#c1440e", "ב": "#2b4162", "ג": "#3a5a40" },
+  primary:    "#c1440e",
+  secondary:  "#4a7aab",
+  dark:       "var(--dark)",
+  bg:         "var(--bg)",
+  border:     "var(--border)",
+  muted:      "var(--muted)",
+  text:       "var(--text)",
+  subdued:    "var(--subdued)",
+  barBg:      "var(--bar-bg)",
+  rowDivider: "var(--row-divider)",
+  hoverBg:    "var(--hover-bg)",
+  latestBg:   "var(--latest-bg)",
+  cardBg:     "var(--card-bg)",
+  doneBg:     "var(--done-bg)",
+  doneBorder: "var(--done-border)",
+  doneText:   "var(--done-text)",
+  chapter:    { "א": "#c1440e", "ב": "#2b4162", "ג": "#3a5a40" },
 };
 
+// Page-level container — direction + overflow only; body handles color/bg/font
 export const c = {
-  background: COLORS_UI.bg,
   minHeight: "100vh",
-  fontFamily: FONTS.sans,
   direction: "rtl",
   padding: 20,
   maxWidth: "100vw",
   overflowX: "hidden",
 };
 
+// Card — for places that spread + override (e.g. ExamsTab, FormatBanner).
+// Use className="ui-card" when no overrides are needed.
 export const card = {
-  background: "white",
+  background: "var(--card-bg)",
   border: `1px solid ${COLORS_UI.border}`,
   padding: 20,
   boxShadow: `2px 2px 0 ${COLORS_UI.dark}`,
   marginBottom: 16,
 };
 
+// Form element base
 export const inp = {
-  fontFamily: "inherit",
   fontSize: 13,
   border: `1px solid ${COLORS_UI.border}`,
   padding: "6px 10px",
@@ -65,3 +71,11 @@ export const countBadge = {
   color: COLORS_UI.bg,
   padding: "4px 10px",
 };
+
+// ── JS-composable layout utilities ──────────────────────────────────────────
+// Use these when you need to spread into an inline style object alongside
+// dynamic values. For pure layout with no dynamic props, prefer className.
+
+export const flexCenter  = { display: "flex", alignItems: "center" };
+export const flexBetween = { display: "flex", justifyContent: "space-between", alignItems: "center" };
+export const flexCol     = { display: "flex", flexDirection: "column" };

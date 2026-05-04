@@ -89,7 +89,7 @@ function ExcludedSection({ excluded, showExcluded, setShowExcluded, maxTopicCoun
         style={{
           marginTop: 8,
           width: "100%",
-          background: showExcluded ? COLORS_UI.barBg : "white",
+          background: showExcluded ? COLORS_UI.barBg : COLORS_UI.cardBg,
           border: `1px solid ${COLORS_UI.border}`,
           borderStyle: "dashed",
           color: COLORS_UI.subdued,
@@ -107,7 +107,7 @@ function ExcludedSection({ excluded, showExcluded, setShowExcluded, maxTopicCoun
           e.currentTarget.style.background = COLORS_UI.barBg;
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background = showExcluded ? COLORS_UI.barBg : "white";
+          e.currentTarget.style.background = showExcluded ? COLORS_UI.barBg : COLORS_UI.cardBg;
         }}
       >
         <span>{showExcluded ? "▲ הסתר נושאים שלא בחומר" : "▼ נושאים שלא בחומר"}</span>
@@ -174,13 +174,7 @@ export default function Overview({
   const maxTypeCount = Object.values(stats.typeCounts).sort((a, b) => b - a)[0];
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))",
-        gap: 20,
-      }}
-    >
+    <div className="auto-grid">
       <div style={card}>
         <CardTitle
           emoji="📊"

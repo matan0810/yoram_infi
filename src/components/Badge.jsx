@@ -1,4 +1,4 @@
-export default function Badge({ children, bg = "#1a1a1a", color = "#f4f1ea" }) {
+export default function Badge({ children, bg = "var(--dark)", color = "var(--bg)" }) {
   return (
     <span
       style={{

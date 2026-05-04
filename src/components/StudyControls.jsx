@@ -1,10 +1,10 @@
 import { COLORS_UI, FONTS } from "../styles";
 
 const STATES = [
-  { key: "none",  icon: "○", label: "ללא",    bg: "white",    border: COLORS_UI.border, color: COLORS_UI.subdued },
-  { key: "done",  icon: "✓", label: "בוצע",   bg: "#3a7a3a",  border: "#3a7a3a",        color: "white"           },
-  { key: "hard",  icon: "★", label: "קשה",    bg: "#fef1e6",  border: "#c1440e",        color: "#c1440e"         },
-  { key: "later", icon: "◎", label: "להמשך", bg: "#e8eef6",  border: "#2b4162",        color: "#2b4162"         },
+  { key: "none",  icon: "○", label: "ללא",    bg: COLORS_UI.cardBg, border: COLORS_UI.border, color: COLORS_UI.subdued },
+  { key: "done",  icon: "✓", label: "בוצע",   bg: "var(--done-text)",  border: "var(--done-text)", color: "var(--card-bg)"  },
+  { key: "hard",  icon: "★", label: "קשה",    bg: "#c1440e18", border: "#c1440e",       color: "#c1440e"         },
+  { key: "later", icon: "◎", label: "להמשך", bg: "#2b416218", border: "#4a7aab",       color: "#4a7aab"         },
 ];
 
 export default function StudyControls({ done, questionKey, toggleDone, hasLabel, toggleLabel }) {

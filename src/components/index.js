@@ -1,4 +1,5 @@
 export { default as Bar } from "./Bar";
+export { default as DarkToggle } from "./DarkToggle";
 export { default as Badge } from "./Badge";
 export { default as CardTitle } from "./CardTitle";
 export { default as Chip, useTypeHelpers } from "./Chip";

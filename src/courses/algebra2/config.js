@@ -21,19 +21,22 @@ export const CHAPTERS = [
     key: "א",
     label: 'פרק א — פולינומים, ע"ע, לכסינות (פרקים 1+2)',
     color: "#2b4162",
-    chipBg: "#e8eef6",
+    chipColor: "#4a7aab",
+    chipBg: "#2b416218",
   },
   {
     key: "ב",
     label: "פרק ב — אופרטורים נילפוטנטיים וצורת ז'ורדן (פרק 3)",
     color: "#c1440e",
-    chipBg: "#fef1e6",
+    chipColor: "#c1440e",
+    chipBg: "#c1440e18",
   },
   {
     key: "ג",
     label: "פרק ג — מכפלה פנימית ואופרטורים (פרקים 4+5)",
     color: "#3a5a40",
-    chipBg: "#eaf0e6",
+    chipColor: "#5a8a5a",
+    chipBg: "#3a5a4018",
   },
 ];
 

@@ -126,13 +126,7 @@ export default function ExamsTab({
       </div>
 
       {/* Exam cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
-          gap: 18,
-        }}
-      >
+      <div className="auto-grid" style={{ gap: 18 }}>
         {filteredExams.map((exam) => {
           const isLatest = exam.year === latestYear;
           return (
@@ -143,7 +137,7 @@ export default function ExamsTab({
                 border: isLatest
                   ? `2px solid ${pri}`
                   : `1px solid ${COLORS_UI.dark}`,
-                background: isLatest ? `${pri}10` : "white",
+                background: isLatest ? `${pri}10` : COLORS_UI.cardBg,
                 boxShadow: `3px 3px 0 ${COLORS_UI.dark}`,
               }}
             >
@@ -203,7 +197,7 @@ export default function ExamsTab({
                       borderBottom: `1px solid ${COLORS_UI.rowDivider}`,
                       alignItems: "start",
                       opacity: excluded ? 0.45 : 1,
-                      background: done ? "#f6fdf4" : "transparent",
+                      background: done ? COLORS_UI.doneBg : "transparent",
                     }}
                   >
                     {/* Question number */}
@@ -212,7 +206,7 @@ export default function ExamsTab({
                         fontFamily: FONTS.serif,
                         fontWeight: 900,
                         fontSize: 16,
-                        color: done ? "#3a7a3a" : pri,
+                        color: done ? COLORS_UI.doneText : pri,
                         textAlign: "center",
                         paddingTop: 2,
                       }}

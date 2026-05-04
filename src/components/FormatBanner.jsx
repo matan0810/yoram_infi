@@ -59,7 +59,7 @@ export default function FormatBanner({ chapters, examFormat, colorsUI }) {
   };
 
   function ChapterCell({ ch }) {
-    const color = chapterByKey[ch.key]?.color ?? accent;
+    const color = chapterByKey[ch.key]?.chipColor ?? chapterByKey[ch.key]?.color ?? accent;
     return (
       <div>
         <b style={{ color }}>

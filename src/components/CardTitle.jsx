@@ -13,7 +13,7 @@ export default function CardTitle({ emoji, title, sub }) {
         {emoji} {title}
       </div>
       {sub && (
-        <div style={{ fontSize: 12, color: COLORS_UI.muted, marginTop: 3 }}>
+        <div className="text-sm text-muted" style={{ marginTop: 3 }}>
           {sub}
         </div>
       )}

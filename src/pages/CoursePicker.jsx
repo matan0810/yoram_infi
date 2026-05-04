@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { COURSE_LIST } from "../courses/index";
 import { COLORS_UI, FONTS, card } from "../styles";
+import DarkToggle from "../components/DarkToggle";
 
 export default function CoursePicker() {
   const navigate = useNavigate();
@@ -10,95 +11,43 @@ export default function CoursePicker() {
     document.title = "מדד שאלות";
   }, []);
 
-  const university = COURSE_LIST[0]?.COURSE?.university;
-
   return (
-    <div
-      style={{
-        background: COLORS_UI.bg,
-        minHeight: "100vh",
-        fontFamily: FONTS.sans,
-        direction: "rtl",
-        padding: "40px 40px 60px",
-      }}
-    >
+    <div className="rtl-page">
+      {/* Dark mode toggle */}
+      <div className="flex-end" style={{ marginBottom: 12 }}>
+        <DarkToggle />
+      </div>
+
       {/* Hero */}
-      <div
-        style={{
-          borderTop: `4px solid ${COLORS_UI.dark}`,
-          paddingTop: 18,
-          paddingBottom: 16,
-          marginBottom: 24,
-          borderBottom: `1px solid ${COLORS_UI.dark}`,
-        }}
-      >
-        <div
-          style={{
-            fontWeight: 800,
-            fontSize: 38,
-            lineHeight: 1,
-            letterSpacing: "-0.03em",
-            marginBottom: 6,
-          }}
-        >
-          מדד שאלות
-        </div>
-        <div
-          style={{
-            fontSize: 13,
-            color: COLORS_UI.subdued,
-          }}
-        >
+      <div className="page-hero">
+        <div className="hero-title">מדד שאלות</div>
+        <div className="text-sm text-muted">
           ניתוח מבחנים, נושאים ומגמות — בחר קורס כדי להתחיל
         </div>
 
         {/* Stats bar */}
-        <div
-          style={{
-            display: "flex",
-            gap: 24,
-            marginTop: 14,
-            paddingTop: 12,
-            borderTop: `1px dashed ${COLORS_UI.border}`,
-          }}
-        >
+        <div className="stats-row">
           {[
             [COURSE_LIST.length, "קורסים"],
             [COURSE_LIST.reduce((s, c) => s + c.EXAMS.length, 0), "מבחנים"],
             [
               COURSE_LIST.reduce(
-                (s, c) =>
-                  s + c.EXAMS.reduce((ss, e) => ss + e.questions.length, 0),
+                (s, c) => s + c.EXAMS.reduce((ss, e) => ss + e.questions.length, 0),
                 0,
               ),
               "שאלות",
             ],
           ].map(([n, l]) => (
             <div key={l}>
-              <div
-                style={{
-                  fontFamily: FONTS.serif,
-                  fontWeight: 900,
-                  fontSize: 26,
-                  color: COLORS_UI.dark,
-                }}
-              >
-                {n}
-              </div>
-              <div style={{ fontSize: 11, color: COLORS_UI.text }}>{l}</div>
+              <div className="stat-num">{n}</div>
+              <div className="stat-label">{l}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Course grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: 20,
-        }}
-      >
+      <div className="course-grid">
         {COURSE_LIST.map((course) => (
           <button
             key={course.id}
@@ -107,12 +56,8 @@ export default function CoursePicker() {
               ...card,
               textAlign: "right",
               cursor: "pointer",
-              border: `1px solid ${COLORS_UI.border}`,
               borderTop: `4px solid ${course.CHAPTERS[0].color}`,
-              background: "white",
               fontFamily: FONTS.sans,
-              boxShadow: `2px 2px 0 ${COLORS_UI.dark}`,
-              transition: "box-shadow 0.15s, transform 0.15s",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = `4px 4px 0 ${COLORS_UI.dark}`;
@@ -123,13 +68,7 @@ export default function CoursePicker() {
               e.currentTarget.style.transform = "translate(0, 0)";
             }}
           >
-            <div
-              style={{
-                fontSize: 11,
-                color: COLORS_UI.muted,
-                marginBottom: 4,
-              }}
-            >
+            <div className="text-sm text-muted" style={{ marginBottom: 4 }}>
               {course.COURSE.number} · {course.COURSE.teacher}
             </div>
             <div
@@ -143,12 +82,8 @@ export default function CoursePicker() {
               {course.COURSE.name}
             </div>
             <div
-              style={{
-                display: "flex",
-                gap: 16,
-                borderTop: `1px dashed ${COLORS_UI.border}`,
-                paddingTop: 10,
-              }}
+              className="stats-row"
+              style={{ marginTop: 0, paddingTop: 10, gap: 16 }}
             >
               {[
                 [course.EXAMS.length, "מבחנים"],
@@ -162,17 +97,8 @@ export default function CoursePicker() {
                 ],
               ].map(([n, l]) => (
                 <div key={l}>
-                  <div
-                    style={{
-                      fontFamily: FONTS.serif,
-                      fontWeight: 900,
-                      fontSize: 20,
-                      color: COLORS_UI.dark,
-                    }}
-                  >
-                    {n}
-                  </div>
-                  <div style={{ fontSize: 11, color: COLORS_UI.text }}>{l}</div>
+                  <div className="stat-num" style={{ fontSize: 20 }}>{n}</div>
+                  <div className="stat-label">{l}</div>
                 </div>
               ))}
             </div>

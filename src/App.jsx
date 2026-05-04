@@ -32,9 +32,3 @@ export default function App() {
     </HashRouter>
   );
 }
-
-// TODO:
-// - fix algebra data (verify remaining unverified exams against PDFs)
-// - add a dark mode
-// - add readme with instructions on how to use the app and how to add new courses
-// - move disclaimer to "2010–2026 · v2.0" line

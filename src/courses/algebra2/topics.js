@@ -67,16 +67,16 @@ export const TOPIC_HE = {
 };
 
 export const COLORS = [
-  CHAPTERS[0].color,  // #2b4162 – כחול (פרק א)
-  CHAPTERS[1].color,  // #c1440e – כתום (פרק ב)
-  CHAPTERS[2].color,  // #3a5a40 – ירוק (פרק ג)
-  "#d4a017",          // זהב
-  "#5a3a6b",          // סגול
-  "#9a3232",          // אדום כהה
-  "#7a5c3e",          // חום
-  "#2a6b6b",          // טורקיז
-  "#1a5276",          // כחול כהה
-  "#6e2f8f",          // סגול כהה
-  "#8e44ad",          // סגול בהיר
-  "#16a085",          // טורקיז כהה
+  CHAPTERS[0].chipColor ?? CHAPTERS[0].color,  // #4a7aab (was dark navy)
+  CHAPTERS[1].chipColor ?? CHAPTERS[1].color,  // #c1440e
+  CHAPTERS[2].chipColor ?? CHAPTERS[2].color,  // #5a8a5a (was dark green)
+  "#d4a017",   // gold
+  "#8a5aab",   // medium purple  (was #5a3a6b dark)
+  "#c05050",   // medium red     (was #9a3232 dark)
+  "#a07850",   // medium brown   (was #7a5c3e dark)
+  "#3a9696",   // medium teal    (was #2a6b6b dark)
+  "#3a7aac",   // medium blue    (was #1a5276 dark)
+  "#9a50c0",   // medium violet  (was #6e2f8f dark)
+  "#8e44ad",   // bright purple
+  "#16a085",   // bright teal
 ];

@@ -31,8 +31,8 @@ function SearchResultCard({
     <div
       className="result-card"
       style={{
-        background: done ? "#f6fdf4" : "white",
-        border: `1px solid ${done ? "#b2d8b2" : COLORS_UI.border}`,
+        background: done ? COLORS_UI.doneBg : COLORS_UI.cardBg,
+        border: `1px solid ${done ? COLORS_UI.doneBorder : COLORS_UI.border}`,
         padding: 12,
         display: "grid",
         gridTemplateColumns: studyMode ? "110px 80px 1fr auto" : "110px 80px 1fr",

@@ -4,13 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>מדד שאלות</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Frank+Ruhl+Libre:wght@400;700;900&display=swap"
       rel="stylesheet"
     />
+    <!-- Apply dark theme before first paint to prevent white flash -->
+    <script>if(localStorage.getItem("theme")==="dark")document.documentElement.setAttribute("data-dark","");</script>
   </head>
-  <body style="margin: 0; background: #f4f1ea">
+  <body style="margin: 0">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
